@@ -12,4 +12,10 @@ typedef struct{
     char *mesaje;
 } Level;
 
+int level_print_mesaje(Level *level);
+
+Map *level_get_map(Level *level);
+Level *level_get_next_level(Level *level);
+Level *level_get_last_level(Level *level);
+
 #endif
