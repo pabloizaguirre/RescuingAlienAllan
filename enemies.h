@@ -9,7 +9,7 @@ typedef struct {
     EnemyType enemy_type;
     char character;
     Position position;
-    
+
 } Enemy;
 
 /*

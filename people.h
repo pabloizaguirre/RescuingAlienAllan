@@ -24,7 +24,7 @@ State people_get_state(People *p);
 /* This function receives a pointer to people and */
 /* returns an array of 5 boxes which correspond   */
 /* to the boxes center, up, don, right and left  */
-/* of that person                                 */ 
+/* of that person                                 */
 Surroundings* People_get_surroundings(People *p);
 
 int People_update()
@@ -37,4 +37,4 @@ int People_update()
 
 
 
-#endif 
+#endif
