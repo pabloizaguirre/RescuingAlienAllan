@@ -3,31 +3,38 @@
 #define PEOPLE_H
 #include "types.h"
 #include <stdio.h>
-
-typedef struct{}
+#include "map.h"
 
 typedef struct {
     char character;
     Position position;
     State state;
-}
-  } People;
+} People;
+
+/*Allocates memory for a person*/
 
 People* create_people(char character, Position position, State state);
 
 /* This functions receive a pointer to people and */
 /* return a certain atribute of that character.   */
 
-Position people_get_position(People *p);
-State people_get_state(People *p);
-
-/* This function receives a pointer to people and */
-/* returns an array of 5 boxes which correspond   */
-/* to the boxes center, up, don, right and left  */
-/* of that person                                 */
+Position People_get_position(People *p);
+State People_get_state(People *p);
 Surroundings* People_get_surroundings(People *p);
 
-int People_update()
+/* Return a certain atribute of a person*/
+
+int People_set_character(People *p, char c);
+int People_set_position(People *p, Position position);
+int People_set_state(People *p, State state);
+
+/*Updates the position of a person depending on the map*/
+
+int People_update(People *p, Map *map);
+
+/*Frees the memory allocated for a person*/
+
+int free_people(People *p);
 
 
 

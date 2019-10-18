@@ -6,7 +6,7 @@
 /*
     Changes the color you are printing with to the color given by the string argument
 */
-int change_color(char *color);
+int change_color(char *foreground_color, char *background_color);
 
 /*
     Changes the custor to the given position
