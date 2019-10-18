@@ -1,4 +1,5 @@
 #include "print_on_screen.h"
+#include "read_from_file.h"
 #include <string.h>
 
 /*
@@ -32,12 +33,45 @@ int change_color(char *foreground_color, char *background_color){
 }
 
 /*
+    Initialize screen
+*/
+Result init_screen(){
+    //Set screen size
+    printf("%c[8;SCREEN_HEIGHT;SCREEN_WIDTHt", 27);
+    clear_screen();
+    if(print_margins()) return ERROR;
+    return OK;
+}
+
+/*
+    Prints the magins between the map and the message boxes
+*/
+Result print_margins(char *file_name){
+    FILE *file;
+    file = fopen(file_name, "r");
+    char *line_buf = NULL;
+    size_t line_buf_size = 0;
+
+    if(!file) return ERROR;
+
+    
+}
+
+/*
+    Clears screen
+*/
+Result clear_screen(){
+    printf("%c[2J", 27);
+    return OK;
+}
+
+/*
     Changes the custor to the given position
 */
 int change_cursor(Position position){
     int x = position.x;
     int y = position.y;
 
-    printf ( "\033[%d;H");
+    printf ("%c[%d;H", 27);
     
 };
