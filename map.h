@@ -29,6 +29,7 @@ void *free_map(Map *map);
 /* Displays the map on the screen */
 void *display_map(Map *map);
 
+/* Checks if a position can be occupied by a person */
 Bool is_position_occupable(Position position, Map *map);
 
 /* Takes as arguments a position in the map and a map and returns an element
