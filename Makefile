@@ -2,7 +2,7 @@ CC = gcc -pedantic
 CFLAGS = -Wall
 EXE = main
 #LIBRARIES = enemies.o level.o map.o people.o print_on_screen.o
-LIBRARIES = print_on_screen.o
+LIBRARIES = read_from_file.o
 
 all : $(EXE)
 
@@ -26,6 +26,9 @@ people.o: people.c people.h
 	$(CC) $(CFLAGS) -c $<
 
 print_on_screen.o: print_on_screen.c print_on_screen.h
+	$(CC) $(CFLAGS) -c $<
+
+read_from_file.o: read_from_file.c read_from_file.h
 	$(CC) $(CFLAGS) -c $<
 
 run:

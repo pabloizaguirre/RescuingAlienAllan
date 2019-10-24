@@ -1,11 +1,13 @@
 #include "read_from_file.h"
-#define MAX_SIZE 1024
 
-char *read_line(FILE *f){
-    char ret[MAX_SIZE];
+Result read_line(FILE *f, char *line){
+
     do{
-        if(fgets(ret, MAX_SIZE, f) == NULL) return NULL;
-    }while(ret[0] == '#' || ret[0] == (char)0);
+        if(fgets(line, MAX_SIZE, f) == NULL){
+            if(feof(f)) return OK;
+            return ERROR;
+        }
+    }while(line[0] == '#' || line[0] == '\n');
 
-    return ret;
+    return OK;
 }

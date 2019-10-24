@@ -9,7 +9,7 @@ typedef struct {
 
 typedef enum {FALSE, TRUE} Bool;
 
-typedef enum {DEAD, ALIVE} State;
+typedef enum {DEAD, ALIVE, DESINTEGRATED, FINISHED} State;
 
 typedef enum {OK, ERROR} Result;
 
