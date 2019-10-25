@@ -1,4 +1,6 @@
 #include "map.h"
+#include "people.h"
+#include "enemies.h"
 
 #ifndef level_h
 #define level_h
@@ -9,11 +11,20 @@ typedef struct{
     Level *next_level;
     Level *last_level;
     int level_number;
-    char *mesaje;
+    char *mensaje;
     People **peoples;
     People *alien;
     Enemy **enemies;
 } Level;
+
+/*
+    Initialices a double linked list of levels from a name of a file containing
+    the names of all the files of all the labels
+    
+    Levels_init() searches for a progress.txt file, and if it exists, it initializes
+    the game from the last level you have played.
+*/
+Level *levels_init(char *file_name);
 
 /*
     Prints the level mesage in the screen

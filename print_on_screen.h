@@ -4,13 +4,21 @@
 #include "types.h"
 #include <stdio.h>
 
-#define SCREEN_HEIGHT 30
-#define SCREEN_WIDTH 130
+typedef struct {
+    int screen_height;
+    int screen_width;
+    Position map;
+    int map_width;
+    int map_height;
+    Position messagebox;
+    int messagebox_width;
+    int messagebox_height;
+} Screen;
 
 /*
     Initialize screen
 */
-Result init_screen();
+Result init_screen(char *file_name, Screen *screen);
 
 /*
     Clears screen
@@ -20,7 +28,7 @@ Result clear_screen();
 /*
     Prints the magins between the map and the message boxes from a given file
 */
-Result print_margins(char *file_name);
+Result print_margins(FILE *f);
 
 /*
     Changes the color you are printing with to the color given by the string argument
@@ -36,5 +44,11 @@ int change_cursor(Position position);
     Prints the given string in the given position
 */
 int print_on_position(Position position, char *text);
+
+/*
+    Prints a message in the screen part of the interface
+    It also crops it to the right dimensions
+*/
+Result print_message(Screen screen, char *text);
 
 #endif

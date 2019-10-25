@@ -2,7 +2,7 @@ CC = gcc -pedantic
 CFLAGS = -Wall
 EXE = main
 #LIBRARIES = enemies.o level.o map.o people.o print_on_screen.o
-LIBRARIES = read_from_file.o
+LIBRARIES = print_on_screen.o read_from_file.o
 
 all : $(EXE)
 

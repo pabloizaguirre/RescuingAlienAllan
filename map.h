@@ -2,6 +2,8 @@
 #define map_h
 
 #include "types.h"
+#include "people.h"
+#include <stdio.h>
 
 /* This enumeration defines the type Box, which represents an element in the map */
 typedef enum {AIR, WALL, START, END, LAVA, PORTALA, PORTALB, LADDER} Box;
@@ -9,6 +11,8 @@ typedef enum {AIR, WALL, START, END, LAVA, PORTALA, PORTALB, LADDER} Box;
 /* The structure Map includes an array of arrays of elements of type Box */
 typedef struct {
     Box **boxes;
+    Position *Start_pos;
+    Position *End_pos;
     Position *PORTALB_pos;
 } Map;
 
@@ -30,7 +34,7 @@ void *free_map(Map *map);
 void *display_map(Map *map);
 
 /* Checks if a position can be occupied by a person */
-Bool is_position_occupable(Position position, Map *map);
+Bool is_position_occupable(Position position, People **people, Map *map);
 
 /* Takes as arguments a position in the map and a map and returns an element
 of type Surrounding that includes the boxes that surround the position and the box

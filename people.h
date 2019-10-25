@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include "map.h"
 
+
 typedef struct {
     char character;
     Position position;

@@ -35,26 +35,97 @@ int change_color(char *foreground_color, char *background_color){
 /*
     Initialize screen
 */
-Result init_screen(){
+Result init_screen(char *file_name, Screen *screen){
+    //Open file
+    char line[MAX_SIZE];
+    FILE *f;
+    f = fopen(file_name, "r");
+    Result r;
+    //Initialice screen variables
+    r = read_line(f, &line);
+    if(r == ERROR) return ERROR;
+    screen->screen_width = atoi(line);
+
+    r = read_line(f, &line);
+    if(r == ERROR) return ERROR;
+    screen->screen_height = atoi(line);
+
+    r = read_line(f, &line);
+    if(r == ERROR) return ERROR;
+    screen->map.x = atoi(line);
+
+    r = read_line(f, &line);
+    if(r == ERROR) return ERROR;
+    screen->map.y = atoi(line);
+
+    r = read_line(f, &line);
+    if(r == ERROR) return ERROR;
+    screen->map_width = atoi(line);
+
+    r = read_line(f, &line);
+    if(r == ERROR) return ERROR;
+    screen->map_height = atoi(line);
+
+    r = read_line(f, &line);
+    if(r == ERROR) return ERROR;
+    screen->messagebox.x = atoi(line);
+
+    r = read_line(f, &line);
+    if(r == ERROR) return ERROR;
+    screen->messagebox.y = atoi(line);
+
+    r = read_line(f, &line);
+    if(r == ERROR) return ERROR;
+    screen->messagebox_width = atoi(line);
+
+    r = read_line(f, &line);
+    if(r == ERROR) return ERROR;
+    screen->messagebox_height = atoi(line);
+
+
     //Set screen size
-    printf("%c[8;SCREEN_HEIGHT;SCREEN_WIDTHt", 27);
     clear_screen();
-    if(print_margins()) return ERROR;
+    printf("%c[8;%d;%dt", 27, screen->screen_height, screen->screen_width);
+    if(print_margins(f) == ERROR) return ERROR;
+    printf("\n");
     return OK;
 }
 
 /*
     Prints the magins between the map and the message boxes
 */
-Result print_margins(char *file_name){
-    FILE *file;
-    file = fopen(file_name, "r");
-    char *line_buf = NULL;
-    size_t line_buf_size = 0;
+Result print_margins(FILE *f){
+    char line[MAX_SIZE];
+    Result r;
+    do{
+        r = read_line(f, &line);
+        printf(line);
 
-    if(!file) return ERROR;
+        if(r == ERROR){
+            printf("error reading file");
+            return ERROR;
+        }
+    }while(!feof(f));    
+}
 
-    
+Result print_message(Screen screen, char *text){
+    int end_flag = 0;
+    int w = screen.messagebox_width - 1;
+    int h = screen.messagebox_height;
+    Position pos = screen.messagebox;
+    change_cursor(pos);
+    for(int i=0; i < h; i++){
+        for(int j=0; j < w; j++){
+            if(text[i*w + j] == (char)0){
+                end_flag=1;
+                break;
+            }
+            printf("%c", text[i*w + j]);
+        }
+        if(end_flag) break;
+        pos.y += 1;
+        change_cursor(pos);
+    }
 }
 
 /*
@@ -72,6 +143,6 @@ int change_cursor(Position position){
     int x = position.x;
     int y = position.y;
 
-    printf ("%c[%d;H", 27);
+    printf ("%c[%d;%dH", 27, y, x);
     
-};
+}

@@ -1,13 +1,25 @@
 #screen width
 130
 #screen height
-40 
+43 
+
 #map x start
 15 
 #map y start
-30 
+6 
+#map width
+100
+#map height
+30
 
-
+#messagebox x start
+3
+#messagebox y start
+39 
+#messagebox width
+127
+#messagebox height
+3
 
 
 +--------------------------------------------------------------------------------------------------------------------------------+
