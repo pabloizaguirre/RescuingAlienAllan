@@ -1,5 +1,6 @@
 #include "print_on_screen.h"
 #include "read_from_file.h"
+#include "map.h"
 #include <string.h>
 
 /*
@@ -30,6 +31,26 @@ int change_color(char *foreground_color, char *background_color){
 
     return printf("%c[%s;%sm", 27, foreground_color_code, background_color_code);
 
+}
+
+/*
+    Changes the custor to the given position
+*/
+int change_cursor(Position position){
+    //falta comprobar que la posición está bien
+    int x = position.x;
+    int y = position.y;
+
+    printf ("%c[%d;%dH", 27, y, x);
+    
+}
+
+/*
+    Clears screen
+*/
+Result clear_screen(){
+    printf("%c[2J", 27);
+    return OK;
 }
 
 /*
@@ -108,6 +129,53 @@ Result print_margins(FILE *f){
     }while(!feof(f));    
 }
 
+//comprobar errores
+Result print_map (Box **map, Screen *s) {
+    int i, j;
+    Position p;
+    if (!map || !screen) return ERROR;
+    
+    p = s->map;
+
+    if (change_cursor(p) < 0) return ERROR;
+
+    for (i = s->map_width - 1; i >= 0; i--) {
+        for (j = 0; j < s->map_height; j++) {
+            switch (map[i][j]){
+                case AIR:
+                    fprintf(" ");
+                case WALL:
+                    change_color("black", "white");
+                    fprintf(" ");
+                case START:
+                    change_color("black", "green");
+                    fprintf(" ");
+                case END:
+                    change_color("black", "cyan");
+                    fprintf(" ");
+                case LAVA:
+                    change_color("black", "red");
+                    fprintf(" ");
+                case PORTALA:
+                    change_color("black", "cyan");
+                    fprintf(" ");
+                case PORTALB:
+                    change_color("black", "cyan");
+                    fprintf(" ");
+                case LADDER:
+                    change_color("white", "black");
+                    fprintf("#");
+                default:
+                    change_color("red", "black");
+                    fprintf("X");
+            }
+        }
+    p.y++;
+    if (change_cursor(p) < 0) return ERROR;
+    }
+    return OK;
+}
+
 Result print_message(Screen screen, char *text){
     int end_flag = 0;
     int w = screen.messagebox_width - 1;
@@ -128,21 +196,4 @@ Result print_message(Screen screen, char *text){
     }
 }
 
-/*
-    Clears screen
-*/
-Result clear_screen(){
-    printf("%c[2J", 27);
-    return OK;
-}
 
-/*
-    Changes the custor to the given position
-*/
-int change_cursor(Position position){
-    int x = position.x;
-    int y = position.y;
-
-    printf ("%c[%d;%dH", 27, y, x);
-    
-}

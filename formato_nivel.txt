@@ -1,0 +1,15 @@
+#Numero nivel:
+
+#Mensaje:
+
+#Number of people:
+
+#Resources:
+#Number of ladders/floors:
+
+#Number of ladders:
+
+#Number of floors:
+
+
+#map:

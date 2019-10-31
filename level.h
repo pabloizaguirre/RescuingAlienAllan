@@ -11,10 +11,14 @@ typedef struct{
     Level *next_level;
     Level *last_level;
     int level_number;
-    char *mensaje;
+    char *message;
     People **peoples;
     People *alien;
     Enemy **enemies;
+    int num_ladder_floor;
+    int num_ladder;
+    int num_floor;
+    int portal; 
 } Level;
 
 /*

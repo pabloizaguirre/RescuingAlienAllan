@@ -1,0 +1,19 @@
+#screen width:
+
+#screen height:
+
+#map x start:
+
+#map y start:
+
+#map width:
+
+#map height:
+
+#messagebox x start:
+
+#messagebox y start:
+
+#messagebox width:
+
+#messagebox height:
