@@ -113,6 +113,17 @@ Result print_message(Screen screen, char *text){
     int w = screen.messagebox_width - 1;
     int h = screen.messagebox_height;
     Position pos = screen.messagebox;
+    //Clear the messagebox
+    change_cursor(pos);
+    for(int i=0; i < h; i++){
+        for(int j=0; j < w; j++){
+            printf(" ");
+        }
+        pos.y += 1;
+        change_cursor(pos);
+    }
+    //Print the message croping it to the right dimensions
+    pos = screen.messagebox;
     change_cursor(pos);
     for(int i=0; i < h; i++){
         for(int j=0; j < w; j++){
@@ -143,6 +154,27 @@ int change_cursor(Position position){
     int x = position.x;
     int y = position.y;
 
-    printf ("%c[%d;%dH", 27, y, x);
-    
+    printf ("%c[%d;%dH", 27, y, x);  
 }
+
+/*
+    Prints the given map in the appropiate place of the 
+    screen, croping it to the right dimensions if it
+    exceeds the limits set in the screen object
+*/
+/* Result print_map(Screen screen, Map map){
+    int w = screen.map_width - 1;
+    int h = screen.map_height;
+    Position pos = screen.map;
+    char c;
+
+    change_cursor(pos);
+    for(int i=0; i < h; i++){
+        for(int j=0; j < w; j++){
+            c = box_to_char((map.boxes)[i][j]);
+            printf("%c", c);
+        }
+        pos.y += 1;
+        change_cursor(pos);
+    }
+} */

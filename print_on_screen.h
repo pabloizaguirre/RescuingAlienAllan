@@ -2,6 +2,7 @@
 #define print_on_screen_h
 
 #include "types.h"
+//#include "map.h"
 #include <stdio.h>
 
 typedef struct {
@@ -50,5 +51,12 @@ int print_on_position(Position position, char *text);
     It also crops it to the right dimensions
 */
 Result print_message(Screen screen, char *text);
+
+/*
+    Prints the given map in the appropiate place of the 
+    screen, croping it to the right dimensions if it
+    exceeds the limits set in the screen object
+*/
+//Result print_map(Screen screen, Map map);
 
 #endif
