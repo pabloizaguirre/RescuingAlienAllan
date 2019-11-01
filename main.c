@@ -25,7 +25,7 @@ int main(int argc, char** argv){
     pos.y = screen.screen_height+3;
     change_cursor(pos);
 
-    map_ch = map_from_file("map_test.txt", screen);
+     map_ch = map_from_file("map_test.txt", screen);
     if (!map_ch) {
         printf("ERROR en map_from_file()");
         return ERROR;
@@ -35,13 +35,32 @@ int main(int argc, char** argv){
             printf("%c", map_ch[i][j]);
         }
     }
+    printf("*************%c***********", map_ch[29][0]);
     
+    /*
     map_bx = map_char_to_box(map_ch, screen);
     if (!map_bx) {
         printf("ERROR en map_char_to_box()");
         return ERROR;
+    } */
+
+    /* map_bx = (char**)malloc(sizeof(char*)*screen.screen_height);
+    if(map_bx == NULL) return ERROR;
+
+    //falta hacer free de todo map cuando hay un error
+    for(i=0;i<screen.map_width;i++){
+        map_bx[i]=(char*)malloc(sizeof(char)*screen.map_width);
+        if(map_bx[i] == NULL) return NULL;
     }
-    /*
+
+    for (i = 0; i < screen.map_height; i++){
+        for (j = 0; j < screen.map_width; j++) {
+            map_bx[i][j] = LAVA;
+        }
+    } */
+
+    printf("hasta aqui sí");
+/* 
     if (print_map(map_bx, screen) == ERROR) return ERROR; */
 
 

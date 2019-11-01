@@ -139,8 +139,8 @@ Result print_map (Box **map, Screen *s) {
 
     if (change_cursor(p) < 0) return ERROR;
 
-    for (i = s->map_width - 1; i >= 0; i--) {
-        for (j = 0; j < s->map_height; j++) {
+    for (i = s->map_height - 1; i >= 0; i--) {
+        for (j = 0; j < s->map_width; j++) {
             switch (map[i][j]){
                 case AIR:
                     fprintf(stdout, " ");
