@@ -18,5 +18,10 @@ int main(int argc, char** argv){
     pos.x = 0;
     pos.y = screen.screen_height+3;
     change_cursor(pos);
+
+    
+
+
+
     return OK;
 }

@@ -1,6 +1,6 @@
 #include "print_on_screen.h"
 #include "read_from_file.h"
-/* #include "map.h" */
+#include "map.h"
 #include <string.h>
 
 /*

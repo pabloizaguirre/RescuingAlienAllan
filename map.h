@@ -2,7 +2,7 @@
 #define map_h
 
 #include "types.h"
-#include "people.h"
+/* #include "people.h" */
 #include <stdio.h>
 
 /* This enumeration defines the type Box, which represents an element in the map */
@@ -34,7 +34,7 @@ void *free_map(Map *map);
 void *display_map(Map *map);
 
 /* Checks if a position can be occupied by a person */
-Bool is_position_occupable(Position position, People **people, Map *map);
+/* Bool is_position_occupable(Position position, People **people, Map *map); */
 
 /* Takes as arguments a position in the map and a map and returns an element
 of type Surrounding that includes the boxes that surround the position and the box
