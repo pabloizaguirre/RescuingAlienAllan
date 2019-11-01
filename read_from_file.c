@@ -11,3 +11,67 @@ Result read_line(FILE *f, char *line){
 
     return OK;
 }
+
+/*
+This function transforms the characters to boxes.
+map[0][0] es el de abajo a la izquierda.
+arriba a la izquierda seria map[100][0]
+ */
+
+Box** map_char_to_box(char** map, Screen screen){
+    char lista[8] = " %SXWAB#";
+    int i,j,rows = screen.map_height,columns = screen.map_width;
+    Box **mapB = NULL;
+
+    map = (Box**)malloc(sizeof(Box*)*columns);
+    if(map == NULL) return NULL;
+
+    for(i=0;i<rows;i++){
+        map[i]=(Box*)malloc(sizeof(Box)*rows);
+        if(map[i] == NULL) {
+            free(map);
+            return NULL;
+        }
+    }
+
+    for(i=0;i<columns;i++){
+        for(j=0;j<rows;j++){
+            if (map[i][j] == lista[0]) mapB[i][j] = AIR;
+            else if (map[i][j] == lista[1]) mapB[i][j] = WALL;
+            else if (map[i][j] == lista[2]) mapB[i][j] = START;
+            else if (map[i][j] == lista[3]) mapB[i][j] = END;
+            else if (map[i][j] == lista[4]) mapB[i][j] = LAVA;
+            else if (map[i][j] == lista[5]) mapB[i][j] = PORTALA;
+            else if (map[i][j] == lista[6]) mapB[i][j] = PORTALB;
+            else if (map[i][j] == lista[7]) mapB[i][j] = LADDER; 
+        }
+    }
+    return mapB;
+}
+
+/*
+Receives a file with a map and writes it in a char table.
+ */
+
+char** map_from_file(char *file, Screen screen){
+    FILE *fp;
+    int i,j,rows = screen.map_height,columns = screen.map_width;
+    char **map;
+
+    map = (char**)malloc(sizeof(char*)*rows);
+    if(map == NULL) return NULL;
+
+    //falta hacer free de todo map cuando hay un error
+    for(i=0;i<columns;i++){
+        map[i]=(char*)malloc(sizeof(char)*columns);
+        if(map[i] == NULL) return NULL;
+    }
+
+    fp = fopen(file, "r");
+    if(fp == NULL) return NULL;
+
+    for(i=0;i<rows;i++){
+        read_line(fp,map[rows-i-1]);
+    }
+    return map;
+}

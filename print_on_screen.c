@@ -130,7 +130,7 @@ Result print_margins(FILE *f){
 }
 
 //comprobar errores
-/* Result print_map (Box **map, Screen *s) {
+Result print_map (Box **map, Screen *s) {
     int i, j;
     Position p;
     if (!map || !s) return ERROR;
@@ -174,7 +174,7 @@ Result print_margins(FILE *f){
     if (change_cursor(p) < 0) return ERROR;
     }
     return OK;
-} */
+}
 
 
 Result print_message(Screen screen, char *text){
