@@ -1,6 +1,6 @@
 #include "print_on_screen.h"
 #include "read_from_file.h"
-#include "map.h"
+/* #include "map.h" */
 #include <string.h>
 
 /*
@@ -130,7 +130,7 @@ Result print_margins(FILE *f){
 }
 
 //comprobar errores
-Result print_map (Box **map, Screen *s) {
+/* Result print_map (Box **map, Screen *s) {
     int i, j;
     Position p;
     if (!map || !s) return ERROR;
@@ -174,12 +174,13 @@ Result print_map (Box **map, Screen *s) {
     if (change_cursor(p) < 0) return ERROR;
     }
     return OK;
-}
+} */
+
 
 Result print_message(Screen screen, char *text){
     int end_flag = 0;
-    int w = screen.map_width - 1;
-    int h = screen.map_height;
+    int w = screen.messagebox_width - 1;
+    int h = screen.messagebox_height;
     Position pos = screen.messagebox;
     //Clear the messagebox
     change_cursor(pos);
