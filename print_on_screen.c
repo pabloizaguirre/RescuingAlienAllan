@@ -133,7 +133,7 @@ Result print_margins(FILE *f){
 Result print_map (Box **map, Screen *s) {
     int i, j;
     Position p;
-    if (!map || !screen) return ERROR;
+    if (!map || !s) return ERROR;
     
     p = s->map;
 
@@ -143,31 +143,31 @@ Result print_map (Box **map, Screen *s) {
         for (j = 0; j < s->map_height; j++) {
             switch (map[i][j]){
                 case AIR:
-                    fprintf(" ");
+                    fprintf(stdout, " ");
                 case WALL:
                     change_color("black", "white");
-                    fprintf(" ");
+                    fprintf(stdout, " ");
                 case START:
                     change_color("black", "green");
-                    fprintf(" ");
+                    fprintf(stdout, " ");
                 case END:
                     change_color("black", "cyan");
-                    fprintf(" ");
+                    fprintf(stdout, " ");
                 case LAVA:
                     change_color("black", "red");
-                    fprintf(" ");
+                    fprintf(stdout, " ");
                 case PORTALA:
                     change_color("black", "cyan");
-                    fprintf(" ");
+                    fprintf(stdout, " ");
                 case PORTALB:
                     change_color("black", "cyan");
-                    fprintf(" ");
+                    fprintf(stdout, " ");
                 case LADDER:
                     change_color("white", "black");
-                    fprintf("#");
+                    fprintf(stdout, "#");
                 default:
                     change_color("red", "black");
-                    fprintf("X");
+                    fprintf(stdout, "X");
             }
         }
     p.y++;
@@ -178,9 +178,20 @@ Result print_map (Box **map, Screen *s) {
 
 Result print_message(Screen screen, char *text){
     int end_flag = 0;
-    int w = screen.messagebox_width - 1;
-    int h = screen.messagebox_height;
+    int w = screen.map_width - 1;
+    int h = screen.map_height;
     Position pos = screen.messagebox;
+    //Clear the messagebox
+    change_cursor(pos);
+    for(int i=0; i < h; i++){
+        for(int j=0; j < w; j++){
+            printf(" ");
+        }
+        pos.y += 1;
+        change_cursor(pos);
+    }
+    //Print the message croping it to the right dimensions
+    pos = screen.messagebox;
     change_cursor(pos);
     for(int i=0; i < h; i++){
         for(int j=0; j < w; j++){
@@ -196,4 +207,24 @@ Result print_message(Screen screen, char *text){
     }
 }
 
+/*
+    Prints the given map in the appropiate place of the 
+    screen, croping it to the right dimensions if it
+    exceeds the limits set in the screen object
+*/
+/* Result print_map(Screen screen, Map map){
+    int w = screen.map_width - 1;
+    int h = screen.map_height;
+    Position pos = screen.map;
+    char c;
 
+    change_cursor(pos);
+    for(int i=0; i < h; i++){
+        for(int j=0; j < w; j++){
+            c = box_to_char((map.boxes)[i][j]);
+            printf("%c", c);
+        }
+        pos.y += 1;
+        change_cursor(pos);
+    }
+} */
