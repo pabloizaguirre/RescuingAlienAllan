@@ -6,31 +6,32 @@
 /*
     Changes the color you are printing with to the color given by the string argument
 */
-int change_color(char *foreground_color, char *background_color){
-    char *foreground_color_code = "30";
-    char *background_color_code = "40";
+int change_color(char *background_color, char *foreground_color){
+    char *foreground_color_code = "40";
+    char *background_color_code = "30";
 
-    if(!strcmp(background_color, "black")) background_color_code = "30";
-    else if(!strcmp(background_color, "red")) background_color_code = "31";
-    else if(!strcmp(background_color, "green")) background_color_code = "32";
-    else if(!strcmp(background_color, "yellow")) background_color_code = "33";
-    else if(!strcmp(background_color, "blue")) background_color_code = "34";
-    else if(!strcmp(background_color, "magenta")) background_color_code = "35";
-    else if(!strcmp(background_color, "cyan")) background_color_code = "36";
-    else if(!strcmp(background_color, "white")) background_color_code = "37";
+    if(!strcmp(background_color, "black")) background_color_code = "40";
+    else if(!strcmp(background_color, "red")) background_color_code = "41";
+    else if(!strcmp(background_color, "green")) background_color_code = "42";
+    else if(!strcmp(background_color, "yellow")) background_color_code = "43";
+    else if(!strcmp(background_color, "blue")) background_color_code = "44";
+    else if(!strcmp(background_color, "magenta")) background_color_code = "45";
+    else if(!strcmp(background_color, "cyan")) background_color_code = "46";
+    else if(!strcmp(background_color, "white")) background_color_code = "47";
+    else if(!strcmp(background_color, "reset")) background_color_code = "0";
 
-    if(!strcmp(foreground_color, "black")) foreground_color_code = "40";
-    else if(!strcmp(foreground_color, "red")) foreground_color_code = "41";
-    else if(!strcmp(foreground_color, "green")) foreground_color_code = "42";
-    else if(!strcmp(foreground_color, "yellow")) foreground_color_code = "43";
-    else if(!strcmp(foreground_color, "blue")) foreground_color_code = "44";
-    else if(!strcmp(foreground_color, "magenta")) foreground_color_code = "45";
-    else if(!strcmp(foreground_color, "cyan")) foreground_color_code = "46";
-    else if(!strcmp(foreground_color, "white")) foreground_color_code = "47";
-        
+    if(!strcmp(foreground_color, "black")) foreground_color_code = "30";
+    else if(!strcmp(foreground_color, "red")) foreground_color_code = "31";
+    else if(!strcmp(foreground_color, "green")) foreground_color_code = "32";
+    else if(!strcmp(foreground_color, "yellow")) foreground_color_code = "33";
+    else if(!strcmp(foreground_color, "blue")) foreground_color_code = "34";
+    else if(!strcmp(foreground_color, "magenta")) foreground_color_code = "35";
+    else if(!strcmp(foreground_color, "cyan")) foreground_color_code = "36";
+    else if(!strcmp(foreground_color, "white")) foreground_color_code = "37";
+    else if(!strcmp(foreground_color, "reset")) foreground_color_code = "0";
 
-    return printf("%c[%s;%sm", 27, foreground_color_code, background_color_code);
-
+    printf("%c[%s;1m", 27, background_color_code);
+    return printf("%c[%s;1m", 27, foreground_color_code);
 }
 
 /*
@@ -41,7 +42,7 @@ int change_cursor(Position position){
     int x = position.x;
     int y = position.y;
 
-    printf ("%c[%d;%dH", 27, y, x);
+    return printf ("%c[%d;%dH", 27, y, x);
     
 }
 
@@ -106,6 +107,7 @@ Result init_screen(char *file_name, Screen *screen){
 
     //Set screen size
     clear_screen();
+    change_color("reset", "reset");
     printf("%c[8;%d;%dt", 27, screen->screen_height, screen->screen_width);
     if(print_margins(f) == ERROR) return ERROR;
     printf("\n");
@@ -133,45 +135,58 @@ Result print_margins(FILE *f){
 Result print_map (Box **map, Screen *s) {
     int i, j;
     Position p;
-    if (!map || !s) return ERROR;
+    if (!map || !s) {
+        return ERROR;
+        printf("Error en los argumentos");
+    }
     
     p = s->map;
-
+    
     if (change_cursor(p) < 0) return ERROR;
 
     for (i = s->map_height - 1; i >= 0; i--) {
         for (j = 0; j < s->map_width; j++) {
             switch (map[i][j]){
                 case AIR:
+                change_color("reset", "reset");
                     fprintf(stdout, " ");
+                    break;
                 case WALL:
-                    change_color("black", "white");
-                    fprintf(stdout, " ");
-                case START:
-                    change_color("black", "green");
-                    fprintf(stdout, " ");
-                case END:
-                    change_color("black", "cyan");
-                    fprintf(stdout, " ");
-                case LAVA:
-                    change_color("black", "red");
-                    fprintf(stdout, " ");
-                case PORTALA:
-                    change_color("black", "cyan");
-                    fprintf(stdout, " ");
-                case PORTALB:
-                    change_color("black", "cyan");
-                    fprintf(stdout, " ");
-                case LADDER:
                     change_color("white", "black");
-                    fprintf(stdout, "#");
-                default:
+                    fprintf(stdout, " ");
+                    break;
+                case START:
+                    change_color("green", "black");
+                    fprintf(stdout, " ");
+                    break;
+                case END:
+                    change_color("cyan", "black");
+                    fprintf(stdout, " ");
+                    break;
+                case LAVA:
                     change_color("red", "black");
+                    fprintf(stdout, " ");
+                    break;
+                case PORTALA:
+                    change_color("reset", "magenta");
+                    fprintf(stdout, "O");
+                    break;
+                case PORTALB:
+                    change_color("reset", "yellow");
+                    fprintf(stdout, "O");
+                    break;
+                case LADDER:
+                    change_color("reset", "white");
+                    fprintf(stdout, "#");
+                    break;
+                default:
+                    change_color("black", "red");
                     fprintf(stdout, "X");
+                    break;
             }
         }
-    p.y++;
-    if (change_cursor(p) < 0) return ERROR;
+        (p.y)++;
+        if (change_cursor(p) < 0) return ERROR;
     }
     return OK;
 }

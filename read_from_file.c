@@ -19,23 +19,24 @@ arriba a la izquierda seria map[100][0]
  */
 
 Box** map_char_to_box(char** map, Screen screen){
-    char lista[8] = " %SXWAB#";
-    int i,j,rows = screen.map_height,columns = screen.map_width;
+    char lista[8] = ".%SXWAB#";
+    int i, j, rows = screen.map_height, columns = screen.map_width;
     Box **mapB = NULL;
 
-    map = (Box**)malloc(sizeof(Box*)*columns);
-    if(map == NULL) return NULL;
-
+    mapB = (Box**)malloc(sizeof(Box*)*rows);
+    if(mapB == NULL) return NULL;
+    
+    //falta hacer free bien
     for(i=0;i<rows;i++){
-        map[i]=(Box*)malloc(sizeof(Box)*rows);
-        if(map[i] == NULL) {
-            free(map);
+        mapB[i]=(Box*)malloc(sizeof(Box)*(columns));
+        if(mapB[i] == NULL) {
+            free(mapB);
             return NULL;
         }
     }
 
-    for(i=0;i<columns;i++){
-        for(j=0;j<rows;j++){
+    for(i=0;i<rows;i++){
+        for(j=0;j<columns;j++){
             if (map[i][j] == lista[0]) mapB[i][j] = AIR;
             else if (map[i][j] == lista[1]) mapB[i][j] = WALL;
             else if (map[i][j] == lista[2]) mapB[i][j] = START;
@@ -55,6 +56,7 @@ Receives a file with a map and writes it in a char table.
 
 char** map_from_file(char *file, Screen screen){
     FILE *fp;
+    //problematico
     int i,j,rows = screen.map_height,columns = screen.map_width;
     char **map;
 

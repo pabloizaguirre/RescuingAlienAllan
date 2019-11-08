@@ -1,0 +1,12 @@
+Si falta hacer algo poner un comentario así:
+//falta blablabla
+
+Si algo es un poco raro poner un comentario así:
+//problematico blablabla
+
+map[i][j] i son las filas y j son las columnas
+
+las personas no pueden entrar al portal b y salir al a
+
+no poner escaleras en la primera columnas
+

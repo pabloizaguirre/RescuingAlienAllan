@@ -4,13 +4,13 @@
 43 
 
 #map x start
-15 
+30
 #map y start
-6 
+7 
 #map width
 100
 #map height
-30
+31
 
 #messagebox x start
 3
