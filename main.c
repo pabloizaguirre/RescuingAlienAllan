@@ -25,7 +25,7 @@ int main(int argc, char** argv){
     pos.y = screen.screen_height+3;
     change_cursor(pos);
 
-     map_ch = map_from_file("map_test.txt", screen);
+    /*  map_ch = map_from_file("map_test.txt", screen);
     if (!map_ch) {
         printf("ERROR en map_from_file()");
         return ERROR;
@@ -35,7 +35,8 @@ int main(int argc, char** argv){
             printf("%c", map_ch[i][j]);
         }
     }
-    printf("*************%c***********", map_ch[29][0]);
+    //map_ch[29][0] == S
+    printf("*************%c***********", map_ch[29][0]); */
     
     /*
     map_bx = map_char_to_box(map_ch, screen);
@@ -44,7 +45,7 @@ int main(int argc, char** argv){
         return ERROR;
     } */
 
-    /* map_bx = (char**)malloc(sizeof(char*)*screen.screen_height);
+    map_bx = (char**)malloc(sizeof(char*)*screen.screen_height);
     if(map_bx == NULL) return ERROR;
 
     //falta hacer free de todo map cuando hay un error
@@ -60,8 +61,8 @@ int main(int argc, char** argv){
     } */
 
     printf("hasta aqui sí");
-/* 
-    if (print_map(map_bx, screen) == ERROR) return ERROR; */
+    
+    /*if (print_map(map_bx, screen) == ERROR) return ERROR; */
 
 
 
