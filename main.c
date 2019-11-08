@@ -3,6 +3,8 @@
 #include "map.h"
 #include "read_from_file.h"
 
+#define MAPA "map_test3_solved.txt"
+
 int main(int argc, char** argv){
     int i, j, k;
     Screen screen;
@@ -26,7 +28,7 @@ int main(int argc, char** argv){
     pos.y = screen.screen_height+3;
     change_cursor(pos);
 
-    map_ch = map_from_file("map_test.txt", screen);
+    map_ch = map_from_file(MAPA, screen);
     if (!map_ch) {
         printf("ERROR en map_from_file()");
         return ERROR;
@@ -73,7 +75,7 @@ int main(int argc, char** argv){
         return ERROR;
         printf("ERROR en print_map\n");
     }
-
+    print_message(screen, "Se ha impreso el mapa");
 
     final_pos.x = 0;
     final_pos.y = screen.screen_height+1;

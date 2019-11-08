@@ -19,7 +19,7 @@ arriba a la izquierda seria map[100][0]
  */
 
 Box** map_char_to_box(char** map, Screen screen){
-    char lista[8] = ".%SXWAB#";
+    char lista[8] = ".WSELAB#";
     int i, j, rows = screen.map_height, columns = screen.map_width;
     Box **mapB = NULL;
 
