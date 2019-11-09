@@ -197,6 +197,8 @@ Result print_message(Screen screen, char *text){
     int w = screen.messagebox_width - 1;
     int h = screen.messagebox_height;
     Position pos = screen.messagebox;
+	
+	change_color("reset", "reset");
     //Clear the messagebox
     change_cursor(pos);
     for(int i=0; i < h; i++){
