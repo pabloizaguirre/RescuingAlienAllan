@@ -3,7 +3,7 @@
 #include "map.h"
 #include "read_from_file.h"
 
-#define MAPA "map_test3_solved.txt"
+#define MAPA "map_test4.txt"
 
 int main(int argc, char** argv){
     int i, j, k;
