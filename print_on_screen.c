@@ -120,6 +120,11 @@ Result init_screen(char *file_name, Screen *screen){
 Result print_margins(FILE *f){
     char line[MAX_SIZE];
     Result r;
+
+    Position pos;
+    pos.x = 0;
+    pos.y = 2;
+    change_cursor(pos);
     do{
         r = read_line(f, &line);
         printf(line);

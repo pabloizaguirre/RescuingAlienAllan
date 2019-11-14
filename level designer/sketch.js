@@ -5,10 +5,10 @@ var map_w = 100;
 
 var cells = [
   new Cell("air", " ", ".", [0,0,0]),
-  new Cell("wall", " ", "%", [255, 255, 255], [0,0,0]),
+  new Cell("wall", " ", "W", [255, 255, 255], [0,0,0]),
   new Cell("start", " ", "S", [0, 255, 0]),
-  new Cell("end", " ", "X", [0, 0, 255]),
-  new Cell("lava", " ", "S", [255, 0, 0]),
+  new Cell("end", " ", "E", [0, 0, 255]),
+  new Cell("lava", " ", "L", [255, 0, 0]),
   new Cell("portalA", "O", "A", [0, 0, 0], [255, 0, 255]),
   new Cell("portalB", "O", "B", [0, 0, 0], [255, 255, 0]),
   new Cell("ladder", "#", "#", [0, 0, 0], [255, 255, 255]),
@@ -65,6 +65,19 @@ function draw() {
       }
     }
   }
+  if(mouseX > 30 && mouseX < 30 + cell_w*map_w && mouseY > 30 && mouseY < 30 + cell_h*map_h){
+    let i = floor((mouseY - 30)/cell_h);
+    let j = floor((mouseX - 30)/cell_w);
+    bg_color = cells[index].bck_color;
+    char = cells[index].draw_char;
+    fg_color = cells[index].fg_color;
+    fill(bg_color);
+    rect(j*cell_w + 30, i*cell_h + 30, cell_w, cell_h);
+    if(char != " "){
+      fill(fg_color);
+      text(char, j*cell_w + 30, (i + 0.66)*cell_h + 30);
+    }
+  }
   if(lines){
     strokeWeight(1);
     stroke(64);
@@ -81,7 +94,7 @@ function mouseDragged(){
   changeMap();
 }
 function changeMap(){
-  if(mouseX > 30 && mouseY < 30 + cell_w*map_w && mouseY > 30 && mouseY < 30 + cell_h*map_h){
+  if(mouseX > 30 && mouseX < 30 + cell_w*map_w && mouseY > 30 && mouseY < 30 + cell_h*map_h){
     let i = floor((mouseY - 30)/cell_h);
     let j = floor((mouseX - 30)/cell_w);
     myMap[i][j] = cells[index];

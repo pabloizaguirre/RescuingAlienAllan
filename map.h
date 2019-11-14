@@ -5,6 +5,7 @@
 /* #include "people.h" */
 #include <stdio.h>
 
+//Celdas
 /* This enumeration defines the type Box, which represents an element in the map */
 typedef enum {AIR, WALL, START, END, LAVA, PORTALA, PORTALB, LADDER} Box;
 

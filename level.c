@@ -1,8 +1,8 @@
 #include "level.h"
+#include "interface.h"
 
-Level *levels_init(char *file_name){
+Level *levels_init(screen screen){
     FILE *f;
-    f = fopen(file_name, "r");
     
 
     /*
@@ -14,7 +14,7 @@ Level *levels_init(char *file_name){
         //Initialization of the game
         f = fopen("progress.txt", w+);
         if (!f) {
-            print_message(screen, "Failed to save the game (progress.txt file couldn't be created");
+            print_message(screen, "Failed to save the game (progress.txt file couldn't be created)");
             return ERROR;
         }
         //initialization of the game from cero

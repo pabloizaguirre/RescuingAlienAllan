@@ -4,9 +4,27 @@ Si falta hacer algo poner un comentario así:
 Si algo es un poco raro poner un comentario así:
 //problematico blablabla
 
+Los sitios donde hay que cambiar cosas si metemos o quitamos tipos de celdas:
+//celdas
+
 map[i][j] i son las filas y j son las columnas
 
 las personas no pueden entrar al portal b y salir al a
 
 no poner escaleras en la primera columnas
 
+
+
+
+
+
+
+
+
+
+COSAS QUE HACER:
+
+Guardado del juego
+Level_init a partir de un archivo
+Conseguir que funcione que se muevan los personajes
+Imprimir margenes automaticamente
