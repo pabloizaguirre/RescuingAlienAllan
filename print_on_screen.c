@@ -2,6 +2,11 @@
 #include "read_from_file.h"
 #include "map.h"
 #include <string.h>
+#include <termios.h>
+
+struct termios initial;
+
+void _term_init(Screen screen);
 
 /*
     Changes the color you are printing with to the color given by the string argument
@@ -106,12 +111,22 @@ Result init_screen(char *file_name, Screen *screen){
 
 
     //Set screen size
+    _term_init(*screen);
     clear_screen();
     change_color("reset", "reset");
     printf("%c[8;%d;%dt", 27, screen->screen_height, screen->screen_width);
     if(print_margins(f) == ERROR) return ERROR;
     printf("\n");
     return OK;
+}
+
+Result restore_screen(Screen screen){
+    Position final_pos;
+    final_pos.x = 0;
+    final_pos.y = screen.screen_height+1;
+    change_color("reset", "reset");
+    change_cursor(final_pos);
+    tcsetattr(fileno(stdin), TCSANOW, &initial);
 }
 
 /*
@@ -134,6 +149,74 @@ Result print_margins(FILE *f){
             return ERROR;
         }
     }while(!feof(f));    
+}
+
+/* 
+    Prints the margins between the map and the message boxes without a file
+*/
+Result print_margins2(Screen screen){
+    int i=0, k;
+    Position pos;
+    pos.x = 0;
+    pos.y = 2;
+    change_cursor(pos);
+
+    change_color("reset", "reset");
+    printf("+");
+    /*
+        +------+
+    */
+    while (i < screen.screen_width - 1){
+        printf("-");
+    }
+    printf("+");
+    /*
+        +------+
+        |
+        |
+        +
+    */
+    pos.x = 0;
+    pos.y = 3;
+    printf("+");
+    i = 1;
+    while (i < screen.screen_height - 1){
+        pos.x = 0;
+        pos.y++;
+        printf("|");
+        i++;
+    }
+    pos.x = 0;
+    pos.y++;
+    printf("+");
+    /*
+        +------+
+        |
+        |
+        +------+
+    */
+    i = 1;
+    while(i < screen.screen_width - 1){
+       printf("-");
+       i++;
+    }
+    printf("+");
+    /*
+        +------+
+        |      | 
+        |      |
+        +------+
+    */
+    i = 1;
+    pos.x--;
+    k = pos.x;
+    while(i < screen.screen_height - 1){
+       pos.x--;
+       pos.y--;
+       printf("|");
+       i++;
+    }
+    return OK;
 }
 
 //comprobar errores
@@ -251,3 +334,33 @@ Result print_message(Screen screen, char *text){
         change_cursor(pos);
     }
 } */
+/*
+  Initializes the terminal in such a way that we can read the input
+  without echo on the screen
+*/
+void _term_init() {
+	struct termios new;	          /*a termios structure contains a set of attributes about 
+					  how the terminal scans and outputs data*/
+		
+	tcgetattr(fileno(stdin), &initial);    /*first we get the current settings of out 
+						 terminal (fileno returns the file descriptor 
+						 of stdin) and save them in initial. We'd better 
+						 restore them later on*/
+	new = initial;	                      /*then we copy them into another one, as we aren't going 
+						to change ALL the values. We'll keep the rest the same */
+	new.c_lflag &= ~ICANON;	              /*here we are setting up new. This line tells to stop the 
+						canonical mode (which means waiting for the user to press 
+						enter before sending)*/
+	new.c_lflag &= ~ECHO;                 /*by deactivating echo, we tell the terminal NOT TO 
+						show the characters the user is pressing*/
+	new.c_cc[VMIN] = 1;                  /*this states the minimum number of characters we have 
+					       to receive before sending is 1 (it means we won't wait 
+					       for the user to press 2,3... letters)*/
+	new.c_cc[VTIME] = 0;	              /*I really have no clue what this does, it must be somewhere in the book tho*/
+	//new.c_lflag &= ~ISIG;                 /*here we discard signals: the program won't end even if we 
+						/*press Ctrl+C or we tell it to finish*/
+
+	tcsetattr(fileno(stdin), TCSANOW, &new);  /*now we SET the attributes stored in new to the 
+						    terminal. TCSANOW tells the program not to wait 
+						    before making this change*/
+}

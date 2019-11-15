@@ -26,7 +26,7 @@ typedef struct {
 } Surroundings;
 
 /* Creates a map of type Map out of a text file */
-Map *create_map(FILE *f);
+Map *create_map(char *file, Screen screen);
 
 /* Deallocates a map */
 void *free_map(Map *map);

@@ -14,7 +14,7 @@ las personas no pueden entrar al portal b y salir al a
 no poner escaleras en la primera columnas
 
 
-
+el numero de niveles que hay está en level.h
 
 
 

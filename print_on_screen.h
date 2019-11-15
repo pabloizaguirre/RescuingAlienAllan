@@ -21,6 +21,12 @@ typedef struct {
 */
 Result init_screen(char *file_name, Screen *screen);
 
+
+/*
+    Restore the terminal to the initial state
+*/
+Result restore_screen(Screen screen);
+
 /*
     Clears screen
 */
@@ -51,6 +57,8 @@ int print_on_position(Position position, char *text);
     It also crops it to the right dimensions
 */
 Result print_message(Screen screen, char *text);
+
+Result print_title(Screen screen, char *text);
 
 /*
     Prints the given map in the appropiate place of the 

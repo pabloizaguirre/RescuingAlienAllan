@@ -5,6 +5,8 @@
 #ifndef level_h
 #define level_h
 
+#define NUM_LEVELS 10
+
 
 typedef struct{
     Map *map;
@@ -12,9 +14,9 @@ typedef struct{
     Level *last_level;
     int level_number;
     char *message;
-    People **peoples;
-    People *alien;
-    Enemy **enemies;
+    int num_people;
+    People *people;
+    Enemy *enemies;
     int num_ladder_floor;
     int num_ladder;
     int num_floor;
@@ -23,12 +25,12 @@ typedef struct{
 
 /*
     Initialices a double linked list of levels from a name of a file containing
-    the names of all the files of all the labels
+    the names of all the files of all the levels
     
     Levels_init() searches for a progress.txt file, and if it exists, it initializes
     the game from the last level you have played.
 */
-Level *levels_init(char *file_name);
+Level *levels_init(Screen screen);
 
 /*
     Prints the level mesage in the screen

@@ -11,5 +11,7 @@
 
 #Number of floors:
 
+#Number of portals:
 
-#map:
+
+#map: 
