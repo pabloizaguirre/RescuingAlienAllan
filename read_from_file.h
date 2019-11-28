@@ -13,8 +13,8 @@
 */
 Result read_line(FILE *f, char *line);
 
-Box** map_char_to_box(char** map, Screen screen);
+Box** map_char_to_box(char** map, Screen *screen);
 
-char** map_from_file(char *file, Screen screen);
+char** map_from_file(char *file, Screen *screen);
 
 #endif

@@ -1,12 +1,13 @@
 #include "print_on_screen.h"
 #include "read_from_file.h"
 #include "map.h"
+#include "level.h"
 #include <string.h>
 #include <termios.h>
 
 struct termios initial;
 
-void _term_init(Screen screen);
+void _term_init();
 
 /*
     Changes the color you are printing with to the color given by the string argument
@@ -42,13 +43,19 @@ int change_color(char *background_color, char *foreground_color){
 /*
     Changes the custor to the given position
 */
-int change_cursor(Position position){
+int change_cursor(Position position, Screen *screen){
+    int x, y;
     //falta comprobar que la posición está bien
-    int x = position.x;
-    int y = position.y;
+    if (position.x < 0 || position.x > screen->screen_width || position.y < 2 || position.y > screen->screen_height + 1){
+        print_message(screen, "Se pide cambiar el cursor a una posición no válida");
+    } else {
+        x = position.x;
+        y = position.y;
+        screen->cursor = position;
+        return printf ("%c[%d;%dH", 27, y, x);
+    }
 
-    return printf ("%c[%d;%dH", 27, y, x);
-    
+    return -1;
 }
 
 /*
@@ -108,38 +115,39 @@ Result init_screen(char *file_name, Screen *screen){
     r = read_line(f, &line);
     if(r == ERROR) return ERROR;
     screen->messagebox_height = atoi(line);
-
+    screen->cursor.x = 10;
+    screen->cursor.y = 10;
 
     //Set screen size
-    _term_init(*screen);
+    _term_init(screen);
     clear_screen();
     change_color("reset", "reset");
     printf("%c[8;%d;%dt", 27, screen->screen_height, screen->screen_width);
-    if(print_margins(f) == ERROR) return ERROR;
+    if(print_margins(f, screen) == ERROR) return ERROR;
     printf("\n");
     return OK;
 }
 
-Result restore_screen(Screen screen){
+Result restore_screen(Screen *screen){
     Position final_pos;
     final_pos.x = 0;
-    final_pos.y = screen.screen_height+1;
+    final_pos.y = screen->screen_height+1;
     change_color("reset", "reset");
-    change_cursor(final_pos);
+    change_cursor(final_pos,screen);
     tcsetattr(fileno(stdin), TCSANOW, &initial);
 }
 
 /*
     Prints the magins between the map and the message boxes
 */
-Result print_margins(FILE *f){
+Result print_margins(FILE *f, Screen *screen){
     char line[MAX_SIZE];
     Result r;
 
     Position pos;
     pos.x = 0;
     pos.y = 2;
-    change_cursor(pos);
+    change_cursor(pos,screen);
     do{
         r = read_line(f, &line);
         printf(line);
@@ -154,19 +162,20 @@ Result print_margins(FILE *f){
 /* 
     Prints the margins between the map and the message boxes without a file
 */
-Result print_margins2(Screen screen){
+Result print_margins2(Screen *screen){
     int i=0, k;
     Position pos;
     pos.x = 0;
     pos.y = 2;
-    change_cursor(pos);
+    change_cursor(pos, screen);
 
     change_color("reset", "reset");
     printf("+");
     /*
         +------+
     */
-    while (i < screen.screen_width - 1){
+
+    for (i = 1; i < screen->screen_width - 1; i++){
         printf("-");
     }
     printf("+");
@@ -175,19 +184,20 @@ Result print_margins2(Screen screen){
         |
         |
         +
+        funciona
     */
     pos.x = 0;
     pos.y = 3;
     printf("+");
-    i = 1;
-    while (i < screen.screen_height - 1){
+    for(i = 1; i < screen->screen_height - 1; i++){
         pos.x = 0;
         pos.y++;
+        change_cursor(pos, screen);
         printf("|");
-        i++;
     }
     pos.x = 0;
     pos.y++;
+    change_cursor(pos, screen);
     printf("+");
     /*
         +------+
@@ -195,10 +205,8 @@ Result print_margins2(Screen screen){
         |
         +------+
     */
-    i = 1;
-    while(i < screen.screen_width - 1){
+    for (i = 1; i < screen->screen_width - 1; i++){
        printf("-");
-       i++;
     }
     printf("+");
     /*
@@ -207,15 +215,62 @@ Result print_margins2(Screen screen){
         |      |
         +------+
     */
-    i = 1;
-    pos.x--;
-    k = pos.x;
-    while(i < screen.screen_height - 1){
-       pos.x--;
+    pos.x = screen->screen_width - 1;
+    pos.y = 3;
+    for (i = 1; i < screen->screen_height; i++){
        pos.y--;
+       change_cursor(pos,screen);
        printf("|");
-       i++;
     }
+
+    /*
+        +------+
+        +------+ 
+        |      |
+        +------+
+    */
+    pos.y = screen->screen_height - screen->messagebox_height - screen->map_height;
+    pos.x = 0;
+    change_cursor(pos, screen);
+    printf("+");
+    for(i = 1; i < screen->screen_width - 1; i++){
+        printf("-");
+    }
+    printf("+");
+
+    /*
+        +------+
+        +------+ 
+        |      |
+        +------+
+        +------+
+    */
+    pos.y = screen->screen_height - screen->messagebox_height;
+    pos.x = 0;
+    change_cursor(pos, screen);
+    printf("+");
+    for(i = 1; i < screen->screen_width - 1; i++){
+        printf("-");
+    }
+    printf("+");
+
+    /*
+        +------+
+        +--+---+ 
+        |  |   |
+        +--+---+
+        +------+
+    */
+    pos = screen->map;
+    printf("+");
+    for(i = 1; i < screen->map_height - 1; i++){
+        pos.y++;
+        change_cursor(pos,screen);
+        printf("|");
+    }
+    change_cursor(pos,screen);
+    printf("+");
+
     return OK;
 }
 
@@ -230,7 +285,7 @@ Result print_map (Box **map, Screen *s) {
     
     p = s->map;
     
-    if (change_cursor(p) < 0) return ERROR;
+    if (change_cursor(p, s) < 0) return ERROR;
 
     for (i = s->map_height - 1; i >= 0; i--) {
         for (j = 0; j < s->map_width; j++) {
@@ -274,31 +329,31 @@ Result print_map (Box **map, Screen *s) {
             }
         }
         (p.y)++;
-        if (change_cursor(p) < 0) return ERROR;
+        if (change_cursor(p, s) < 0) return ERROR;
     }
     return OK;
 }
 
 
-Result print_message(Screen screen, char *text){
+Result print_message(Screen *screen, char *text){
     int end_flag = 0;
-    int w = screen.messagebox_width - 1;
-    int h = screen.messagebox_height;
-    Position pos = screen.messagebox;
+    int w = screen->messagebox_width - 1;
+    int h = screen->messagebox_height;
+    Position pos = screen->messagebox;
 	
 	change_color("reset", "reset");
     //Clear the messagebox
-    change_cursor(pos);
+    change_cursor(pos,screen);
     for(int i=0; i < h; i++){
         for(int j=0; j < w; j++){
             printf(" ");
         }
         pos.y += 1;
-        change_cursor(pos);
+        change_cursor(pos,screen);
     }
     //Print the message croping it to the right dimensions
-    pos = screen.messagebox;
-    change_cursor(pos);
+    pos = screen->messagebox;
+    change_cursor(pos,screen);
     for(int i=0; i < h; i++){
         for(int j=0; j < w; j++){
             if(text[i*w + j] == (char)0){
@@ -309,39 +364,40 @@ Result print_message(Screen screen, char *text){
         }
         if(end_flag) break;
         pos.y += 1;
-        change_cursor(pos);
+        change_cursor(pos,screen);
     }
 }
+
 
 /*
     Prints the given map in the appropiate place of the 
     screen, croping it to the right dimensions if it
     exceeds the limits set in the screen object
 */
-/* Result print_map(Screen screen, Map map){
-    int w = screen.map_width - 1;
-    int h = screen.map_height;
-    Position pos = screen.map;
+/* Result print_map(Screen *screen, Map map){
+    int w = screen->map_width - 1;
+    int h = screen->map_height;
+    Position pos = screen->map;
     char c;
 
-    change_cursor(pos);
+    change_cursor(pos, screen);
     for(int i=0; i < h; i++){
         for(int j=0; j < w; j++){
             c = box_to_char((map.boxes)[i][j]);
             printf("%c", c);
         }
         pos.y += 1;
-        change_cursor(pos);
+        change_cursor(pos, screen);
     }
 } */
 /*
   Initializes the terminal in such a way that we can read the input
   without echo on the screen
 */
-void _term_init() {
+void _term_init(Screen*screen) {
 	struct termios new;	          /*a termios structure contains a set of attributes about 
 					  how the terminal scans and outputs data*/
-		
+	
 	tcgetattr(fileno(stdin), &initial);    /*first we get the current settings of out 
 						 terminal (fileno returns the file descriptor 
 						 of stdin) and save them in initial. We'd better 

@@ -19,9 +19,9 @@ arriba a la izquierda seria map[100][0]
  */
 
 //Celdas
-Box** map_char_to_box(char** map, Screen screen){
+Box** map_char_to_box(char** map, Screen *screen){
     char lista[8] = ".WSELAB#";
-    int i, j, rows = screen.map_height, columns = screen.map_width;
+    int i, j, rows = screen->map_height, columns = screen->map_width;
     Box **mapB = NULL;
 
     mapB = (Box**)malloc(sizeof(Box*)*rows);
@@ -55,10 +55,10 @@ Box** map_char_to_box(char** map, Screen screen){
 Receives a file with a map and writes it in a char table.
  */
 
-char** map_from_file(char *file, Screen screen){
+char** map_from_file(char *file, Screen *screen){
     FILE *fp;
     //problematico
-    int i,j,rows = screen.map_height,columns = screen.map_width;
+    int i,j,rows = screen->map_height,columns = screen->map_width;
     char **map;
 
     map = (char**)malloc(sizeof(char*)*rows);

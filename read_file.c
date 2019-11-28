@@ -42,9 +42,9 @@ map[0][0] es el de abajo a la izquierda.
 arriba a la izquierda seria map[100][0]
  */
 
-Box** map_char_to_box(char** map, Screen screen){
+Box** map_char_to_box(char** map, Screen *screen){
     char lista[8] = " %SXWAB#";
-    int i,j,rows = screen.screen_width,columns = screen.screen_height;
+    int i,j,rows = screen->screen_width,columns = screen->screen_height;
     Box **mapB;
 
     map = (Box**)malloc(sizeof(Box*)*columns);
@@ -72,9 +72,9 @@ Box** map_char_to_box(char** map, Screen screen){
 Receives a file with a map and writes it in a char table.
  */
 
-char** map_from_file(char *file, Screen screen){
+char** map_from_file(char *file, Screen *screen){
     FILE *fp;
-    int i,j,rows = screen.screen_width,columns = screen.screen_height;
+    int i,j,rows = screen->screen_width,columns = screen->screen_height;
     char **map;
 
     map = (char**)malloc(sizeof(char*)*columns);

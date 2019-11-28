@@ -1,8 +1,10 @@
 CC = gcc -pedantic
 CFLAGS = -Wall
-EXE = test
+EXE = test main
 #LIBRARIES = enemies.o level.o map.o people.o print_on_screen.o
-LIBRARIES =print_on_screen.o read_from_file.o
+#LIBRARIES =print_on_screen.o read_from_file.o
+LIBRARIES =print_on_screen.o read_from_file.o level.o read_keys.o map.o
+
 
 all : $(EXE)
 
@@ -14,6 +16,9 @@ $(EXE) : % : %.o $(LIBRARIES)
 	$(CC) $(CFLAGS) -o $@ $@.o $(LIBRARIES)
 
 enemies.o: enemies.c enemies.h
+	$(CC) $(CFLAGS) -c $<
+
+read_keys.o: read_keys.c read_keys.h
 	$(CC) $(CFLAGS) -c $<
 
 level.o: level.c level.h

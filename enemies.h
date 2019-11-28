@@ -20,7 +20,7 @@ Enemy *create_enemy(EnemyType type, char character, Position position);
 /*
     Update enemy position
 */
-Enemy *enemy_update(Enemy *enemy, Level *level);
+//Enemy *enemy_update(Enemy *enemy, Level *level);
 
 /*
     Get functions for the enemy structure
@@ -33,7 +33,7 @@ Position enemy_get_position(Enemy *enemy);
     Set fuctions for the enemy structure
 */
 Enemy *enemy_set_enemytype(Enemy *enemy, EnemyType type);
-Enemy *enemy_set_char(Enemy *enemy, char char);
+Enemy *enemy_set_char(Enemy *enemy, char character);
 Enemy *enemy_set_position(Enemy *enemy, Position position);
 
 

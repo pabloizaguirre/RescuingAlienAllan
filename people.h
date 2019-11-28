@@ -21,7 +21,6 @@ People* create_people(char character, Position position, State state);
 
 Position People_get_position(People *p);
 State People_get_state(People *p);
-Surroundings* People_get_surroundings(People *p);
 
 /* Return a certain atribute of a person*/
 

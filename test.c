@@ -7,7 +7,7 @@
 
 int main(int argc, char** argv){
     int i, j, k;
-    Screen screen;
+    Screen *screen;
     //Level level;
     char interface_file[] = "size_test.txt";
     FILE *f;
@@ -22,8 +22,8 @@ int main(int argc, char** argv){
 
     Position pos;
     pos.x = 0;
-    pos.y = screen.screen_height+3;
-    change_cursor(pos);
+    pos.y = screen->screen_height+3;
+    change_cursor(pos, screen);
 
     map_ch = map_from_file(MAPA, screen);
     if (!map_ch) {
@@ -38,11 +38,15 @@ int main(int argc, char** argv){
     }
 
 
-    if (print_map(map_bx, &screen) == ERROR) {
+    if (print_map(map_bx, screen) == ERROR) {
         return ERROR;
         printf("ERROR en print_map\n");
     }
     print_message(screen, "Se ha impreso el mapa");
+
+    pos.x = -1;
+    pos.y = 10;
+    change_cursor(pos, screen);
 
     restore_screen(screen);
 

@@ -9,9 +9,39 @@ State Change_state(People *p, Box b) {
     } else if (b == END) {
         return FINISHED;
     } else {
-        return ALIVE
+        return ALIVE;
     }
 }
+
+People* create_people(char character, Position position, State state){
+    People p;
+    p.character = character;
+    p.position = position;
+    p.state = state;
+    return &p;
+}
+
+Position People_get_position(People *p){
+    return p->position;
+}
+
+State People_get_state(People *p){
+    return p->state;
+}
+
+int People_set_character(People *p, char c){
+    p->character = c;
+    return 1;
+}
+int People_set_position(People *p, Position position){
+    p->position = position;
+    return 1;
+}
+int People_set_state(People *p, State state){
+    p->state = state;
+    return 1;
+}
+
 
 // Returns -1 if something went wrong and 1 if it succeded
 int People_update(People *p, People **people, Map *map){
@@ -73,4 +103,9 @@ int People_update(People *p, People **people, Map *map){
 
     // The person hasn't moved
     return 0;
+}
+
+int free_people(People *p){
+    free(p);
+    return 1;
 }
