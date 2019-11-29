@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include "map.h"
-#include "types.h"
 #include "read_from_file.h"
 #include "print_on_screen.h"
+#include "level.h"
 
 
 Map* create_map(char *map_file, Screen *screen){
@@ -26,11 +26,37 @@ void *free_map(Map *map){
     return;
 }
 
-/* 
-Bool is_position_valid_resources(Position position, Map *map){
-    if(position.x < map.)
+Bool is_position_occupable(Position position, Level *level, Screen *screen) {
+    int i;
+    Box b;
+    //falta comprobar que la posición esté dentro de la caja del mapa
+
+    b = level->map->boxes[position.x][position.y];
+
+    if(b == WALL){
+        return FALSE;
+    }
+
+    //state
+    for(i = 0; i < level->num_people; i++){
+        if ((level->people[i]->state != DESINTEGRATED) && (level->people[i]->position.x == position.x) && (level->people[i]->position.y == position.y)){
+            return FALSE;
+        }
+    }
+
+    return TRUE;
+}
+
+
+Bool is_position_valid_resources(Position position, Screen *screen, Map *map){
+    //falta comprobar que la posición esté dentro de la caja del mapa
+
+    if (map->boxes[position.x][position.y] != AIR){
+        return FALSE;
+    }
+    return TRUE;
 } 
-*/
+
 
 Surroundings map_get_position_surroundings(Position position, Map *map){
     Surroundings sur;

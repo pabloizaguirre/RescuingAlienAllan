@@ -3,7 +3,6 @@
 #define PEOPLE_H
 #include "types.h"
 #include <stdio.h>
-#include "map.h"
 
 
 typedef struct {
@@ -33,9 +32,12 @@ it moves, 0 if it doesnt't, -1 if error.*/
 
 int People_update(People *p, Map *map);
 
+/* Prints the people */
+Result print_people(Level *level, Screen *screen);
+
 /*Frees the memory allocated for a person*/
 
-int free_people(People *p);
+int free_people(Level *level);
 
 
 

@@ -1,0 +1,19 @@
+#Numero nivel:
+2
+#Mensaje:
+bebebebebebebebeb
+
+#Number of people:
+15
+#Resources:
+#Number of ladders/floors:
+8
+#Number of ladders:
+3
+#Number of floors:
+5
+#Number of portals:
+9
+
+#map:   
+map_test2.txt

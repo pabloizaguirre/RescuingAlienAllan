@@ -7,28 +7,32 @@
 
 //it returns the number of resources used
 FLAG design(Level *level, Screen *screen){
-    //print_map(level->map->boxes, &screen);
-    //print_resources(level, screen);
-    //change_cursor(screen->map, screen);
+    print_map(level->map->boxes, screen);
+    print_resources(screen, level);
+    change_cursor(screen->cursor, screen);
     char c = read_key();
+
     
     switch(c) {
     case('w'):
-        screen->cursor.y--;
+        if(screen->cursor.y > screen->map.y)
+            screen->cursor.y--;
         break;
     case('s'):
-        screen->cursor.y++;
+        if(screen->cursor.y < screen->map.y + screen->map_height - 1)
+            screen->cursor.y++;
         break;
     case('d'):
-        screen->cursor.x++;
+        if(screen->cursor.x < screen->map.x + screen->map_width - 1)
+            screen->cursor.x++;
         break;
     case('a'):
-        screen->cursor.x--;
+        if(screen->cursor.x > screen->map.x)
+            screen->cursor.x--;
         break;
     }
 
     change_cursor(screen->cursor, screen);
-    //rintf(" %c", read_key());
 }
 
 
@@ -37,15 +41,17 @@ int main(int argc, char** argv){
     Level *level;
     char interface_file[] = "size_test.txt";
     FLAG rec;
+    int i = 0;
 
     init_screen(interface_file, &screen);
-    //print_message(screen, "Start");
-    //print_title(screen, "Saving alien Alan");
+    print_message(&screen, "Start");
+    //print_title(&screen, "Saving alien Alan");
     
-    //level = levels_init(screen);
+    level = levels_init(&screen);
 
+    screen.cursor = screen.map;
     while(TRUE){
-        screen.cursor = screen.map;
+        
         rec = design(level, &screen);
         /* if (rec < level->cond_recursos[0]){
             return ERR;
@@ -63,9 +69,9 @@ int main(int argc, char** argv){
             }
         }while(ret == LEVEL_FINISHED); */
 
-        
+        i++;
     }
-
+    print_resources(&screen, level);
     restore_screen(&screen);
 
     return OK;

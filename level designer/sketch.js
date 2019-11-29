@@ -12,6 +12,7 @@ var cells = [
   new Cell("portalA", "O", "A", [0, 0, 0], [255, 0, 255]),
   new Cell("portalB", "O", "B", [0, 0, 0], [255, 255, 0]),
   new Cell("ladder", "#", "#", [0, 0, 0], [255, 255, 255]),
+  new Cell("zonaportal", "^", "Z", [0, 0, 0], [0, 255, 0])
 ];
 
 var index = 1;

@@ -45,16 +45,17 @@ int change_color(char *background_color, char *foreground_color){
 */
 int change_cursor(Position position, Screen *screen){
     int x, y;
-    //falta comprobar que la posición está bien
-    if (position.x < 0 || position.x > screen->screen_width || position.y < 2 || position.y > screen->screen_height + 1){
+    //falta comprobar que la posición está bien. Creo que no lo he hecho bien
+    if (position.x < 0 || position.x > screen->screen_width || position.y < 2 || position.y > screen->screen_height - 1){
         print_message(screen, "Se pide cambiar el cursor a una posición no válida");
-    } else {
+    } else {  
         x = position.x;
         y = position.y;
-        screen->cursor = position;
+        //screen->cursor = position;
         return printf ("%c[%d;%dH", 27, y, x);
     }
-
+    printf("Error en change_cursor()\n");
+    fflush(stdout);
     return -1;
 }
 
@@ -273,7 +274,7 @@ Result print_margins2(Screen *screen){
 
     return OK;
 }
-
+//celdas
 //comprobar errores
 Result print_map (Box **map, Screen *s) {
     int i, j;
@@ -286,7 +287,7 @@ Result print_map (Box **map, Screen *s) {
     p = s->map;
     
     if (change_cursor(p, s) < 0) return ERROR;
-
+    
     for (i = s->map_height - 1; i >= 0; i--) {
         for (j = 0; j < s->map_width; j++) {
             switch (map[i][j]){
@@ -321,6 +322,10 @@ Result print_map (Box **map, Screen *s) {
                 case LADDER:
                     change_color("reset", "white");
                     fprintf(stdout, "#");
+                    break;
+                case ZONAPORTAL:
+                    change_color("reset", "magenta");
+                    fprintf(stdout, "·");
                     break;
                 default:
                     change_color("black", "red");

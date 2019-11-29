@@ -19,18 +19,39 @@ arriba a la izquierda seria map[100][0]
  */
 
 //Celdas
-Box** map_char_to_box(char** map, Screen *screen){
-    char lista[8] = ".WSELAB#";
+Map* map_char_to_box(char** map, Screen *screen){
+    char lista[9] = ".WSELAB#Z";
     int i, j, rows = screen->map_height, columns = screen->map_width;
+    Map* map_obj = NULL;
     Box **mapB = NULL;
 
+    //falta control de errores.
+    map_obj = (Map *)malloc(sizeof(Map));
+    if(map == NULL) return NULL;
+
+    map_obj->Start_pos = (Position*)malloc(sizeof(Position));
+    if(!map_obj->Start_pos) return NULL;
+
+    map_obj->End_pos = (Position*)malloc(sizeof(Position));
+    if(!map_obj->End_pos) return NULL;
+
+    map_obj->PORTALB_pos = (Position*)malloc(sizeof(Position));
+    if(!map_obj->PORTALB_pos) return NULL;
+
     mapB = (Box**)malloc(sizeof(Box*)*rows);
-    if(mapB == NULL) return NULL;
+    if(mapB == NULL){
+        free(map);
+        free(map_obj);
+        return NULL;
+    }
     
     //falta hacer free bien
     for(i=0;i<rows;i++){
         mapB[i]=(Box*)malloc(sizeof(Box)*(columns));
         if(mapB[i] == NULL) {
+            //falta cambiar free(map_obj) por free_map(map_obj)
+            free(map);
+            free(map_obj); 
             free(mapB);
             return NULL;
         }
@@ -40,15 +61,34 @@ Box** map_char_to_box(char** map, Screen *screen){
         for(j=0;j<columns;j++){
             if (map[i][j] == lista[0]) mapB[i][j] = AIR;
             else if (map[i][j] == lista[1]) mapB[i][j] = WALL;
-            else if (map[i][j] == lista[2]) mapB[i][j] = START;
-            else if (map[i][j] == lista[3]) mapB[i][j] = END;
+            else if (map[i][j] == lista[2]){
+                 mapB[i][j] = START;
+                 map_obj->Start_pos->x = j;
+                 map_obj->Start_pos->y = i;
+            }
+            else if (map[i][j] == lista[3]){
+                mapB[i][j] = END;
+                map_obj->End_pos->x = j;
+                map_obj->End_pos->y = i;
+            }
             else if (map[i][j] == lista[4]) mapB[i][j] = LAVA;
             else if (map[i][j] == lista[5]) mapB[i][j] = PORTALA;
-            else if (map[i][j] == lista[6]) mapB[i][j] = PORTALB;
-            else if (map[i][j] == lista[7]) mapB[i][j] = LADDER; 
+            else if (map[i][j] == lista[6]){
+                mapB[i][j] = PORTALB;
+                map_obj->PORTALB_pos->x = j;
+                map_obj->PORTALB_pos->y = i;
+            }
+            else if (map[i][j] == lista[7]) mapB[i][j] = LADDER;
+            else if (map[i][j] == lista[8]) mapB[i][j] = ZONAPORTAL;
         }
+        free(map[i]);
     }
-    return mapB;
+
+    free(map);
+    
+    map_obj->boxes = mapB;
+
+    return map_obj;
 }
 
 /*
@@ -65,7 +105,7 @@ char** map_from_file(char *file, Screen *screen){
     if(map == NULL) return NULL;
 
     //falta hacer free de todo map cuando hay un error
-    for(i=0;i<columns;i++){
+    for(i=0;i<rows;i++){
         map[i]=(char*)malloc(sizeof(char)*columns);
         if(map[i] == NULL) return NULL;
     }
@@ -76,5 +116,8 @@ char** map_from_file(char *file, Screen *screen){
     for(i=0;i<rows;i++){
         read_line(fp,map[rows-i-1]);
     }
+
+    fclose(fp);
+
     return map;
 }

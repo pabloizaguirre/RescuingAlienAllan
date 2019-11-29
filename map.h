@@ -8,7 +8,7 @@
 
 //Celdas
 /* This enumeration defines the type Box, which represents an element in the map */
-typedef enum {AIR, WALL, START, END, LAVA, PORTALA, PORTALB, LADDER} Box;
+typedef enum {AIR, WALL, START, END, LAVA, PORTALA, PORTALB, LADDER, ZONAPORTAL} Box;
 
 /* The structure Map includes an array of arrays of elements of type Box */
 typedef struct {
@@ -33,10 +33,9 @@ Map *create_map(char *file, Screen *screen);
 void *free_map(Map *map);
 
 /* Checks if a position can be occupied by a person */
-/* Bool is_position_occupable(Position position, People **people, Map *map); */
-
+Bool is_position_occupable(Position position, Level *level, Screen *screen);
 /* Checks if you can place a resource on a given position */
-/* Bool is_position_valid_resources(Position position, Map *map); */
+Bool is_position_valid_resources(Position position, Screen *screen, Map *map);
 
 /* Takes as arguments a position in the map and a map and returns an element
 of type Surrounding that includes the boxes that surround the position and the box

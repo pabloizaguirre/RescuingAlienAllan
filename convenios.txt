@@ -7,12 +7,16 @@ Si algo es un poco raro poner un comentario así:
 Los sitios donde hay que cambiar cosas si metemos o quitamos tipos de celdas:
 //celdas
 
+Los sitios donde hay que cambiar cosas si metemos o quitados tipos de estados:
+//state
+
 map[i][j] i son las filas y j son las columnas
 
 las personas no pueden entrar al portal b y salir al a
 
 no poner escaleras en la primera columnas
 
+En **people la primera persona es *people[0], y el alien (la última persona es *people[num_people - 1])
 
 el numero de niveles que hay está en level.h
 

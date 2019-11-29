@@ -1,6 +1,7 @@
 #ifndef types_h
 #define types_h
 
+typedef struct _Level Level;
 
 typedef struct {
     int x;

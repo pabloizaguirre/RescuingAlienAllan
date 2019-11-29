@@ -1,0 +1,18 @@
+#Numero nivel:
+1
+#Mensaje:
+balabalbalabala
+#Number of people:
+15
+#Resources:
+#Number of ladders/floors:
+3
+#Number of ladders:
+5
+#Number of floors:
+7
+#Number of portals:
+2
+
+#map:   
+map_test4.txt

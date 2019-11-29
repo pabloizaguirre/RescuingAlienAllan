@@ -5,19 +5,15 @@
 #include "map.h"
 #include "people.h"
 
-#define NUM_LEVELS 10
-
-typedef struct _Level Level;
-
+#define NUM_LEVELS 4
 
 struct _Level {
     Map *map;
     Level *next_level;
-    Level *last_level; 
     int level_number;
-    char *message;
+    char message[256];
     int num_people;
-    People *people;
+    People **people;
     int num_ladder_floor;
     int num_ladder;
     int num_floor;
@@ -57,6 +53,8 @@ Level *level_set_peoples(Level *level, People **peoples);
 Level *level_set_alien(Level *level, People *alien);
 
 
-Result print_resources(Screen *screen, Level level);
+Result print_resources(Screen *screen, Level *level);
+
+void level_destroy(Level* levels);
 
 #endif

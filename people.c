@@ -1,9 +1,10 @@
 #include "people.h"
 #include "map.h"
+#include "level.h"
 
 // Returns the state of the person when it reaches the b Box
 // Done for AIR, WALL, START, END, LAVA, PORTALA, PORTALB, LADDER
-State Change_state(People *p, Box b) {
+State change_state(Box b) {
     if (b == LAVA || b == WALL) {
         return DESINTEGRATED;
     } else if (b == END) {
@@ -14,11 +15,16 @@ State Change_state(People *p, Box b) {
 }
 
 People* create_people(char character, Position position, State state){
-    People p;
-    p.character = character;
-    p.position = position;
-    p.state = state;
-    return &p;
+    People *p;
+    p = (People*)malloc(sizeof(People));
+    if (!p){
+        printf("Error when allocating memory in create_people()\n");
+        return NULL;
+    }
+    p->character = character;
+    p->position = position;
+    p->state = state;
+    return p;
 }
 
 Position People_get_position(People *p){
@@ -43,9 +49,9 @@ int People_set_state(People *p, State state){
 }
 
 
-// Returns -1 if something went wrong and 1 if it succeded
-int People_update(People *p, People **people, Map *map){
-    Surroundings surr = map_get_position_surroundings(p->position, map);
+// Returns -1 if something went wrong, 0 if it doesn't move and 1 if it succeeded
+Result People_update(People *p, Level *level, Screen *screen){
+    Surroundings surr = map_get_position_surroundings(p->position, level->map);
     Position pos_aux = p->position;
 
     if (p->state != ALIVE) {
@@ -60,21 +66,21 @@ int People_update(People *p, People **people, Map *map){
     switch (*(surr.center)){
         case LADDER:
             pos_aux.y++;
-            if (is_position_occupable(pos_aux, people, map)){
+            if (is_position_occupable(pos_aux, level, screen)){
                 // Moves up
                 p->position.y++;
-                p->state = Change_state(p, map->boxes[p->position.x][p->position.y]);
+                p->state = change_state(level->map->boxes[p->position.x][p->position.y]);
                 return 1;
             }
             return 0;
             break;
         case PORTALA:
-            if(map->PORTALB_pos){
-                pos_aux = *(map->PORTALB_pos);
-                if (is_position_occupable(pos_aux, people, map)){
+            if(level->map->PORTALB_pos){
+                pos_aux = *(level->map->PORTALB_pos);
+                if (is_position_occupable(pos_aux, level, screen)){
                     // Moves to portal B
                     p->position = pos_aux;
-                    p->state = Change_state(p, map->boxes[p->position.x][p->position.y]);
+                    p->state = change_state(level->map->boxes[p->position.x][p->position.y]);
                     return 1;
                 }
             }
@@ -85,18 +91,18 @@ int People_update(People *p, People **people, Map *map){
     // Check if the person can move down
     pos_aux = p->position;
     pos_aux.y--;
-    if (is_position_occupable(pos_aux, people, map)){
+    if (is_position_occupable(pos_aux, level, screen)){
         // Moves down
         p->position = pos_aux;
-        p->state = Change_state(p, map->boxes[p->position.x][p->position.y]);
+        p->state = change_state(level->map->boxes[p->position.x][p->position.y]);
         return 1;
     } else { // If the person cannot move down then it will move right if it is possible
         pos_aux = p->position;
         pos_aux.x++;
-        if (is_position_occupable(pos_aux, people, map)) {
+        if (is_position_occupable(pos_aux, level, screen)) {
             // Moves right
             p->position = pos_aux;
-            p->state = Change_state(p, map->boxes[p->position.x][p->position.y]);
+            p->state = change_state(level->map->boxes[p->position.x][p->position.y]);
             return 1;
         }
     }
@@ -105,7 +111,36 @@ int People_update(People *p, People **people, Map *map){
     return 0;
 }
 
-int free_people(People *p){
-    free(p);
+//state
+Result print_people(Level *level, Screen *screen){
+    int i;
+    if (!level || !screen){
+        print_message(screen, "Error in print_people(): !level or !screen");
+        return ERROR;
+    }
+
+    for(i = 0; i < level->num_people - 1; i++){
+        if(level->people[i]->state != DESINTEGRATED && level->people[i]->state != FINISHED){
+            change_cursor(level->people[i]->position, screen);
+            change_color("reset", "reset");
+            printf("%c", level->people[i]->character);
+        }
+    }
+    if(level->people[i]->state != DESINTEGRATED && level->people[i]->state != FINISHED){
+        change_cursor(level->people[i]->position, screen);
+        change_color("reset", "green");
+        printf("%c", level->people[i]->character);
+    }
+}
+
+//problematico creo que esta mal
+int free_people(Level *level){
+    int i;
+    for (i = 0; i < level->num_people; i++){
+        if (level->people[i] != NULL){
+            free(level->people[i]);
+        }
+    }
+    free(level->people);
     return 1;
 }
