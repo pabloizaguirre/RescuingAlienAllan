@@ -19,6 +19,11 @@ Level *levels_init(Screen *screen){
     char num_floor[64];
     char num_ladder[64];
 
+    //esto es para probar con people_create
+    Position spos;
+    spos.x = 30;
+    spos.y = 19;
+
     for(int i = 0; i < NUM_LEVELS; i++){
 
         sprintf(level_file, "level%d.txt", i+1);
@@ -87,6 +92,19 @@ Level *levels_init(Screen *screen){
 
         plevel->map = create_map(map_file, screen);
         if(plevel->map == NULL) return NULL;
+
+        plevel->people = (People**)malloc(sizeof(People*)*plevel->num_people);
+        if(plevel->people == NULL) return NULL;
+
+
+        //falta hacer esto bien que está hecho para que solo este viva la primera persona y que la posicion
+        //donde empieza esté bien
+        plevel->people[0] = create_people(64, spos, ALIVE);
+        for(int k = 1; k < plevel->num_people; k++){
+            plevel->people[k] = create_people(64, spos, DESINTEGRATED);
+        }
+
+
         
         fclose(f_level);
     }
@@ -101,53 +119,6 @@ Level *level_get_next_level(Level *level){
 }
 People **level_get_peoples(Level *level){
     return level->people;
-}
-
-Result print_resources(Screen *screen, Level *level){
-    int end_flag = 0;
-    int w = screen->screen_width - screen->map_width - 3;
-    int h = screen->map_height;
-    Position res_pos, pos;
-    res_pos.x = 2;
-    res_pos.y = (screen->map).y;
-
-    pos = res_pos;
-	
-	change_color("reset", "reset");
-    //Clear the messagebox
-    change_cursor(pos, screen);
-    for(int i=0; i < h; i++){
-        for(int j=0; j < w; j++){
-            printf(" ");
-        }
-        pos.y += 1;
-        change_cursor(pos, screen);
-    }
-    //Print the message croping it to the right dimensions
-    pos = res_pos;
-    change_cursor(pos, screen);
-    if(level->num_ladder_floor > 0){
-        printf("LADDERS/FLOORS: x%d", level->num_ladder_floor);
-    }
-
-    pos.y++;
-    change_cursor(pos, screen);
-    if(level->num_ladder > 0){
-        printf("LADDERS: x%d", level->num_ladder);
-    }
-
-    pos.y++;
-    change_cursor(pos, screen);
-    if(level->num_floor > 0){
-        printf("FLOORS: x%d", level->num_floor);
-    }
-
-    pos.y++;
-    change_cursor(pos, screen);
-    if(level->portal > 0){
-        printf("PORTAl: x%d", level->portal);
-    }
-    return OK;
 }
 
 void level_destroy(Level *levels){

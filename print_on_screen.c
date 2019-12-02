@@ -373,6 +373,52 @@ Result print_message(Screen *screen, char *text){
     }
 }
 
+Result print_resources(Screen *screen, Level *level){
+    int end_flag = 0;
+    int w = screen->screen_width - screen->map_width - 4;
+    int h = screen->map_height;
+    Position res_pos, pos;
+    res_pos.x = 3;
+    res_pos.y = (screen->map).y;
+
+    pos = res_pos;
+	
+	change_color("reset", "reset");
+    //Clear the messagebox
+    change_cursor(pos, screen);
+    for(int i=0; i < h; i++){
+        for(int j=0; j < w; j++){
+            printf(" ");
+        }
+        pos.y += 1;
+        change_cursor(pos, screen);
+    }
+    //Print the message croping it to the right dimensions
+    pos = res_pos;
+    change_cursor(pos, screen);
+    if(level->num_ladder_floor > 0){
+        printf("LADDERS/FLOORS: x%d", level->num_ladder_floor);
+    }
+
+    pos.y++;
+    change_cursor(pos, screen);
+    if(level->num_ladder > 0){
+        printf("LADDERS: x%d", level->num_ladder);
+    }
+
+    pos.y++;
+    change_cursor(pos, screen);
+    if(level->num_floor > 0){
+        printf("FLOORS: x%d", level->num_floor);
+    }
+
+    pos.y++;
+    change_cursor(pos, screen);
+    if(level->portal > 0){
+        printf("PORTAL: x%d", level->portal);
+    }
+    return OK;
+}
 
 /*
     Prints the given map in the appropiate place of the 

@@ -11,6 +11,8 @@ Los sitios donde hay que cambiar cosas si metemos o quitados tipos de estados:
 //state
 
 map[i][j] i son las filas y j son las columnas
+map[h][0] es el punto de arriba a la izqda del mapa y
+map[0][0] es el punto de abajo a la izqda del mapa 
 
 las personas no pueden entrar al portal b y salir al a
 

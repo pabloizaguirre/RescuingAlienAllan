@@ -2,6 +2,7 @@
 #ifndef PEOPLE_H
 #define PEOPLE_H
 #include "types.h"
+#include "map.h"
 #include <stdio.h>
 
 
@@ -30,7 +31,7 @@ int People_set_state(People *p, State state);
 /*Updates the position of a person depending on the map. Returns 1 if
 it moves, 0 if it doesnt't, -1 if error.*/
 
-int People_update(People *p, Map *map);
+int people_update(People *p, Level *level, Screen *screen);
 
 /* Prints the people */
 Result print_people(Level *level, Screen *screen);

@@ -30,7 +30,7 @@ typedef struct {
 Map *create_map(char *file, Screen *screen);
 
 /* Deallocates a map */
-void *free_map(Map *map);
+void free_map(Map *map);
 
 /* Checks if a position can be occupied by a person */
 Bool is_position_occupable(Position position, Level *level, Screen *screen);

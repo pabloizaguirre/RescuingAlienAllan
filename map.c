@@ -21,17 +21,25 @@ Map* create_map(char *map_file, Screen *screen){
     return map;
 }
 
-void *free_map(Map *map){
+void free_map(Map *map){
     free(map);
     return;
 }
 
 Bool is_position_occupable(Position position, Level *level, Screen *screen) {
-    int i;
+    int i, x, y;
     Box b;
+
     //falta comprobar que la posición esté dentro de la caja del mapa
 
-    b = level->map->boxes[position.x][position.y];
+    //transformar porisción en posición del mapa:
+    x = position.x - screen->map.x;
+    y = screen->map_height - (position.y - screen->map.y - 1);
+
+
+    b = level->map->boxes[y][x];
+
+    printf("la casilla de debajo es %d, %d, %d, pos %d, %d", x, y, b, position.x, position.y);
 
     if(b == WALL){
         return FALSE;
@@ -50,7 +58,7 @@ Bool is_position_occupable(Position position, Level *level, Screen *screen) {
 
 Bool is_position_valid_resources(Position position, Screen *screen, Map *map){
     //falta comprobar que la posición esté dentro de la caja del mapa
-
+    //falta cambiar la posicion a tipo posicion de mapa
     if (map->boxes[position.x][position.y] != AIR){
         return FALSE;
     }

@@ -60,6 +60,8 @@ int print_on_position(Position position, char *text);
 */
 Result print_message(Screen *screen, char *text);
 
+Result print_resources(Screen *screen, Level *level);
+
 Result print_title(Screen *screen, char *text);
 
 /*

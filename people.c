@@ -1,6 +1,7 @@
 #include "people.h"
 #include "map.h"
 #include "level.h"
+#include <stdlib.h>
 
 // Returns the state of the person when it reaches the b Box
 // Done for AIR, WALL, START, END, LAVA, PORTALA, PORTALB, LADDER
@@ -50,7 +51,7 @@ int People_set_state(People *p, State state){
 
 
 // Returns -1 if something went wrong, 0 if it doesn't move and 1 if it succeeded
-Result People_update(People *p, Level *level, Screen *screen){
+int people_update(People *p, Level *level, Screen *screen){
     Surroundings surr = map_get_position_surroundings(p->position, level->map);
     Position pos_aux = p->position;
 
@@ -68,8 +69,9 @@ Result People_update(People *p, Level *level, Screen *screen){
             pos_aux.y++;
             if (is_position_occupable(pos_aux, level, screen)){
                 // Moves up
-                p->position.y++;
+                p->position.y--;
                 p->state = change_state(level->map->boxes[p->position.x][p->position.y]);
+                print_message(screen, "ladder");
                 return 1;
             }
             return 0;
@@ -81,6 +83,7 @@ Result People_update(People *p, Level *level, Screen *screen){
                     // Moves to portal B
                     p->position = pos_aux;
                     p->state = change_state(level->map->boxes[p->position.x][p->position.y]);
+                    print_message(screen, "portala");
                     return 1;
                 }
             }
@@ -90,11 +93,12 @@ Result People_update(People *p, Level *level, Screen *screen){
 
     // Check if the person can move down
     pos_aux = p->position;
-    pos_aux.y--;
+    pos_aux.y++;
     if (is_position_occupable(pos_aux, level, screen)){
         // Moves down
         p->position = pos_aux;
         p->state = change_state(level->map->boxes[p->position.x][p->position.y]);
+        print_message(screen, "moves down");
         return 1;
     } else { // If the person cannot move down then it will move right if it is possible
         pos_aux = p->position;
@@ -103,6 +107,7 @@ Result People_update(People *p, Level *level, Screen *screen){
             // Moves right
             p->position = pos_aux;
             p->state = change_state(level->map->boxes[p->position.x][p->position.y]);
+            print_message(screen, "moves right");
             return 1;
         }
     }
@@ -115,7 +120,8 @@ Result People_update(People *p, Level *level, Screen *screen){
 Result print_people(Level *level, Screen *screen){
     int i;
     if (!level || !screen){
-        print_message(screen, "Error in print_people(): !level or !screen");
+        printf("Error in print_people(): !level or !screen");
+        fflush(stdout);
         return ERROR;
     }
 

@@ -56,15 +56,15 @@ Map* map_char_to_box(char** map, Screen *screen){
             return NULL;
         }
     }
-
+    //falta arreglar la start_pos, end_pos y portal_pos
     for(i=0;i<rows;i++){
         for(j=0;j<columns;j++){
             if (map[i][j] == lista[0]) mapB[i][j] = AIR;
             else if (map[i][j] == lista[1]) mapB[i][j] = WALL;
             else if (map[i][j] == lista[2]){
                  mapB[i][j] = START;
-                 map_obj->Start_pos->x = j;
-                 map_obj->Start_pos->y = i;
+                 map_obj->Start_pos->x = screen->map.x + j;
+                 map_obj->Start_pos->y = screen->map.y + i;
             }
             else if (map[i][j] == lista[3]){
                 mapB[i][j] = END;
