@@ -8,10 +8,18 @@
 
 //it returns the number of resources used
 FLAG design(Level *level, Screen *screen){
+    char text[40];
     print_map(level->map->boxes, screen);
     print_resources(screen, level);
     print_people(level, screen);
-    people_update(level->people[0], level, screen);
+    if (people_update(level->people[0], level, screen) < 0){
+        printf("ERROR EN PEOPLE_UPDATE()\n");
+        fflush(stdout);
+        return GAME_FINISHED;
+    }
+    sprintf(text, "position: (%d, %d)", screen->cursor.x, screen->cursor.y);
+    //sprintf(text, "position occupable: %d", is_position_occupable(screen->cursor, level, screen));
+    print_message(screen, text);
     change_cursor(screen->cursor, screen);
     char c = read_key();
 
@@ -43,9 +51,11 @@ int main(int argc, char** argv){
     Screen screen;
     Level *level;
     char interface_file[] = "size_test.txt";
+    char text[40];
     FLAG rec;
     int i = 0;
     Position pos;
+    Position map_pos;
 
     init_screen(interface_file, &screen);
     print_message(&screen, "Start");
@@ -60,26 +70,32 @@ int main(int argc, char** argv){
 
     screen.cursor = screen.map;
 
+    pos.x = screen.map.x + screen.map_width - 1;
+    pos.y = screen.map.y;
+
+    change_cursor(pos, &screen);
+    printf("X");
+    //sprintf(text, "position occupable: %d", is_position_occupable(pos, level, &screen));
+    //print_message(&screen, text);
+
+    //is_position_occupable(pos, level, &screen);
+    map_pos = map_position(screen.map, &screen);
+    if (map_pos.x < 0){
+        printf("Error\n");
+        return ERROR;
+    }
+    sprintf(text, "%d, %d", map_pos.x, map_pos.y);
+    print_message(&screen, text);
+
+    printf("%d, %d", level->map->PORTALB_pos->x, level->map->PORTALB_pos->y);
+
+
+    /* level->map->boxes[map_pos.x][map_pos.y] = LAVA;*/
+    print_map(level->map->boxes, &screen); 
+
     while(TRUE){
         
         rec = design(level, &screen);
-
-        /* if (rec < level->cond_recursos[0]){
-            return ERR;
-        } else if (rec > level->cond_recursos[1]){
-            n_estrellas = 1;
-        } else if (rec > level->cond_recursos[2]){
-            n_estrellas = 2;
-        } else {
-            n_estrellas = 3;
-        } */
-        
-        /* do{
-            for(int i = 0; i < level->num_people; i++){
-                people_update(level->people[i]);
-            }
-        }while(ret == LEVEL_FINISHED); */
-
         i++;
     } 
 

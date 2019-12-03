@@ -46,7 +46,7 @@ int change_color(char *background_color, char *foreground_color){
 int change_cursor(Position position, Screen *screen){
     int x, y;
     //falta comprobar que la posición está bien. Creo que no lo he hecho bien
-    if (position.x < 0 || position.x > screen->screen_width || position.y < 2 || position.y > screen->screen_height - 1){
+    if (position.x < 0 || position.x > screen->screen_width || position.y < 2 || position.y > screen->screen_height + 1){
         print_message(screen, "Se pide cambiar el cursor a una posición no válida");
     } else {  
         x = position.x;

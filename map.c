@@ -26,20 +26,49 @@ void free_map(Map *map){
     return;
 }
 
+Position map_position(Position position, Screen *screen){
+    Position map_pos;
+
+    if (position.x < screen->map.x || position.y < screen->map.y || position.x > screen->map.x + screen->map_width - 1 || position.y > screen->map.y + screen->map_height - 1){
+        map_pos.x = -1;
+        return map_pos;
+    }
+    map_pos.y = position.x - screen->map.x;
+    map_pos.x = screen->map_height - (position.y - screen->map.y + 1);
+
+    return map_pos;
+}
+
+Position screen_position(Position position, Screen *screen){
+    Position screen_pos;
+
+    if (position.x < 0 || position.y < 0 || position.x > screen->screen_width - 1 || position.y > screen->screen_height - 1){
+        screen_pos.x = -1;
+        return screen_pos;
+    }
+
+    screen_pos.x = position.y - screen->map.x;
+    screen_pos.y = -position.x + screen->map_height + screen->map.y -1;
+
+    return screen_pos;
+}
+
+
+//Problematico this function returns true if there is a ladder, but if the person comes from above, the position is
+//not occupable 
 Bool is_position_occupable(Position position, Level *level, Screen *screen) {
     int i, x, y;
     Box b;
+    Position map_pos;
+    //quitar:
+    char text[100];
 
-    //falta comprobar que la posición esté dentro de la caja del mapa
+    map_pos = map_position(position, screen);
+    if (map_pos.x < 0){
+        return FALSE;
+    }
 
-    //transformar porisción en posición del mapa:
-    x = position.x - screen->map.x;
-    y = screen->map_height - (position.y - screen->map.y - 1);
-
-
-    b = level->map->boxes[y][x];
-
-    printf("la casilla de debajo es %d, %d, %d, pos %d, %d", x, y, b, position.x, position.y);
+    b = level->map->boxes[map_pos.x][map_pos.y];
 
     if(b == WALL){
         return FALSE;
