@@ -21,8 +21,8 @@ Level *levels_init(Screen *screen){
 
     //esto es para probar con people_create
     Position spos;
-    spos.x = 30;
-    spos.y = 19;
+    /* spos.x = 30;
+    spos.y = 16; */
 
     for(int i = 0; i < NUM_LEVELS; i++){
 
@@ -97,12 +97,17 @@ Level *levels_init(Screen *screen){
         if(plevel->people == NULL) return NULL;
 
 
+        spos = screen_position(*(plevel->map->Start_pos), screen);
         //falta hacer esto bien que está hecho para que solo este viva la primera persona y que la posicion
         //donde empieza esté bien
-        plevel->people[0] = create_people(64, spos, ALIVE);
+        for (int k = 0; k < plevel->num_people; k++){
+            plevel->people[k] = create_people(64, spos, DESINTEGRATED, k);
+        }
+
+        /* plevel->people[0] = create_people(64, spos, ALIVE);
         for(int k = 1; k < plevel->num_people; k++){
             plevel->people[k] = create_people(64, spos, DESINTEGRATED);
-        }
+        } */
 
 
         

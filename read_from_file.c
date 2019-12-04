@@ -29,14 +29,11 @@ Map* map_char_to_box(char** map, Screen *screen){
     map_obj = (Map *)malloc(sizeof(Map));
     if(map == NULL) return NULL;
 
-    map_obj->Start_pos = (Position*)malloc(sizeof(Position));
-    if(!map_obj->Start_pos) return NULL;
+    map_obj->Start_pos = NULL;
 
-    map_obj->End_pos = (Position*)malloc(sizeof(Position));
-    if(!map_obj->End_pos) return NULL;
+    map_obj->End_pos = NULL;
 
-    map_obj->PORTALB_pos = (Position*)malloc(sizeof(Position));
-    if(!map_obj->PORTALB_pos) return NULL;
+    map_obj->PORTALB_pos = NULL;
 
     mapB = (Box**)malloc(sizeof(Box*)*rows);
     if(mapB == NULL){
@@ -62,21 +59,27 @@ Map* map_char_to_box(char** map, Screen *screen){
             if (map[i][j] == lista[0]) mapB[i][j] = AIR;
             else if (map[i][j] == lista[1]) mapB[i][j] = WALL;
             else if (map[i][j] == lista[2]){
-                 mapB[i][j] = START;
-                 map_obj->Start_pos->x = screen->map.x + j;
-                 map_obj->Start_pos->y = screen->map.y + i;
+                mapB[i][j] = START;
+                map_obj->Start_pos = (Position*)malloc(sizeof(Position));
+                if(!map_obj->Start_pos) return NULL;
+                map_obj->Start_pos->x = i;
+                map_obj->Start_pos->y = j;
             }
             else if (map[i][j] == lista[3]){
                 mapB[i][j] = END;
-                map_obj->End_pos->x = j;
-                map_obj->End_pos->y = i;
+                map_obj->End_pos = (Position*)malloc(sizeof(Position));
+                if(!map_obj->End_pos) return NULL;
+                map_obj->End_pos->x = i;
+                map_obj->End_pos->y = j;
             }
             else if (map[i][j] == lista[4]) mapB[i][j] = LAVA;
             else if (map[i][j] == lista[5]) mapB[i][j] = PORTALA;
             else if (map[i][j] == lista[6]){
                 mapB[i][j] = PORTALB;
-                map_obj->PORTALB_pos->x = j;
-                map_obj->PORTALB_pos->y = i;
+                map_obj->PORTALB_pos = (Position*)malloc(sizeof(Position));
+                if(!map_obj->PORTALB_pos) return NULL;
+                map_obj->PORTALB_pos->x = i;
+                map_obj->PORTALB_pos->y = j;
             }
             else if (map[i][j] == lista[7]) mapB[i][j] = LADDER;
             else if (map[i][j] == lista[8]) mapB[i][j] = ZONAPORTAL;

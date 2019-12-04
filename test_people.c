@@ -9,14 +9,21 @@
 //it returns the number of resources used
 FLAG design(Level *level, Screen *screen){
     char text[40];
+    int i;
+
     print_map(level->map->boxes, screen);
     print_resources(screen, level);
-    print_people(level, screen);
-    if (people_update(level->people[0], level, screen) < 0){
-        printf("ERROR EN PEOPLE_UPDATE()\n");
-        fflush(stdout);
-        return GAME_FINISHED;
+    
+    for (i = 0; i < level->num_people; i++){
+        if (people_update(level->people[i], level, screen) < 0){
+            printf("ERROR EN PEOPLE_UPDATE()\n");
+            fflush(stdout);
+            return GAME_FINISHED;
+        }
     }
+
+    print_people(level, screen);
+
     sprintf(text, "position: (%d, %d)", screen->cursor.x, screen->cursor.y);
     //sprintf(text, "position occupable: %d", is_position_occupable(screen->cursor, level, screen));
     print_message(screen, text);
@@ -47,6 +54,24 @@ FLAG design(Level *level, Screen *screen){
 }
 
 
+int movement_loop(Level *level, Screen * screen){
+    int k, i;
+
+    print_map(level->map->boxes, screen);
+    print_resources(screen, level);
+    print_people(level, screen);
+
+    for (i = 0; i < level->num_people; i++){
+        k = people_update(level->people[i], level, screen);
+        if (k < 0){
+            printf("ERROR EN PEOPLE_UPDATE()\n");
+            fflush(stdout);
+            return GAME_FINISHED;
+        }
+    }
+}
+
+
 int main(int argc, char** argv){
     Screen screen;
     Level *level;
@@ -62,40 +87,18 @@ int main(int argc, char** argv){
     //print_title(&screen, "Saving alien Alan");
     
     level = levels_init(&screen);
-
-    level->map->Start_pos->y = 10;
-    level->map->Start_pos->x = 30;
     
-    printf("start pos: %d, %d", level->map->Start_pos->x, level->map->Start_pos->y);
+    
 
     screen.cursor = screen.map;
 
-    pos.x = screen.map.x + screen.map_width - 1;
-    pos.y = screen.map.y;
-
-    change_cursor(pos, &screen);
-    printf("X");
-    //sprintf(text, "position occupable: %d", is_position_occupable(pos, level, &screen));
-    //print_message(&screen, text);
-
-    //is_position_occupable(pos, level, &screen);
-    map_pos = map_position(screen.map, &screen);
-    if (map_pos.x < 0){
-        printf("Error\n");
-        return ERROR;
-    }
-    sprintf(text, "%d, %d", map_pos.x, map_pos.y);
-    print_message(&screen, text);
-
-    printf("%d, %d", level->map->PORTALB_pos->x, level->map->PORTALB_pos->y);
 
 
-    /* level->map->boxes[map_pos.x][map_pos.y] = LAVA;*/
-    print_map(level->map->boxes, &screen); 
 
     while(TRUE){
-        
         rec = design(level, &screen);
+
+        //movement_loop(level, &screen);
         i++;
     } 
 

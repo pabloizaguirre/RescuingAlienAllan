@@ -10,11 +10,12 @@ typedef struct {
     char character;
     Position position;
     State state;
+    int wait;
 } People;
 
 /*Allocates memory for a person*/
 
-People* create_people(char character, Position position, State state);
+People* create_people(char character, Position position, State state, int wait);
 
 /* This functions receive a pointer to people and */
 /* return a certain atribute of that character.   */

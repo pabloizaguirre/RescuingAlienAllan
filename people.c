@@ -15,7 +15,7 @@ State change_state(Box b) {
     }
 }
 
-People* create_people(char character, Position position, State state){
+People* create_people(char character, Position position, State state, int wait){
     People *p;
     p = (People*)malloc(sizeof(People));
     if (!p){
@@ -25,6 +25,7 @@ People* create_people(char character, Position position, State state){
     p->character = character;
     p->position = position;
     p->state = state;
+    p->wait = wait;
     return p;
 }
 
@@ -60,7 +61,18 @@ int people_update(People *p, Level *level, Screen *screen){
         return -1;
     }
 
-    if (p->state != ALIVE) {
+    if (p->state != ALIVE && p->wait < 0) {
+        return 0;
+    }
+
+    if (p->wait > 0){
+        p->wait--;
+        return 0;
+    }
+
+    if (p->wait == 0){
+        p->wait--;
+        People_set_state(p, ALIVE);
         return 0;
     }
 
@@ -69,7 +81,7 @@ int people_update(People *p, Level *level, Screen *screen){
     // First check if the person is in a special box (i.e: ladder, portal ...)
     switch (b){
         case LADDER:
-            pos_aux.y++;
+            pos_aux.y--;
             if (is_position_occupable(pos_aux, level, screen)){
                 // Moves up
                 p->position.y--;
@@ -81,19 +93,19 @@ int people_update(People *p, Level *level, Screen *screen){
             return 0;
             break;
         case PORTALA:
-            if(level->map->PORTALB_pos){
+            if(level->map->PORTALB_pos != NULL){
                 map_pos = *(level->map->PORTALB_pos);
                 pos_aux = screen_position(map_pos, screen);
                 if (is_position_occupable(pos_aux, level, screen)){
                     // Moves to portal B
                     p->position = pos_aux;
-                    map_pos = map_position(p->position, screen);
                     p->state = change_state(level->map->boxes[map_pos.x][map_pos.y]);
                     print_message(screen, "portala");
                     return 1;
                 }
             }
-            return 0;
+            break;
+        default:
             break;
     }
 
@@ -148,6 +160,7 @@ Result print_people(Level *level, Screen *screen){
         change_color("reset", "green");
         printf("%c", level->people[i]->character);
     }
+    return OK;
 }
 
 //problematico creo que esta mal

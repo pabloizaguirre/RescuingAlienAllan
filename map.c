@@ -42,12 +42,12 @@ Position map_position(Position position, Screen *screen){
 Position screen_position(Position position, Screen *screen){
     Position screen_pos;
 
-    if (position.x < 0 || position.y < 0 || position.x > screen->screen_width - 1 || position.y > screen->screen_height - 1){
+    if (position.x < 0 || position.y < 0 || position.x > screen->map_height - 1 || position.y > screen->map_width - 1){
         screen_pos.x = -1;
         return screen_pos;
     }
 
-    screen_pos.x = position.y - screen->map.x;
+    screen_pos.x = position.y + screen->map.x;
     screen_pos.y = -position.x + screen->map_height + screen->map.y -1;
 
     return screen_pos;
@@ -60,8 +60,6 @@ Bool is_position_occupable(Position position, Level *level, Screen *screen) {
     int i, x, y;
     Box b;
     Position map_pos;
-    //quitar:
-    char text[100];
 
     map_pos = map_position(position, screen);
     if (map_pos.x < 0){
@@ -76,7 +74,7 @@ Bool is_position_occupable(Position position, Level *level, Screen *screen) {
 
     //state
     for(i = 0; i < level->num_people; i++){
-        if ((level->people[i]->state != DESINTEGRATED) && (level->people[i]->position.x == position.x) && (level->people[i]->position.y == position.y)){
+        if ((level->people[i]->state != DESINTEGRATED) && (level->people[i]->state != FINISHED) && (level->people[i]->position.x == position.x) && (level->people[i]->position.y == position.y)){
             return FALSE;
         }
     }
