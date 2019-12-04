@@ -36,8 +36,8 @@ Result clear_screen();
 /*
     Prints the magins between the map and the message boxes from a given file
 */
-Result print_margins(FILE *f, Screen *screen);
-Result print_margins2(Screen *screen);
+Result print_margins2(FILE *f, Screen *screen);
+Result print_margins(Screen *screen);
 
 /*
     Changes the color you are printing with to the color given by the string argument

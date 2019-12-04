@@ -45,8 +45,11 @@ Position screen_position(Position position, Screen *screen);
 
 /* Checks if a position can be occupied by a person */
 Bool is_position_occupable(Position position, Level *level, Screen *screen);
+
 /* Checks if you can place a resource on a given position */
-Bool is_position_valid_resources(Position position, Screen *screen, Map *map);
+Bool is_position_valid_resources(Position position, Level *level, Screen *screen);
+
+Map *map_merge(Map *mapDest, Map *mapRes);
 
 /* Takes as arguments a position in the map and a map and returns an element
 of type Surrounding that includes the boxes that surround the position and the box

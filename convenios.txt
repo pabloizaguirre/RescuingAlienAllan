@@ -30,6 +30,8 @@ el numero de niveles que hay está en level.h
 
 COSAS QUE HACER:
 
+creo que se puede quitar lo de surroundings
+
 Guardado del juego
 Level_init a partir de un archivo
 Conseguir que funcione que se muevan los personajes

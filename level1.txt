@@ -15,4 +15,4 @@ balabalbalabala
 2
 
 #map:   
-map_test3_solved.txt
+map_test.txt

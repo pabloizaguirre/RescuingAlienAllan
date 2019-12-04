@@ -124,7 +124,7 @@ Result init_screen(char *file_name, Screen *screen){
     clear_screen();
     change_color("reset", "reset");
     printf("%c[8;%d;%dt", 27, screen->screen_height, screen->screen_width);
-    if(print_margins(f, screen) == ERROR) return ERROR;
+    if(print_margins(screen) == ERROR) return ERROR;
     printf("\n");
     return OK;
 }
@@ -141,7 +141,7 @@ Result restore_screen(Screen *screen){
 /*
     Prints the magins between the map and the message boxes
 */
-Result print_margins(FILE *f, Screen *screen){
+Result print_margins2(FILE *f, Screen *screen){
     char line[MAX_SIZE];
     Result r;
 
@@ -163,7 +163,7 @@ Result print_margins(FILE *f, Screen *screen){
 /* 
     Prints the margins between the map and the message boxes without a file
 */
-Result print_margins2(Screen *screen){
+Result print_margins(Screen *screen){
     int i=0, k;
     Position pos;
     pos.x = 0;
@@ -188,9 +188,9 @@ Result print_margins2(Screen *screen){
         funciona
     */
     pos.x = 0;
-    pos.y = 3;
+    pos.y = 2;
     printf("+");
-    for(i = 1; i < screen->screen_height - 1; i++){
+    for(i = 1; i < screen->screen_height - 3; i++){
         pos.x = 0;
         pos.y++;
         change_cursor(pos, screen);
@@ -205,6 +205,7 @@ Result print_margins2(Screen *screen){
         |
         |
         +------+
+        Funciona
     */
     for (i = 1; i < screen->screen_width - 1; i++){
        printf("-");
@@ -215,11 +216,12 @@ Result print_margins2(Screen *screen){
         |      | 
         |      |
         +------+
+        Funciona
     */
-    pos.x = screen->screen_width - 1;
-    pos.y = 3;
-    for (i = 1; i < screen->screen_height; i++){
-       pos.y--;
+    pos.x = screen->screen_width;
+    pos.y = 2;
+    for (i = 1; i < screen->screen_height - 3; i++){
+       pos.y++;
        change_cursor(pos,screen);
        printf("|");
     }
@@ -229,8 +231,9 @@ Result print_margins2(Screen *screen){
         +------+ 
         |      |
         +------+
+        Funciona
     */
-    pos.y = screen->screen_height - screen->messagebox_height - screen->map_height;
+    pos.y = screen->map.y - 1;
     pos.x = 0;
     change_cursor(pos, screen);
     printf("+");
@@ -245,8 +248,9 @@ Result print_margins2(Screen *screen){
         |      |
         +------+
         +------+
+        Funciona
     */
-    pos.y = screen->screen_height - screen->messagebox_height;
+    pos.y = screen->messagebox.y - 1;
     pos.x = 0;
     change_cursor(pos, screen);
     printf("+");
@@ -262,9 +266,11 @@ Result print_margins2(Screen *screen){
         +--+---+
         +------+
     */
-    pos = screen->map;
+    pos.y = screen->map.y - 1;
+    pos.x = screen->map.x - 1;
+    change_cursor(pos, screen);
     printf("+");
-    for(i = 1; i < screen->map_height - 1; i++){
+    for(i = 1; i < screen->map_height + 2; i++){
         pos.y++;
         change_cursor(pos,screen);
         printf("|");

@@ -29,7 +29,7 @@ void free_map(Map *map){
 Position map_position(Position position, Screen *screen){
     Position map_pos;
 
-    if (position.x < screen->map.x || position.y < screen->map.y || position.x > screen->map.x + screen->map_width - 1 || position.y > screen->map.y + screen->map_height - 1){
+    if (position.x < screen->map.x || position.y < screen->map.y || position.x > screen->map.x + screen->map_width - 1 || position.y > screen->map.y + screen->map_height - 1){
         map_pos.x = -1;
         return map_pos;
     }
@@ -83,14 +83,40 @@ Bool is_position_occupable(Position position, Level *level, Screen *screen) {
 }
 
 
-Bool is_position_valid_resources(Position position, Screen *screen, Map *map){
+Bool is_position_valid_resources(Position position, Level *level, Screen *screen){
     //falta comprobar que la posición esté dentro de la caja del mapa
     //falta cambiar la posicion a tipo posicion de mapa
-    if (map->boxes[position.x][position.y] != AIR){
+    Box b;
+    Position map_pos;
+
+    map_pos = map_position(position, screen);
+    if (map_pos.x < 0){
+        return FALSE;
+    }
+
+    b = level->map->boxes[map_pos.x][map_pos.y];
+
+    if (b != AIR && b != ZONAPORTAL){
         return FALSE;
     }
     return TRUE;
 } 
+
+/* Map *map_merge(Screen *screen, Map *mapDest, Map *mapRes){
+    int i, j;
+    if (!mapDest || !mapRes){
+        return NULL;
+    }
+
+    for (i = 0; i < screen->map_height - 1; i++){
+        for (j = 0; j < screen->map_width - 1; j++){
+            if (mapRes[i][j] != AIR){
+                
+            }
+        }
+    }
+}
+ */
 
 
 Surroundings map_get_position_surroundings(Position position, Map *map){
