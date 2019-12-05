@@ -100,23 +100,28 @@ Bool is_position_valid_resources(Position position, Level *level, Screen *screen
         return FALSE;
     }
     return TRUE;
-} 
+}
 
-/* Map *map_merge(Screen *screen, Map *mapDest, Map *mapRes){
+Result map_merge(Screen *screen, Map *map){
     int i, j;
-    if (!mapDest || !mapRes){
-        return NULL;
+    if (!map || !screen){
+        return ERROR;
     }
 
     for (i = 0; i < screen->map_height - 1; i++){
         for (j = 0; j < screen->map_width - 1; j++){
-            if (mapRes[i][j] != AIR){
-                
+            if((map->boxes)[i][j] == AIR && (map->boxes_design)[i][j] != AIR){
+                (map->boxes_merge)[i][j] = (map->boxes_design)[i][j];
+            }
+            else{
+                (map->boxes_merge)[i][j] = (map->boxes)[i][j];
             }
         }
     }
+
+    return OK;
 }
- */
+
 
 
 Surroundings map_get_position_surroundings(Position position, Map *map){

@@ -5,14 +5,64 @@
 #include "read_from_file.h"
 #include "read_keys.h"
 
+Box get_resource(char c){
+    switch (c)
+    {
+    case 'e':
+        return LADDER;    
+    case 'q':
+        return WALL;
+    case 'p':
+        return PORTALA;
+    default:
+        return AIR;
+    }
+}
+
+int place_resource(Screen *screen, Level *level, char resource){
+    Position pos = screen->cursor;
+    Box current = (level->map->boxes_design)[pos.y][pos.x];
+    Box res = get_resource(resource);
+
+    if(current == LADDER){
+        if(level->num_ladder_floor_act < level->num_ladder_floor){
+            (level->num_ladder_floor_act)++;
+        }else if(level->num_ladder_act < level->num_ladder){
+            (level->num_ladder_act)++;
+        }
+    }else if(current == WALL){
+        if(level->num_ladder_floor_act < level->num_ladder_floor){
+            (level->num_ladder_floor_act)++;
+        }else if(level->num_floor_act < level->num_ladder){
+            (level->num_floor_act)++;
+        }
+    }
+    (level->map->boxes_design)[pos.y][pos.x] = res;
+
+    if(res == LADDER){
+        if(level->num_ladder_act > 0){
+            (level->num_ladder_act)--;
+        }else if(level->num_ladder_floor_act > 0){
+            (level->num_ladder_floor_act)--;
+        }
+    }else if(res == WALL){
+        if(level->num_floor_act > 0){
+            (level->num_floor_act)--;
+        }else if(level->num_ladder_floor_act > 0){
+            (level->num_ladder_floor_act)--;
+        }
+    }
+
+}
+
+
+
 //it returns the number of resources used
 FLAG design(Level *level, Screen *screen){
-    print_map(level->map->boxes, screen);
     print_resources(screen, level);
     change_cursor(screen->cursor, screen);
     char c = read_key();
 
-    
     switch(c) {
     case('w'):
         if(screen->cursor.y > screen->map.y)
@@ -30,6 +80,13 @@ FLAG design(Level *level, Screen *screen){
         if(screen->cursor.x > screen->map.x)
             screen->cursor.x--;
         break;
+    default:
+        if(is_position_valid_resources(screen->cursor, level, screen)){
+            place_resource(screen, level, c);
+            map_merge(&screen, level->map);
+            print_map(level->map->boxes_merge, &screen);
+            print_resources(&screen, level);
+        }
     }
 
     change_cursor(screen->cursor, screen);
@@ -50,6 +107,9 @@ int main(int argc, char** argv){
     level = levels_init(&screen);
 
     screen.cursor = screen.map;
+    map_merge(&screen, level->map);
+    print_map(level->map->boxes_merge, &screen);
+    print_resources(&screen, level);
     while(TRUE){
         
         rec = design(level, &screen);

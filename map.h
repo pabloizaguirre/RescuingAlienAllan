@@ -14,6 +14,8 @@ typedef enum {AIR, WALL, START, END, LAVA, PORTALA, PORTALB, LADDER, ZONAPORTAL}
 Las posiciones son de tipo mapa, no de tipo */
 typedef struct {
     Box **boxes;
+    Box **boxes_design;
+    Box **boxes_merge;
     Position *Start_pos;
     Position *End_pos;
     Position *PORTALB_pos;
@@ -49,7 +51,7 @@ Bool is_position_occupable(Position position, Level *level, Screen *screen);
 /* Checks if you can place a resource on a given position */
 Bool is_position_valid_resources(Position position, Level *level, Screen *screen);
 
-Map *map_merge(Map *mapDest, Map *mapRes);
+Result map_merge(Screen *screen, Map *map);
 
 /* Takes as arguments a position in the map and a map and returns an element
 of type Surrounding that includes the boxes that surround the position and the box

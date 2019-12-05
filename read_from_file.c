@@ -24,10 +24,26 @@ Map* map_char_to_box(char** map, Screen *screen){
     int i, j, rows = screen->map_height, columns = screen->map_width;
     Map* map_obj = NULL;
     Box **mapB = NULL;
+    Box **boxes_design = NULL;
+    Box **boxes_merge = NULL;
 
     //falta control de errores.
     map_obj = (Map *)malloc(sizeof(Map));
     if(map == NULL) return NULL;
+    //falta control de errores.
+    boxes_design = (Box **)malloc(sizeof(Box*)*rows);
+    if(boxes_design == NULL){
+        free(map);
+        free(map_obj);
+        return NULL;
+    }
+
+    boxes_merge = (Box **)malloc(sizeof(Box*)*rows);
+    if(boxes_merge == NULL){
+        free(map);
+        free(map_obj);
+        return NULL;
+    }
 
     map_obj->Start_pos = NULL;
 
@@ -53,6 +69,34 @@ Map* map_char_to_box(char** map, Screen *screen){
             return NULL;
         }
     }
+
+    for(i=0;i<rows;i++){
+        boxes_design[i]=(Box*)malloc(sizeof(Box)*(columns));
+        if(boxes_design[i] == NULL) {
+            //falta cambiar free(map_obj) por free_map(map_obj)
+            free(map);
+            free(map_obj); 
+            free(mapB);
+            free(boxes_design);
+            return NULL;
+        }
+        for(j=0; j<columns; j++){
+            boxes_design[i][j] = AIR;
+        }
+    }
+
+    for(i=0;i<rows;i++){
+        boxes_merge[i]=(Box*)malloc(sizeof(Box)*(columns));
+        if(boxes_merge[i] == NULL) {
+            //falta cambiar free(map_obj) por free_map(map_obj)
+            free(map);
+            free(map_obj); 
+            free(mapB);
+            free(boxes_design);
+            return NULL;
+        }
+    }
+
     //falta arreglar la start_pos, end_pos y portal_pos
     for(i=0;i<rows;i++){
         for(j=0;j<columns;j++){
@@ -90,6 +134,9 @@ Map* map_char_to_box(char** map, Screen *screen){
     free(map);
     
     map_obj->boxes = mapB;
+
+    map_obj->boxes_design = boxes_design;
+    map_obj->boxes_merge = boxes_merge;
 
     return map_obj;
 }

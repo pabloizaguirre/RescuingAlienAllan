@@ -15,8 +15,11 @@ struct _Level {
     int num_people;
     People **people;
     int num_ladder_floor;
+    int num_ladder_floor_act;
     int num_ladder;
+    int num_ladder_act;
     int num_floor;
+    int num_floor_act;
     int portal; 
 };
 

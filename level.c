@@ -67,18 +67,19 @@ Level *levels_init(Screen *screen){
             return NULL;
         }
         plevel->num_ladder_floor = atoi(num_ladder_floor);
-
+        plevel->num_ladder_floor_act = atoi(num_ladder_floor);
        
         if(read_line(f_level, num_ladder) != OK){
             return NULL;
         }
         plevel->num_ladder = atoi(num_ladder);
+        plevel->num_ladder_act = atoi(num_ladder);
 
-        
         if(read_line(f_level, num_floor) != OK){
             return NULL;
         }
         plevel->num_floor = atoi(num_floor);
+        plevel->num_floor_act = atoi(num_floor);
 
         
         if(read_line(f_level, num_portal) != OK){
