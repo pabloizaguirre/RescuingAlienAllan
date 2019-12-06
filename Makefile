@@ -3,7 +3,7 @@ CFLAGS = -Wall
 EXE = test main test_people
 #LIBRARIES = enemies.o level.o map.o people.o print_on_screen.o
 #LIBRARIES =print_on_screen.o read_from_file.o
-LIBRARIES =print_on_screen.o read_from_file.o level.o read_keys.o map.o people.o
+LIBRARIES =print_on_screen.o read_from_file.o level.o read_keys.o map.o people.o design.o
 
 
 all : $(EXE)
@@ -28,6 +28,9 @@ map.o: map.c map.h
 	$(CC) $(CFLAGS) -c $<
 
 people.o: people.c people.h
+	$(CC) $(CFLAGS) -c $<
+
+design.o: design.c design.h
 	$(CC) $(CFLAGS) -c $<
 
 print_on_screen.o: print_on_screen.c print_on_screen.h

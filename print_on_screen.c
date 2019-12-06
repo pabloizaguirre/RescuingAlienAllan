@@ -403,26 +403,35 @@ Result print_resources(Screen *screen, Level *level){
     pos = res_pos;
     change_cursor(pos, screen);
     if(level->num_ladder_floor > 0){
-        printf("LADDERS/FLOORS: x%d", level->num_ladder_floor);
+        printf("LADDERS/FLOORS: x%d", level->num_ladder_floor_act);
     }
 
     pos.y++;
     change_cursor(pos, screen);
     if(level->num_ladder > 0){
-        printf("LADDERS: x%d", level->num_ladder);
+        printf("LADDERS (L): x%d", level->num_ladder_act);
     }
 
     pos.y++;
     change_cursor(pos, screen);
     if(level->num_floor > 0){
-        printf("FLOORS: x%d", level->num_floor);
+        printf("FLOORS (F): x%d", level->num_floor_act);
     }
 
     pos.y++;
     change_cursor(pos, screen);
     if(level->portal > 0){
-        printf("PORTAL: x%d", level->portal);
+        printf("PORTAL (P): x%d", level->portal_act);
     }
+
+    pos.y += 2;
+    change_cursor(pos, screen);
+    printf("Press q to save and quit");
+
+    pos.y += 2;
+    change_cursor(pos, screen);
+    printf("Press other key to delete");
+
     return OK;
 }
 

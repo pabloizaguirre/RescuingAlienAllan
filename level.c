@@ -86,6 +86,7 @@ Level *levels_init(Screen *screen){
             return NULL;
         }
         plevel->portal = atoi(num_portal);
+        plevel->portal_act = atoi(num_portal);
 
         if(read_line(f_level,map_file) != OK){
             return NULL;

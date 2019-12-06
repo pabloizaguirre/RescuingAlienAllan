@@ -21,6 +21,7 @@ struct _Level {
     int num_floor;
     int num_floor_act;
     int portal; 
+    int portal_act;
 };
 
 /*
