@@ -84,8 +84,6 @@ Bool is_position_occupable(Position position, Level *level, Screen *screen) {
 
 
 Bool is_position_valid_resources(Position position, Level *level, Screen *screen){
-    //falta comprobar que la posición esté dentro de la caja del mapa
-    //falta cambiar la posicion a tipo posicion de mapa
     Box b;
     Position map_pos;
 

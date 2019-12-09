@@ -8,7 +8,7 @@
 #include <time.h>
 
 //it returns the number of resources used
-FLAG design(Level *level, Screen *screen){
+FLAG design_test(Level *level, Screen *screen){
     char text[40];
     int i;
     printf("\e[?25l");
@@ -111,7 +111,7 @@ int main(int argc, char** argv){
 
     printf("\e[?25l");
     while(TRUE){
-        rec = design(level, &screen);
+        rec = design_test(level, &screen);
 
         /* if (movement_loop(level, &screen) == LEVEL_FINISHED){
             print_message(&screen, "Level finished");
