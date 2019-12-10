@@ -66,7 +66,7 @@ Bool is_position_occupable(Position position, Level *level, Screen *screen) {
         return FALSE;
     }
 
-    b = level->map->boxes[map_pos.x][map_pos.y];
+    b = level->map->boxes_merge[map_pos.x][map_pos.y];
 
     if(b == WALL){
         return FALSE;

@@ -73,10 +73,14 @@ Result clear_screen(){
 Result init_screen(char *file_name, Screen *screen){
     //Open file
     char line[MAX_SIZE];
+    char title[MAX_SIZE];
     FILE *f;
     f = fopen(file_name, "r");
     Result r;
     //Initialice screen variables
+    r = read_line(f, &title);
+    if(r == ERROR) return ERROR;
+
     r = read_line(f, &line);
     if(r == ERROR) return ERROR;
     screen->screen_width = atoi(line);
@@ -126,6 +130,7 @@ Result init_screen(char *file_name, Screen *screen){
     printf("%c[8;%d;%dt", 27, screen->screen_height, screen->screen_width);
     if(print_margins(screen) == ERROR) return ERROR;
     printf("\n");
+    print_title(screen, title);
     return OK;
 }
 
@@ -136,6 +141,16 @@ Result restore_screen(Screen *screen){
     change_color("reset", "reset");
     change_cursor(final_pos,screen);
     tcsetattr(fileno(stdin), TCSANOW, &initial);
+}
+
+Result print_title(Screen *screen, char *title){
+    Position pos;
+    pos.y = 4;
+    pos.x = (screen->screen_width  - strlen(title))/ 2;
+    change_color("reset", "reset");
+    change_cursor(pos, screen);
+    printf(title);
+    return OK;
 }
 
 /*

@@ -76,7 +76,7 @@ int people_update(People *p, Level *level, Screen *screen){
         return 0;
     }
 
-    b = level->map->boxes[map_pos.x][map_pos.y];
+    b = level->map->boxes_merge[map_pos.x][map_pos.y];
 
     // First check if the person is in a special box (i.e: ladder, portal ...)
     switch (b){
@@ -86,7 +86,7 @@ int people_update(People *p, Level *level, Screen *screen){
                 // Moves up
                 p->position.y--;
                 map_pos = map_position(p->position, screen);
-                p->state = change_state(level->map->boxes[map_pos.x][map_pos.y]);
+                p->state = change_state(level->map->boxes_merge[map_pos.x][map_pos.y]);
                 print_message(screen, "ladder");
                 return 1;
             }
@@ -99,7 +99,7 @@ int people_update(People *p, Level *level, Screen *screen){
                 if (is_position_occupable(pos_aux, level, screen)){
                     // Moves to portal B
                     p->position = pos_aux;
-                    p->state = change_state(level->map->boxes[map_pos.x][map_pos.y]);
+                    p->state = change_state(level->map->boxes_merge[map_pos.x][map_pos.y]);
                     print_message(screen, "portala");
                     return 1;
                 }
@@ -113,13 +113,13 @@ int people_update(People *p, Level *level, Screen *screen){
     pos_aux = p->position;
     pos_aux.y++;
     map_pos = map_position(pos_aux, screen);
-    b = level->map->boxes[map_pos.x][map_pos.y];
+    b = level->map->boxes_merge[map_pos.x][map_pos.y];
     //The person cannot move down if there is a ladder underneath
     if (is_position_occupable(pos_aux, level, screen) && b != LADDER){
         // Moves down
         p->position = pos_aux;
         map_pos = map_position(p->position, screen);
-        p->state = change_state(level->map->boxes[map_pos.x][map_pos.y]);
+        p->state = change_state(level->map->boxes_merge[map_pos.x][map_pos.y]);
         print_message(screen, "moves down");
         return 1;
     } else { // If the person cannot move down then it will move right if it is possible
@@ -129,7 +129,7 @@ int people_update(People *p, Level *level, Screen *screen){
             // Moves right
             p->position = pos_aux;
             map_pos = map_position(p->position, screen);
-            p->state = change_state(level->map->boxes[map_pos.x][map_pos.y]);
+            p->state = change_state(level->map->boxes_merge[map_pos.x][map_pos.y]);
             print_message(screen, "moves right");
             return 1;
         }

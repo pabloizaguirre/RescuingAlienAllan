@@ -1,3 +1,6 @@
+#title
+Rescue alien Alan
+
 #screen width
 130
 #screen height
