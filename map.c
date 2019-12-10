@@ -106,8 +106,8 @@ Result map_merge(Screen *screen, Map *map){
         return ERROR;
     }
 
-    for (i = 0; i < screen->map_height - 1; i++){
-        for (j = 0; j < screen->map_width - 1; j++){
+    for (i = 0; i < screen->map_height; i++){
+        for (j = 0; j < screen->map_width; j++){
             if(((map->boxes)[i][j] == AIR || (map->boxes)[i][j] == ZONAPORTAL) && (map->boxes_design)[i][j] != AIR){
                 (map->boxes_merge)[i][j] = (map->boxes_design)[i][j];
             }

@@ -111,14 +111,14 @@ int main(int argc, char** argv){
 
     printf("\e[?25l");
     while(TRUE){
-        rec = design_test(level, &screen);
+        //rec = design_test(level, &screen);
 
-        /* if (movement_loop(level, &screen) == LEVEL_FINISHED){
+        if (movement_loop(level, &screen) == LEVEL_FINISHED){
             print_message(&screen, "Level finished");
             fflush(stdout);
             usleep(2*1000*1000);
             break;
-        } */
+        }
         i++;
     } 
     printf("\e[?25h");

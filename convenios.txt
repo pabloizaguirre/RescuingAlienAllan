@@ -30,8 +30,6 @@ el numero de niveles que hay está en level.h
 
 COSAS QUE HACER:
 
-no funcion design en la primera fila y ultima columna
-
 si no puedes colocar algo que se ponga el cursor rojo
 
 creo que se puede quitar lo de surroundings
