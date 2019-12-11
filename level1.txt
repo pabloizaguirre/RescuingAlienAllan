@@ -6,13 +6,13 @@ balabalbalabala
 15
 #Resources:
 #Number of ladders/floors:
-3
+17
 #Number of ladders:
-5
+0
 #Number of floors:
-7
+0
 #Number of portals:
-2
+1
 
 #map:   
-map_test4_solved.txt
+map_test4.txt

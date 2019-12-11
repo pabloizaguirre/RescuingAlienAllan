@@ -296,7 +296,7 @@ Result print_margins(Screen *screen){
     return OK;
 }
 //celdas
-//comprobar errores
+//falta comprobar errores
 Result print_map (Box **map, Screen *s) {
     int i, j;
     Position p;
@@ -308,7 +308,7 @@ Result print_map (Box **map, Screen *s) {
     p = s->map;
     
     if (change_cursor(p, s) < 0) return ERROR;
-    
+    printf("\e[?25l");
     for (i = s->map_height - 1; i >= 0; i--) {
         for (j = 0; j < s->map_width; j++) {
             switch (map[i][j]){
@@ -357,6 +357,7 @@ Result print_map (Box **map, Screen *s) {
         (p.y)++;
         if (change_cursor(p, s) < 0) return ERROR;
     }
+    printf("\e[?25h");
     return OK;
 }
 
@@ -418,25 +419,25 @@ Result print_resources(Screen *screen, Level *level){
     pos = res_pos;
     change_cursor(pos, screen);
     if(level->num_ladder_floor > 0){
-        printf("LADDERS/FLOORS: x%d", level->num_ladder_floor_act);
+        printf("LADDERS/FLOORS (l/f): x%d", level->num_ladder_floor_act);
     }
 
-    pos.y++;
-    change_cursor(pos, screen);
     if(level->num_ladder > 0){
-        printf("LADDERS (L): x%d", level->num_ladder_act);
+        pos.y++;
+        change_cursor(pos, screen);
+        printf("LADDERS (l): x%d", level->num_ladder_act);
     }
 
-    pos.y++;
-    change_cursor(pos, screen);
     if(level->num_floor > 0){
-        printf("FLOORS (F): x%d", level->num_floor_act);
+        pos.y++;
+        change_cursor(pos, screen);
+        printf("FLOORS (f): x%d", level->num_floor_act);
     }
 
     pos.y++;
     change_cursor(pos, screen);
     if(level->portal > 0){
-        printf("PORTAL (P): x%d", level->portal_act);
+        printf("PORTAL (p): x%d", level->portal_act);
     }
 
     pos.y += 2;
