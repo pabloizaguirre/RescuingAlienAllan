@@ -15,12 +15,13 @@ typedef struct {
     Position messagebox;
     int messagebox_width;
     int messagebox_height;
+    char star_char;
 } Screen;
 
 /*
     Initialize screen
 */
-Result init_screen(char *file_name, Screen *screen);
+Screen *init_screen(char *file_name);
 
 
 /*

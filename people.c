@@ -163,6 +163,38 @@ Result print_people(Level *level, Screen *screen){
     return OK;
 }
 
+
+FLAG movement_loop(Level *level, Screen * screen){
+    int k, i;
+    FLAG flag = LEVEL_FINISHED;
+
+    usleep(100*1000);
+
+    print_map(level->map->boxes_merge, screen);
+    print_resources(screen, level);
+    print_people(level, screen);
+    fflush(stdout);
+    
+    for (i = 0; i < level->num_people; i++){
+        k = people_update(level->people[i], level, screen);
+        fflush(stdout);
+        if (k < 0){
+            printf("ERROR EN PEOPLE_UPDATE()\n");
+            fflush(stdout);
+            return GAME_FINISHED;
+        }
+        if (k > 0){
+            flag = LEVEL_NOT_FINISHED;
+        }
+    }
+    if (flag == LEVEL_FINISHED){
+        return LEVEL_FINISHED;
+    }
+    return LEVEL_NOT_FINISHED;
+}
+
+
+
 //problematico creo que esta mal
 int free_people(Level *level){
     int i;

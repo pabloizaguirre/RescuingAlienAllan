@@ -1,5 +1,7 @@
 #title
 Rescue alien Alan
+#star character
+★
 
 #screen width
 130

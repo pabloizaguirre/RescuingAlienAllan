@@ -56,7 +56,7 @@ FLAG design_test(Level *level, Screen *screen){
 }
 
 
-FLAG movement_loop(Level *level, Screen * screen){
+FLAG movement_loop2(Level *level, Screen * screen){
     int k, i;
     FLAG flag = LEVEL_FINISHED;
 
@@ -113,7 +113,7 @@ int main(int argc, char** argv){
     while(TRUE){
         //rec = design_test(level, &screen);
 
-        if (movement_loop(level, &screen) == LEVEL_FINISHED){
+        if (movement_loop2(level, &screen) == LEVEL_FINISHED){
             print_message(&screen, "Level finished");
             fflush(stdout);
             usleep(2*1000*1000);

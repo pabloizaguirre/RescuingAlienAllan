@@ -37,6 +37,10 @@ int people_update(People *p, Level *level, Screen *screen);
 /* Prints the people */
 Result print_people(Level *level, Screen *screen);
 
+/* Performs one loop. Every person moves once. IMPORTANT: use this function once when the level starts
+because the first time will return LEVEL_FINISHED*/
+FLAG movement_loop(Level *level, Screen * screen);
+
 /*Frees the memory allocated for a person*/
 
 int free_people(Level *level);

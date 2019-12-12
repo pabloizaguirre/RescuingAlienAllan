@@ -14,14 +14,34 @@ struct _Level {
     char message[256];
     int num_people;
     People **people;
-    int num_ladder_floor;
+    
+    // Currently unused resources
     int num_ladder_floor_act;
-    int num_ladder;
     int num_ladder_act;
-    int num_floor;
     int num_floor_act;
-    int portal; 
     int portal_act;
+    
+    // minimum spare resources
+    int num_ladder_floor;
+    int num_ladder;
+    int num_floor;
+    int portal; 
+    int min_people;
+    
+    
+    // maximum spare resources for 2 stars
+    int num_ladder_floor_2;
+    int num_ladder_2;
+    int num_floor_2;
+    int portal_2; 
+    int min_people_2;
+
+    // maximum spare resources for 3 stars
+    int num_ladder_floor_3;
+    int num_ladder_3;
+    int num_floor_3;
+    int portal_3; 
+    int min_people_3;
 };
 
 /*
@@ -37,6 +57,13 @@ Level *levels_init(Screen *screen);
     Prints the level mesage in the screen
 */
 int level_print_mesaje(Level *level);
+
+/* 
+    Returns the state of the game (LOST, STARS_1, STARS_2, STARS_3, SUPREME) and RES_ERROR if there
+    was an error
+ */
+Level_result game_status(Level *level);
+
 
 /*
     Get functions for the level structure

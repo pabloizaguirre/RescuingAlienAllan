@@ -70,55 +70,64 @@ Result clear_screen(){
 /*
     Initialize screen
 */
-Result init_screen(char *file_name, Screen *screen){
+Screen *init_screen(char *file_name){
     //Open file
     char line[MAX_SIZE];
     char title[MAX_SIZE];
     FILE *f;
     f = fopen(file_name, "r");
     Result r;
+    Screen *screen = NULL;
+    
+    screen = (Screen *)malloc(sizeof(Screen));
+    if(!screen) return NULL;
+
     //Initialice screen variables
     r = read_line(f, &title);
-    if(r == ERROR) return ERROR;
+    if(r == ERROR) return NULL;
 
     r = read_line(f, &line);
-    if(r == ERROR) return ERROR;
+    if(r == ERROR) return NULL;
+    screen->star_char = line[0];
+
+    r = read_line(f, &line);
+    if(r == ERROR) return NULL;
     screen->screen_width = atoi(line);
 
     r = read_line(f, &line);
-    if(r == ERROR) return ERROR;
+    if(r == ERROR) return NULL;
     screen->screen_height = atoi(line);
 
     r = read_line(f, &line);
-    if(r == ERROR) return ERROR;
+    if(r == ERROR) return NULL;
     screen->map.x = atoi(line);
 
     r = read_line(f, &line);
-    if(r == ERROR) return ERROR;
+    if(r == ERROR) return NULL;
     screen->map.y = atoi(line);
 
     r = read_line(f, &line);
-    if(r == ERROR) return ERROR;
+    if(r == ERROR) return NULL;
     screen->map_width = atoi(line);
 
     r = read_line(f, &line);
-    if(r == ERROR) return ERROR;
+    if(r == ERROR) return NULL;
     screen->map_height = atoi(line);
 
     r = read_line(f, &line);
-    if(r == ERROR) return ERROR;
+    if(r == ERROR) return NULL;
     screen->messagebox.x = atoi(line);
 
     r = read_line(f, &line);
-    if(r == ERROR) return ERROR;
+    if(r == ERROR) return NULL;
     screen->messagebox.y = atoi(line);
 
     r = read_line(f, &line);
-    if(r == ERROR) return ERROR;
+    if(r == ERROR) return NULL;
     screen->messagebox_width = atoi(line);
 
     r = read_line(f, &line);
-    if(r == ERROR) return ERROR;
+    if(r == ERROR) return NULL;
     screen->messagebox_height = atoi(line);
     screen->cursor.x = 10;
     screen->cursor.y = 10;
@@ -128,10 +137,10 @@ Result init_screen(char *file_name, Screen *screen){
     clear_screen();
     change_color("reset", "reset");
     printf("%c[8;%d;%dt", 27, screen->screen_height, screen->screen_width);
-    if(print_margins(screen) == ERROR) return ERROR;
+    if(print_margins(screen) == ERROR) return NULL;
     printf("\n");
     print_title(screen, title);
-    return OK;
+    return screen;
 }
 
 Result restore_screen(Screen *screen){

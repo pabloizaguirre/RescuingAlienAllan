@@ -9,20 +9,15 @@
 Level *levels_init(Screen *screen){
     Level *plevel_first, *plevel, *plevel_last;      
     FILE *f_level;
+    Position spos;
     char level_file[256];
     char level_number[64];
     char level_message[256];
     char num_people[64];
-    char num_ladder_floor[64];
     char map_file[256];
-    char num_portal[64];
-    char num_floor[64];
-    char num_ladder[64];
-
-    //esto es para probar con people_create
-    Position spos;
-    /* spos.x = 30;
-    spos.y = 16; */
+    char num_portal[64], num_floor[64], num_ladder[64], num_ladder_floor[64], min_people[64];
+    char num_portal_2[64], num_floor_2[64], num_ladder_2[64], num_ladder_floor_2[64], min_people_2[64];
+    char num_portal_3[64], num_floor_3[64], num_ladder_3[64], num_ladder_floor_3[64], min_people_3[64];
 
     for(int i = 0; i < NUM_LEVELS; i++){
 
@@ -88,6 +83,68 @@ Level *levels_init(Screen *screen){
         plevel->portal = atoi(num_portal);
         plevel->portal_act = atoi(num_portal);
 
+        if(read_line(f_level, min_people) != OK){
+            return NULL;
+        }
+        plevel->min_people = atoi(min_people);
+        
+        //2 stars
+        if(read_line(f_level, num_ladder_floor_2) != OK){
+            return NULL;
+        }
+        plevel->num_ladder_floor_2 = atoi(num_ladder_floor_2);
+       
+        if(read_line(f_level, num_ladder_2) != OK){
+            return NULL;
+        }
+        plevel->num_ladder_2 = atoi(num_ladder_2);
+
+        if(read_line(f_level, num_floor_2) != OK){
+            return NULL;
+        }
+        plevel->num_floor_2 = atoi(num_floor_2);
+
+        
+        if(read_line(f_level, num_portal_2) != OK){
+            return NULL;
+        }
+        plevel->portal_2 = atoi(num_portal_2);
+
+        if(read_line(f_level, min_people_2) != OK){
+            return NULL;
+        }
+        plevel->min_people_2 = atoi(min_people_2);
+
+        //3 stars
+        if(read_line(f_level, num_ladder_floor_3) != OK){
+            return NULL;
+        }
+        plevel->num_ladder_floor_3 = atoi(num_ladder_floor_3);
+       
+        if(read_line(f_level, num_ladder_3) != OK){
+            return NULL;
+        }
+        plevel->num_ladder_3 = atoi(num_ladder_3);
+
+        if(read_line(f_level, num_floor_3) != OK){
+            return NULL;
+        }
+        plevel->num_floor_3 = atoi(num_floor_3);
+
+        
+        if(read_line(f_level, num_portal_3) != OK){
+            return NULL;
+        }
+        plevel->portal_3 = atoi(num_portal_3);
+        
+        if(read_line(f_level, min_people_3) != OK){
+            return NULL;
+        }
+        plevel->min_people_3 = atoi(min_people_3);
+        
+
+
+
         if(read_line(f_level,map_file) != OK){
             return NULL;
         }
@@ -100,23 +157,55 @@ Level *levels_init(Screen *screen){
 
 
         spos = screen_position(*(plevel->map->Start_pos), screen);
-        //falta hacer esto bien que está hecho para que solo este viva la primera persona y que la posicion
-        //donde empieza esté bien
+        
         for (int k = 0; k < plevel->num_people; k++){
             plevel->people[k] = create_people(64, spos, DESINTEGRATED, k);
         }
 
-        /* plevel->people[0] = create_people(64, spos, ALIVE);
-        for(int k = 1; k < plevel->num_people; k++){
-            plevel->people[k] = create_people(64, spos, DESINTEGRATED);
-        } */
-
-
-        
         fclose(f_level);
     }
     return plevel_first;
 } 
+
+/* 
+    Returns the state of the game 
+ */
+Level_result game_status(Level *level){
+    int i, people_finished = 0;
+    if (!level) return RES_ERROR;
+
+    for (i = 0; i < level->num_people; i++){
+        if(level->people[i]->state == FINISHED) people_finished++;
+    }
+
+    if (level->num_ladder_floor_act > level->num_ladder_floor_3 && level->num_ladder_act > level->num_ladder_3
+                    && level->num_floor_act > level->num_floor_3 && level->portal_act > level->portal_3 
+                    && people_finished > level->min_people_3){
+        return SUPREME;
+
+
+    } else if (level->num_ladder_floor_act == level->num_ladder_floor_3 && level->num_ladder_act == level->num_ladder_3
+                    && level->num_floor_act == level->num_floor_3 && level->portal_act == level->portal_3 
+                    && people_finished == level->min_people_3){
+        return STARS_3;
+
+
+    } else if (level->num_ladder_floor_act >= level->num_ladder_floor_2 && level->num_ladder_act >= level->num_ladder_2
+                    && level->num_floor_act >= level->num_floor_2 && level->portal_act >= level->portal_2
+                    && people_finished >= level->min_people_2){
+        return STARS_2;
+
+
+    } else if (level->num_ladder_floor_act >= level->num_ladder_floor && level->num_ladder_act >= level->num_ladder
+                    && level->num_floor_act >= level->num_floor && level->portal_act >= level->portal
+                    && people_finished >= level->min_people){
+        return STARS_1;
+
+
+    } else {
+        return LOST;
+    }
+}
 
 Map *level_get_map(Level *level){
     return level->map;
