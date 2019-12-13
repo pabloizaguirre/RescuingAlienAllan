@@ -120,20 +120,6 @@ Result map_merge(Screen *screen, Map *map){
     return OK;
 }
 
-
-
-Surroundings map_get_position_surroundings(Position position, Map *map){
-    Surroundings sur;
-
-    sur.center = &map->boxes[position.x][position.y];
-    sur.bottom = &map->boxes[position.x][position.y-1];
-    sur.top = &map->boxes[position.x][position.y+1];
-    sur.left = &map->boxes[position.x-1][position.y];
-    sur.right = &map->boxes[position.x+1][position.y];
-
-    return sur;
-}
-
 Position* map_get_start_position(Map *map){
     return map->Start_pos;
 }

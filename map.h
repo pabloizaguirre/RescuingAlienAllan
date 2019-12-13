@@ -21,14 +21,6 @@ typedef struct {
     Position *PORTALB_pos;
 } Map;
 
-typedef struct {
-    Box *center;
-    Box *top;
-    Box *bottom;
-    Box *right;
-    Box *left;
-} Surroundings;
-
 /* Creates a map of type Map out of a text file */
 Map *create_map(char *file, Screen *screen);
 
@@ -52,11 +44,6 @@ Bool is_position_occupable(Position position, Level *level, Screen *screen);
 Bool is_position_valid_resources(Position position, Level *level, Screen *screen);
 
 Result map_merge(Screen *screen, Map *map);
-
-/* Takes as arguments a position in the map and a map and returns an element
-of type Surrounding that includes the boxes that surround the position and the box
-in the given position */
-Surroundings map_get_position_surroundings(Position position, Map *map);
 
 Position* map_get_start_position(Map *map);
 

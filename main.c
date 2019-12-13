@@ -29,6 +29,10 @@ int main(int argc, char** argv){
         movement_loop(actual_level, screen);
         while(movement_loop(actual_level, screen) != LEVEL_FINISHED);
         
+
+        
+        if(level_end(game_status(actual_level), screen));
+
         /* Load next level */
         print_message(screen, "Level finished");
         fflush(stdout);

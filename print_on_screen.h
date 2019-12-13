@@ -65,6 +65,12 @@ Result print_resources(Screen *screen, Level *level);
 
 Result print_title(Screen *screen, char *text);
 
+/* 
+    Prints on screen if you passed the level or not
+ */
+
+Result level_end(Level_result res, Screen *screen);
+
 /*
     Prints the given map in the appropiate place of the 
     screen, croping it to the right dimensions if it

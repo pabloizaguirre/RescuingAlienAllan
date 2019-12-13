@@ -15,13 +15,17 @@ Level *levels_init(Screen *screen){
     char level_message[256];
     char num_people[64];
     char map_file[256];
+    char folder_name[256];
     char num_portal[64], num_floor[64], num_ladder[64], num_ladder_floor[64], min_people[64];
     char num_portal_2[64], num_floor_2[64], num_ladder_2[64], num_ladder_floor_2[64], min_people_2[64];
     char num_portal_3[64], num_floor_3[64], num_ladder_3[64], num_ladder_floor_3[64], min_people_3[64];
+    
+    
 
     for(int i = 0; i < NUM_LEVELS; i++){
 
-        sprintf(level_file, "level%d.txt", i+1);
+        sprintf(folder_name, "./level_files/");
+        sprintf(level_file, "./level_files/level%d.txt", i+1);
 
         f_level = fopen(level_file, "r");
         if(f_level == NULL){
@@ -141,20 +145,18 @@ Level *levels_init(Screen *screen){
             return NULL;
         }
         plevel->min_people_3 = atoi(min_people_3);
-        
-
-
 
         if(read_line(f_level,map_file) != OK){
             return NULL;
         }
-
-        plevel->map = create_map(map_file, screen);
+        strcat(folder_name, map_file);
+        plevel->map = create_map(folder_name, screen);
         if(plevel->map == NULL) return NULL;
 
         plevel->people = (People**)malloc(sizeof(People*)*plevel->num_people);
         if(plevel->people == NULL) return NULL;
 
+        
 
         spos = screen_position(*(plevel->map->Start_pos), screen);
         

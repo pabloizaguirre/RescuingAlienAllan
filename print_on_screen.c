@@ -460,6 +460,36 @@ Result print_resources(Screen *screen, Level *level){
     return OK;
 }
 
+Result level_end(Level_result res, Screen *screen){
+    switch(res){
+            case LOST:
+                print_message(screen, "Level not completed");
+                fflush(stdout);
+                usleep(2*1000*1000);
+                break;
+            case STARS_1:
+                print_message(screen, "Level completed with 1 star");
+                fflush(stdout);
+                usleep(2*1000*1000);
+                break;
+            case STARS_2:
+                print_message(screen, "Level completed with 2 stars");
+                fflush(stdout);
+                usleep(2*1000*1000);
+                break;
+            case STARS_3:
+                print_message(screen, "Level completed with 3 stars");
+                fflush(stdout);
+                usleep(2*1000*1000);
+                break;
+            case SUPREME:
+                print_message(screen, "You found a better way to solve the level than what the developers of the game thought!!!");
+                fflush(stdout);
+                usleep(2*1000*1000);
+                break;
+        }
+}
+
 /*
     Prints the given map in the appropiate place of the 
     screen, croping it to the right dimensions if it
