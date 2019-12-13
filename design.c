@@ -24,27 +24,29 @@ int place_resource(Screen *screen, Level *level, char resource){
     Box res = get_resource(resource);
     int k = 0;
 
-    if(current == LADDER){
-        if(level->num_ladder_floor_act < level->num_ladder_floor){
-            (level->num_ladder_floor_act)++;
-        }else if(level->num_ladder_act < level->num_ladder){
-            (level->num_ladder_act)++;
+    if(resource == (char)127){
+        if(current == LADDER){
+            if(level->num_ladder_floor_act < level->num_ladder_floor){
+                (level->num_ladder_floor_act)++;
+            }else if(level->num_ladder_act < level->num_ladder){
+                (level->num_ladder_act)++;
+            }
+        }else if(current == WALL){
+            if(level->num_ladder_floor_act < level->num_ladder_floor){
+                (level->num_ladder_floor_act)++;
+            }else if(level->num_floor_act < level->num_floor){
+                (level->num_floor_act)++;
+            }
+        }else if(current == PORTALA){
+            if(level->portal_act < level->portal){
+                (level->portal_act)++;
+            }
         }
-    }else if(current == WALL){
-        if(level->num_ladder_floor_act < level->num_ladder_floor){
-            (level->num_ladder_floor_act)++;
-        }else if(level->num_floor_act < level->num_floor){
-            (level->num_floor_act)++;
+        if((level->map->boxes_design)[pos.x][pos.y] != AIR){
+            (level->map->boxes_design)[pos.x][pos.y] = AIR;
+            (level->map->boxes_merge)[pos.x][pos.y] = AIR;
+            k = 2;
         }
-    }else if(current == PORTALA){
-        if(level->portal_act < level->portal){
-            (level->portal_act)++;
-        }
-    }
-    if((level->map->boxes_design)[pos.x][pos.y] != AIR){
-        (level->map->boxes_design)[pos.x][pos.y] = AIR;
-        (level->map->boxes_merge)[pos.x][pos.y] = AIR;
-        k = 2;
     }
 
     if(res == LADDER){
@@ -101,7 +103,7 @@ FLAG design(Level *level, Screen *screen){
         if(screen->cursor.x > screen->map.x)
             screen->cursor.x--;
         break;
-    case('q'):
+    case('\n'):
         return DESIGN_FINISHED;
     default:
         if(is_position_valid_resources(screen->cursor, level, screen)){

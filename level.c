@@ -156,12 +156,10 @@ Level *levels_init(Screen *screen){
         plevel->people = (People**)malloc(sizeof(People*)*plevel->num_people);
         if(plevel->people == NULL) return NULL;
 
-        
-
         spos = screen_position(*(plevel->map->Start_pos), screen);
         
         for (int k = 0; k < plevel->num_people; k++){
-            plevel->people[k] = create_people(64, spos, DESINTEGRATED, k);
+            plevel->people[k] = create_people(64, spos, DESINTEGRATED, 3*k);
         }
 
         fclose(f_level);
@@ -180,26 +178,37 @@ Level_result game_status(Level *level){
         if(level->people[i]->state == FINISHED) people_finished++;
     }
 
-    if (level->num_ladder_floor_act > level->num_ladder_floor_3 && level->num_ladder_act > level->num_ladder_3
-                    && level->num_floor_act > level->num_floor_3 && level->portal_act > level->portal_3 
-                    && people_finished > level->min_people_3){
-        return SUPREME;
 
+    if (level->num_ladder_floor_act >= level->num_ladder_floor - level->num_ladder_floor_3
+                    && level->num_ladder_act >= level->num_ladder - level->num_ladder_3
+                    && level->num_floor_act >= level->num_floor - level->num_floor_3 
+                    && level->portal_act >= level->portal - level->portal_3 
+                    && people_finished >= level->min_people_3){
 
-    } else if (level->num_ladder_floor_act == level->num_ladder_floor_3 && level->num_ladder_act == level->num_ladder_3
-                    && level->num_floor_act == level->num_floor_3 && level->portal_act == level->portal_3 
-                    && people_finished == level->min_people_3){
+        if (level->num_ladder_floor_act > level->num_ladder_floor - level->num_ladder_floor_3 
+                    || level->num_ladder_act > level->num_ladder - level->num_ladder_3
+                    || level->num_floor_act > level->num_floor - level->num_floor_3 
+                    || level->portal_act > level->portal - level->portal_3 
+                    || people_finished > level->min_people_3){
+            
+            return SUPREME;
+        }
+
         return STARS_3;
 
 
-    } else if (level->num_ladder_floor_act >= level->num_ladder_floor_2 && level->num_ladder_act >= level->num_ladder_2
-                    && level->num_floor_act >= level->num_floor_2 && level->portal_act >= level->portal_2
+    } else if (level->num_ladder_floor_act >= level->num_ladder_floor - level->num_ladder_floor_2 
+                    && level->num_ladder_act >= level->num_ladder - level->num_ladder_2
+                    && level->num_floor_act >= level->num_floor - level->num_floor_2 
+                    && level->portal_act >= level->portal - level->portal_2
                     && people_finished >= level->min_people_2){
         return STARS_2;
 
 
-    } else if (level->num_ladder_floor_act >= level->num_ladder_floor && level->num_ladder_act >= level->num_ladder
-                    && level->num_floor_act >= level->num_floor && level->portal_act >= level->portal
+    } else if (level->num_ladder_floor_act >= 0 
+                    && level->num_ladder_act >= 0
+                    && level->num_floor_act >= 0
+                    && level->portal_act >= 0
                     && people_finished >= level->min_people){
         return STARS_1;
 
@@ -219,9 +228,16 @@ People **level_get_peoples(Level *level){
     return level->people;
 }
 
-void level_destroy(Level *levels){
-    free (levels);
-    return;
+void free_level(Level* first_level, Screen * screen){
+    Level *next_level;
+    if(!screen) return;
+    while(first_level){
+        next_level = first_level->next_level;
+        free_map(first_level->map, screen);
+        free_people(first_level);
+        free(first_level);
+        first_level = next_level;
+    }
 }
 
 

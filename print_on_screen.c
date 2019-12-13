@@ -45,7 +45,7 @@ int change_color(char *background_color, char *foreground_color){
 */
 int change_cursor(Position position, Screen *screen){
     int x, y;
-    //falta comprobar que la posición está bien. Creo que no lo he hecho bien
+    
     if (position.x < 0 || position.x > screen->screen_width || position.y < 2 || position.y > screen->screen_height + 1){
         print_message(screen, "Se pide cambiar el cursor a una posición no válida");
     } else {  
@@ -75,20 +75,20 @@ Screen *init_screen(char *file_name){
     char line[MAX_SIZE];
     char title[MAX_SIZE];
     FILE *f;
-    f = fopen(file_name, "r");
     Result r;
     Screen *screen = NULL;
     
     screen = (Screen *)malloc(sizeof(Screen));
     if(!screen) return NULL;
 
+    f = fopen(file_name, "r");
+    if(f == NULL){
+        free(screen);
+    }
+
     //Initialice screen variables
     r = read_line(f, &title);
     if(r == ERROR) return NULL;
-
-    r = read_line(f, &line);
-    if(r == ERROR) return NULL;
-    screen->star_char = line[0];
 
     r = read_line(f, &line);
     if(r == ERROR) return NULL;
@@ -145,11 +145,13 @@ Screen *init_screen(char *file_name){
 
 Result restore_screen(Screen *screen){
     Position final_pos;
+    if(!screen) return;
     final_pos.x = 0;
     final_pos.y = screen->screen_height+1;
     change_color("reset", "reset");
     change_cursor(final_pos,screen);
     tcsetattr(fileno(stdin), TCSANOW, &initial);
+    free(screen);
 }
 
 Result print_title(Screen *screen, char *title){
@@ -424,10 +426,20 @@ Result print_resources(Screen *screen, Level *level){
         pos.y += 1;
         change_cursor(pos, screen);
     }
-    //Print the message croping it to the right dimensions
+    //Print the resources and instrucctions
     pos = res_pos;
     change_cursor(pos, screen);
+
+    pos.y++;
+    change_cursor(pos, screen);
+    printf("RESOURCES:");
+    pos.y++;
+
+    
+    
     if(level->num_ladder_floor > 0){
+        pos.y++;
+        change_cursor(pos, screen);
         printf("LADDERS/FLOORS (l/f): x%d", level->num_ladder_floor_act);
     }
 
@@ -443,24 +455,89 @@ Result print_resources(Screen *screen, Level *level){
         printf("FLOORS (f): x%d", level->num_floor_act);
     }
 
-    pos.y++;
-    change_cursor(pos, screen);
     if(level->portal > 0){
+        pos.y++;
+        change_cursor(pos, screen);
         printf("PORTAL (p): x%d", level->portal_act);
     }
 
-    pos.y += 2;
+    // 2 starts
+    pos.y+=2;
     change_cursor(pos, screen);
-    printf("Press q to save and quit");
+    printf("2 stars:");
+    pos.y++;
+    
+    if(level->num_ladder_floor_2 > 0){
+        pos.y++;
+        change_cursor(pos, screen);
+        printf("LADDERS/FLOORS: x%d", level->num_ladder_floor_2);
+    }
+
+    if(level->num_ladder_2 > 0){
+        pos.y++;
+        change_cursor(pos, screen);
+        printf("LADDERS: x%d", level->num_ladder_2);
+    }
+
+    if(level->num_floor_2 > 0){
+        pos.y++;
+        change_cursor(pos, screen);
+        printf("FLOORS: x%d", level->num_floor_2);
+    }
+
+    if(level->portal_2 > 0){
+        pos.y++;
+        change_cursor(pos, screen);
+        printf("PORTALS: x%d", level->portal_2);
+    }
+
+    // 3 starts
+    pos.y+=2;
+    change_cursor(pos, screen);
+    printf("3 stars use:");
+    pos.y++;
+    
+    if(level->num_ladder_floor_3 > 0){
+        pos.y++;
+        change_cursor(pos, screen);
+        printf("LADDERS/FLOORS: x%d", level->num_ladder_floor_3);
+    }
+
+    if(level->num_ladder_3 > 0){
+        pos.y++;
+        change_cursor(pos, screen);
+        printf("LADDERS: x%d", level->num_ladder_3);
+    }
+
+    if(level->num_floor_3 > 0){
+        pos.y++;
+        change_cursor(pos, screen);
+        printf("FLOORS: x%d", level->num_floor_3);
+    }
+
+    if(level->portal_3 > 0){
+        pos.y++;
+        change_cursor(pos, screen);
+        printf("PORTALS: x%d", level->portal_3);
+    }
+    
+
+    pos.y += 3;
+    change_cursor(pos, screen);
+    printf("Press ENTER to play");
 
     pos.y += 2;
     change_cursor(pos, screen);
-    printf("Press other key to delete");
+    printf("Press DEL to delete");
 
     return OK;
 }
 
 Result level_end(Level_result res, Screen *screen){
+    if(!screen){
+        return ERROR;
+    }
+
     switch(res){
             case LOST:
                 print_message(screen, "Level not completed");
@@ -488,6 +565,42 @@ Result level_end(Level_result res, Screen *screen){
                 usleep(2*1000*1000);
                 break;
         }
+        return OK;
+}
+
+//This function doesn't crop the file, so make sure it fits on screen
+Result print_file(char *path, Position pos, Screen *screen){
+    FILE *f;
+    int i;
+    char line[MAX_SIZE];
+    Result r;
+
+    f = fopen(path, "r");
+    if(!f) return -1;
+
+    change_cursor(pos, screen);
+
+    do{
+        i = 0;
+        r = read_line(f, &line);
+        while (line[i]){
+            if (line[i] != " "){
+                printf("%c", line[i]);
+                pos.x++;
+            } else{
+                pos.x++;
+                change_cursor(pos, screen)
+            }
+        }
+        pos.y++;
+
+        if(r == ERROR){
+            printf("error reading file");
+            return ERROR;
+        }
+    }while(!feof(f));
+
+    Return OK;
 }
 
 /*

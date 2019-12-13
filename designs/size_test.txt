@@ -1,0 +1,27 @@
+#title
+Rescue alien Alan
+
+#screen width
+130
+#screen height
+43 
+
+#map x start
+30
+#map y start
+7 
+#map width
+100
+#map height
+31
+
+#messagebox x start
+3
+#messagebox y start
+39 
+#messagebox width
+127
+#messagebox height
+3
+
+

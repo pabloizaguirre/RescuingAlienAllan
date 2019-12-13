@@ -193,16 +193,26 @@ FLAG movement_loop(Level *level, Screen * screen){
     return LEVEL_NOT_FINISHED;
 }
 
+Result reset_people(Level *level, Screen * screen){
+    Position spos = screen_position(*(level->map->Start_pos), screen);
+        
+    for (int k = 0; k < level->num_people; k++){
+        level->people[k]->position = spos;
+        level->people[k]->state = DESINTEGRATED;
+        level->people[k]->wait = 3*k;                
+    }
+}
 
 
-//problematico creo que esta mal
 int free_people(Level *level){
     int i;
-    for (i = 0; i < level->num_people; i++){
-        if (level->people[i] != NULL){
-            free(level->people[i]);
+    if(level->people){
+        for (i = 0; i < level->num_people; i++){
+            if (level->people[i] != NULL){
+                free(level->people[i]);
+            }
         }
+        free(level->people);
     }
-    free(level->people);
     return 1;
 }

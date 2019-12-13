@@ -21,11 +21,6 @@ Map* create_map(char *map_file, Screen *screen){
     return map;
 }
 
-void free_map(Map *map){
-    free(map);
-    return;
-}
-
 Position map_position(Position position, Screen *screen){
     Position map_pos;
 
@@ -130,5 +125,34 @@ Position* map_get_end_position(Map *map){
 
 Position* map_get_portalb_position(Map *map){
     return map->PORTALB_pos;
+}
+
+void free_map(Map *map, Screen *screen){
+    if(map->boxes){
+        for(int i = 0; i < screen->map_height; i++){
+            if(map->boxes[i])free(map->boxes[i]);
+        }
+        free(map->boxes);
+    }
+
+    if(map->boxes_design){
+        for(int i = 0; i < screen->map_height; i++){
+            if(map->boxes_design[i])free(map->boxes_design[i]);
+        }
+        free(map->boxes_design);
+    }
+
+    if(map->boxes_merge){
+        for(int i = 0; i < screen->map_height; i++){
+            if(map->boxes_merge[i])free(map->boxes_merge[i]);
+        }
+        free(map->boxes_merge);
+    }
+
+    free(map->Start_pos);
+    free(map->End_pos);
+    free(map->PORTALB_pos);
+    free (map);
+    return;
 }
 

@@ -25,7 +25,7 @@ typedef struct {
 Map *create_map(char *file, Screen *screen);
 
 /* Deallocates a map */
-void free_map(Map *map);
+void free_map(Map *map, Screen * screen);
 
 /* It recieves as an argument a position of the screen and returns a map position 
 If the position is not in the map then the function returns a position which has a -1 in pos.x 

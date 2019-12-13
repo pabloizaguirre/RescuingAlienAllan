@@ -3,18 +3,22 @@
 #include "level.h"
 #include "design.h"
 
+void free_all(Screen *screen, Level * first_level);
 
 int main(int argc, char** argv){
     Screen *screen;
     Level *first_level, *actual_level;
-    char interface_file[] = "size_test.txt";
+    char interface_file[] = "./designs/size_test.txt";
     FLAG rec;
     int i = 0;
+    Level_result lr;
 
     screen = init_screen(interface_file);
+    if(!screen) free_all(screen, first_level);
     print_message(screen, "Start");
     
     first_level = levels_init(screen);
+    if(!first_level) free_all(screen, first_level);
     actual_level = first_level;
 
     while(actual_level->next_level != NULL){
@@ -29,21 +33,23 @@ int main(int argc, char** argv){
         movement_loop(actual_level, screen);
         while(movement_loop(actual_level, screen) != LEVEL_FINISHED);
         
-
+        lr = game_status(actual_level);
         
-        if(level_end(game_status(actual_level), screen));
+        if(level_end(lr, screen) == ERROR) return ERROR;
 
         /* Load next level */
-        print_message(screen, "Level finished");
-        fflush(stdout);
-        usleep(2*1000*1000);
-        actual_level = actual_level->next_level;
+        if(lr != LOST && lr != RES_ERROR)actual_level = actual_level->next_level;
     } 
     
     
     
     print_message(screen, "Goodbye");
-    restore_screen(screen);
+    free_all(screen, first_level);
 
     return OK;
+}
+
+void free_all(Screen *screen, Level * first_level){
+    free_level(first_level, screen);
+    restore_screen(screen);
 }

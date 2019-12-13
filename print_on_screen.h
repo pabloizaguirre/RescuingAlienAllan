@@ -15,7 +15,6 @@ typedef struct {
     Position messagebox;
     int messagebox_width;
     int messagebox_height;
-    char star_char;
 } Screen;
 
 /*
@@ -70,6 +69,12 @@ Result print_title(Screen *screen, char *text);
  */
 
 Result level_end(Level_result res, Screen *screen);
+
+/* 
+    prints the content of a file without printing the spaces you have to change
+    the color of the cursor before calling this function for it to work
+ */
+Result print_file(char *path, Position pos, Screen *screen);
 
 /*
     Prints the given map in the appropiate place of the 

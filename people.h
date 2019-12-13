@@ -41,6 +41,8 @@ Result print_people(Level *level, Screen *screen);
 because the first time will return LEVEL_FINISHED*/
 FLAG movement_loop(Level *level, Screen * screen);
 
+Result reset_people(Level *level, Screen * screen);
+
 /*Frees the memory allocated for a person*/
 
 int free_people(Level *level);

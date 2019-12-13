@@ -8,9 +8,9 @@ balabalbalabala
 
 #Resources:
 #Number of ladders/floors:
-17
+5
 #Number of ladders:
-0
+10
 #Number of floors:
 0
 #Number of portals:
