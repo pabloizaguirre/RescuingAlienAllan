@@ -3,7 +3,7 @@
 #Mensaje:
 balabalbalabala
 #Number of people:
-15
+10
 
 
 #Resources:
@@ -45,4 +45,4 @@ balabalbalabala
 9
 
 #map:   
-map_test4.txt
+map4.txt

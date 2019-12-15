@@ -15,4 +15,4 @@ bloblboblbolboblo
 2
 
 #map:   
-map_test4.txt
+map4.txt

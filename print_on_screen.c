@@ -535,6 +535,8 @@ Result print_resources(Screen *screen, Level *level){
 }
 
 Result level_end(Level_result res, Screen *screen){
+    Position map_pos, pos;
+
     if(!screen){
         return ERROR;
     }
@@ -543,29 +545,36 @@ Result level_end(Level_result res, Screen *screen){
             case LOST:
                 print_message(screen, "Level not completed");
                 fflush(stdout);
-                usleep(2*1000*1000);
                 break;
             case STARS_1:
                 print_message(screen, "Level completed with 1 star");
                 fflush(stdout);
-                usleep(2*1000*1000);
                 break;
             case STARS_2:
                 print_message(screen, "Level completed with 2 stars");
                 fflush(stdout);
-                usleep(2*1000*1000);
                 break;
             case STARS_3:
                 print_message(screen, "Level completed with 3 stars");
                 fflush(stdout);
-                usleep(2*1000*1000);
                 break;
             case SUPREME:
                 print_message(screen, "You found a better way to solve the level than what the developers of the game thought!!!");
                 fflush(stdout);
-                usleep(2*1000*1000);
                 break;
         }
+
+        /* Print the stars on screen */
+        if (res != LOST){
+            map_pos.x = screen->map_height/2 + 5;
+            map_pos.y = screen->map_width/2;
+            pos = screen_position(map_pos, screen);
+            print_file("./designs/star.txt", pos, screen);
+            fflush(stdout);
+        }
+
+        usleep(2*1000*1000);
+
         return OK;
 }
 
@@ -573,32 +582,33 @@ Result level_end(Level_result res, Screen *screen){
 Result print_file(char *path, Position pos, Screen *screen){
     FILE *f;
     int i;
-    char line[MAX_SIZE];
-    Result r;
+    char line[256];
+    Position pos_aux = pos;
 
     f = fopen(path, "r");
-    if(!f) return -1;
+    if(!f) return ERROR;
 
     change_cursor(pos, screen);
 
     do{
         i = 0;
-        r = read_line(f, &line);
-        while (line[i]){
-            if (line[i] != " "){
+        if(read_line(f, line) == ERROR){
+            printf("Error reading file in print_file()\n");
+            return ERROR;
+        }
+        while (line[i] != 0){
+            if (line[i] != 32){
                 printf("%c", line[i]);
                 pos.x++;
             } else{
                 pos.x++;
                 change_cursor(pos, screen);
             }
+            i++;
         }
-        pos.y++;
-
-        if(r == ERROR){
-            printf("error reading file");
-            return ERROR;
-        }
+        pos_aux.y++;
+        pos = pos_aux;
+        change_cursor(pos, screen);
     }while(!feof(f));
 
     return OK;

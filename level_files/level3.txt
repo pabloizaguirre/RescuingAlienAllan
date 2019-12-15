@@ -15,4 +15,4 @@ bubububububububu
 2
 
 #map:   
-map_test3.txt
+map3.txt
