@@ -24,7 +24,7 @@ int place_resource(Screen *screen, Level *level, char resource){
     Box res = get_resource(resource);
     int k = 0;
 
-    if(resource == (char)127){
+    if(resource == (char)127 || res == LADDER || res == WALL || res == PORTALA){
         if(current == LADDER){
             if(level->num_ladder_floor_act < level->num_ladder_floor){
                 (level->num_ladder_floor_act)++;
