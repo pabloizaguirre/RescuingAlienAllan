@@ -1,19 +1,23 @@
-#screen width:
+#title
 
-#screen height:
+#screen width
 
-#map x start:
+#screen height
 
-#map y start:
 
-#map width:
+#map x start
 
-#map height:
+#map y start
 
-#messagebox x start:
+#map width
 
-#messagebox y start:
+#map height
 
-#messagebox width:
 
-#messagebox height:
+#messagebox x start
+
+#messagebox y start
+
+#messagebox width
+
+#messagebox height

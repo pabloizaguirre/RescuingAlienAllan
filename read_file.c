@@ -30,7 +30,7 @@ Level* level_from_file(Level *level, char *file){
     int number_people = atoi(line);
     People *people;
     for(int i = 0; i < number_people; i++){
-        people[i]=people
+        people[i] = people;
     }
 
 }

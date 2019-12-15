@@ -4,6 +4,8 @@
 
 #Number of people:
 
+
+
 #Resources:
 #Number of ladders/floors:
 
@@ -12,6 +14,33 @@
 #Number of floors:
 
 #Number of portals:
+
+#Min number of people:
+
+
+
+#2stars:
+#Number of ladders/floors:
+
+#Number of ladders:
+
+#Number of floors:
+
+#Number of portals:
+
+#Min number of people:
+
+
+#3stars:
+#Number of ladders/floors:
+
+#Number of ladders:
+
+#Number of floors:
+
+#Number of portals:
+
+#Min number of people:
 
 
 #map:   

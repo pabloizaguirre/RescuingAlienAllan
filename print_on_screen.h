@@ -76,6 +76,8 @@ Result level_end(Level_result res, Screen *screen);
  */
 Result print_file(char *path, Position pos, Screen *screen);
 
+Result start_screen(Screen *screen);
+
 /*
     Prints the given map in the appropiate place of the 
     screen, croping it to the right dimensions if it

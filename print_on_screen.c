@@ -47,7 +47,7 @@ int change_cursor(Position position, Screen *screen){
     int x, y;
     
     if (position.x < 0 || position.x > screen->screen_width || position.y < 2 || position.y > screen->screen_height + 1){
-        print_message(screen, "Se pide cambiar el cursor a una posición no válida");
+        return -1;
     } else {  
         x = position.x;
         y = position.y;
@@ -88,46 +88,90 @@ Screen *init_screen(char *file_name){
 
     //Initialice screen variables
     r = read_line(f, &title);
-    if(r == ERROR) return NULL;
+    if(r == ERROR){
+        free(screen);
+        fclose(f);
+        return NULL;
+    }
 
     r = read_line(f, &line);
-    if(r == ERROR) return NULL;
+    if(r == ERROR){
+        free(screen);
+        fclose(f);
+        return NULL;
+    }
     screen->screen_width = atoi(line);
 
     r = read_line(f, &line);
-    if(r == ERROR) return NULL;
+    if(r == ERROR){
+        free(screen);
+        fclose(f);
+        return NULL;
+    }
     screen->screen_height = atoi(line);
 
     r = read_line(f, &line);
-    if(r == ERROR) return NULL;
+    if(r == ERROR){
+        free(screen);
+        fclose(f);
+        return NULL;
+    }
     screen->map.x = atoi(line);
 
     r = read_line(f, &line);
-    if(r == ERROR) return NULL;
+    if(r == ERROR){
+        free(screen);
+        fclose(f);
+        return NULL;
+    }
     screen->map.y = atoi(line);
 
     r = read_line(f, &line);
-    if(r == ERROR) return NULL;
+    if(r == ERROR) {
+        free(screen);
+        fclose(f);
+        return NULL;
+    }
     screen->map_width = atoi(line);
 
     r = read_line(f, &line);
-    if(r == ERROR) return NULL;
+    if(r == ERROR){
+        free(screen);
+        fclose(f);
+        return NULL;
+    }
     screen->map_height = atoi(line);
 
     r = read_line(f, &line);
-    if(r == ERROR) return NULL;
+    if(r == ERROR) {
+        free(screen);
+        fclose(f);
+        return NULL;
+    }
     screen->messagebox.x = atoi(line);
 
     r = read_line(f, &line);
-    if(r == ERROR) return NULL;
+    if(r == ERROR){
+        free(screen);
+        fclose(f);
+        return NULL;
+    }
     screen->messagebox.y = atoi(line);
 
     r = read_line(f, &line);
-    if(r == ERROR) return NULL;
+    if(r == ERROR) {
+        free(screen);
+        fclose(f);
+        return NULL;
+    }
     screen->messagebox_width = atoi(line);
 
     r = read_line(f, &line);
-    if(r == ERROR) return NULL;
+    if(r == ERROR){
+        free(screen);
+        fclose(f);
+        return NULL;
+    }
     screen->messagebox_height = atoi(line);
     screen->cursor.x = 10;
     screen->cursor.y = 10;
@@ -137,10 +181,29 @@ Screen *init_screen(char *file_name){
     clear_screen();
     change_color("reset", "reset");
     printf("%c[8;%d;%dt", 27, screen->screen_height, screen->screen_width);
-    if(print_margins(screen) == ERROR) return NULL;
+    if(start_screen(screen) == ERROR) {
+        free(screen);
+        fclose(f);
+        return NULL;
+    }
+    if(print_margins(screen) == ERROR){
+        free(screen);
+        fclose(f);
+        return NULL;
+    }
     printf("\n");
     print_title(screen, title);
     return screen;
+}
+
+Result start_screen(Screen *screen){
+    Position pos;
+    pos.x = 0;
+    pos.y = 2;
+    if(print_file("./designs/start_screen.txt", pos, screen) == ERROR) return ERROR;
+    read_key();
+    clear_screen();
+    return OK;
 }
 
 Result restore_screen(Screen *screen){
@@ -582,7 +645,7 @@ Result level_end(Level_result res, Screen *screen){
 Result print_file(char *path, Position pos, Screen *screen){
     FILE *f;
     int i;
-    char line[256];
+    char line[1024];
     Position pos_aux = pos;
 
     f = fopen(path, "r");

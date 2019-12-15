@@ -1,7 +1,7 @@
 #Numero nivel:
 1
 #Mensaje:
-balabalbalabala
+Can you make it to the end?
 #Number of people:
 10
 

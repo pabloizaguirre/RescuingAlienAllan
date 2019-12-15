@@ -8,18 +8,18 @@ void free_all(Screen *screen, Level * first_level);
 int main(int argc, char** argv){
     Screen *screen;
     Level *first_level, *actual_level;
-    char interface_file[] = "./designs/size_test.txt";
+    char interface_file[] = "./designs/screen_info.txt";
     FLAG rec;
     int i = 0;
     Level_result lr;
 
     screen = init_screen(interface_file);
     if(!screen) free_all(screen, first_level);
-    print_message(screen, "Start");
     
     first_level = levels_init(screen);
     if(!first_level) free_all(screen, first_level);
     actual_level = first_level;
+    print_message(screen, actual_level->message);
 
     while(actual_level->next_level != NULL){
         /* Design loop */
@@ -40,6 +40,7 @@ int main(int argc, char** argv){
         /* Load next level */
         if(lr != LOST && lr != RES_ERROR)actual_level = actual_level->next_level;
         else reset_people(actual_level, screen);
+        print_message(screen, actual_level->message);
     } 
     
     
