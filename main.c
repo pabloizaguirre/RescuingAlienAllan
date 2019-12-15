@@ -39,6 +39,7 @@ int main(int argc, char** argv){
 
         /* Load next level */
         if(lr != LOST && lr != RES_ERROR)actual_level = actual_level->next_level;
+        else reset_people(actual_level, screen);
     } 
     
     

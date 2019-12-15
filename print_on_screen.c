@@ -145,13 +145,14 @@ Screen *init_screen(char *file_name){
 
 Result restore_screen(Screen *screen){
     Position final_pos;
-    if(!screen) return;
+    if(!screen) return ERROR;
     final_pos.x = 0;
     final_pos.y = screen->screen_height+1;
     change_color("reset", "reset");
     change_cursor(final_pos,screen);
     tcsetattr(fileno(stdin), TCSANOW, &initial);
     free(screen);
+    return OK;
 }
 
 Result print_title(Screen *screen, char *title){
@@ -589,7 +590,7 @@ Result print_file(char *path, Position pos, Screen *screen){
                 pos.x++;
             } else{
                 pos.x++;
-                change_cursor(pos, screen)
+                change_cursor(pos, screen);
             }
         }
         pos.y++;
@@ -600,7 +601,7 @@ Result print_file(char *path, Position pos, Screen *screen){
         }
     }while(!feof(f));
 
-    Return OK;
+    return OK;
 }
 
 /*
