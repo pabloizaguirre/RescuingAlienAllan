@@ -603,7 +603,7 @@ Result level_end(Level_result res, Screen *screen){
     if(!screen){
         return ERROR;
     }
-
+    printf("\e[?25l");
     switch(res){
             case LOST:
                 print_message(screen, "Level not completed");
@@ -628,16 +628,45 @@ Result level_end(Level_result res, Screen *screen){
         }
 
         /* Print the stars on screen */
+        map_pos.x = screen->map_height/2 + 5;   
+        map_pos.y = screen->map_width/2 - 28;
+        pos = screen_position(map_pos, screen);
+        print_file("./designs/empty_star.txt", pos, screen);
+        map_pos.y = screen->map_width/2 - 8;
+        pos = screen_position(map_pos, screen);
+        print_file("./designs/empty_star.txt", pos, screen);
+        map_pos.y = screen->map_width/2 + 12;
+        pos = screen_position(map_pos, screen);
+        print_file("./designs/empty_star.txt", pos, screen);
+        fflush(stdout);
+        
         if (res != LOST){
-            map_pos.x = screen->map_height/2 + 5;
-            map_pos.y = screen->map_width/2;
+            usleep(700*1000);
+            map_pos.x = screen->map_height/2 + 5;   
+            map_pos.y = screen->map_width/2 - 28;
             pos = screen_position(map_pos, screen);
             print_file("./designs/star.txt", pos, screen);
             fflush(stdout);
+
+            if(res != STARS_1){
+                usleep(700*1000);
+                map_pos.y = screen->map_width/2 - 8;
+                pos = screen_position(map_pos, screen);
+                print_file("./designs/star.txt", pos, screen);
+                fflush(stdout);
+
+                if(res != STARS_2){
+                    usleep(700*1000);
+                    map_pos.y = screen->map_width/2 + 12;
+                    pos = screen_position(map_pos, screen);
+                    print_file("./designs/star.txt", pos, screen);
+                    fflush(stdout);
+                }
+            }
         }
 
-        usleep(2*1000*1000);
-
+        usleep(5*1000*1000);
+        printf("\e[?25h");
         return OK;
 }
 

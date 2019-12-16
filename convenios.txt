@@ -30,9 +30,7 @@ el numero de niveles que hay está en level.h
 
 COSAS QUE HACER:
 
-creo que se puede quitar lo de surroundings
-
-falta poner en level.txt el numero de personas mínimo
+que si das al enter varias veces no siga funcionando el juego
 
 Guardado del juego
 Level_init a partir de un archivo

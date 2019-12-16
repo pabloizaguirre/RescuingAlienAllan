@@ -30,8 +30,10 @@ int main(int argc, char** argv){
         while(design(actual_level, screen) == DESIGN_NOT_FINISHED);
 
         /* People movement loop */
+        printf("\e[?25l");
         movement_loop(actual_level, screen);
         while(movement_loop(actual_level, screen) != LEVEL_FINISHED);
+        printf("\e[?25h");
         
         lr = game_status(actual_level);
         

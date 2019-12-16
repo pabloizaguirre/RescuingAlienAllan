@@ -87,7 +87,6 @@ int people_update(People *p, Level *level, Screen *screen){
                 p->position.y--;
                 map_pos = map_position(p->position, screen);
                 p->state = change_state(level->map->boxes_merge[map_pos.x][map_pos.y]);
-                print_message(screen, "ladder");
                 return 1;
             }
             return 0;
@@ -100,7 +99,6 @@ int people_update(People *p, Level *level, Screen *screen){
                     // Moves to portal B
                     p->position = pos_aux;
                     p->state = change_state(level->map->boxes_merge[map_pos.x][map_pos.y]);
-                    print_message(screen, "portala");
                     return 1;
                 }
             }
@@ -113,14 +111,17 @@ int people_update(People *p, Level *level, Screen *screen){
     pos_aux = p->position;
     pos_aux.y++;
     map_pos = map_position(pos_aux, screen);
-    b = level->map->boxes_merge[map_pos.x][map_pos.y];
+
+    if(map_pos.x != -1){
+        b = level->map->boxes_merge[map_pos.x][map_pos.y];
+    } else b = AIR;//This is just so it works when the cell below is the end of the map
+    
     //The person cannot move down if there is a ladder underneath
     if (is_position_occupable(pos_aux, level, screen) && b != LADDER){
         // Moves down
         p->position = pos_aux;
         map_pos = map_position(p->position, screen);
         p->state = change_state(level->map->boxes_merge[map_pos.x][map_pos.y]);
-        print_message(screen, "moves down");
         return 1;
     } else { // If the person cannot move down then it will move right if it is possible
         pos_aux = p->position;
@@ -130,7 +131,6 @@ int people_update(People *p, Level *level, Screen *screen){
             p->position = pos_aux;
             map_pos = map_position(p->position, screen);
             p->state = change_state(level->map->boxes_merge[map_pos.x][map_pos.y]);
-            print_message(screen, "moves right");
             return 1;
         }
     }
@@ -167,16 +167,18 @@ Result print_people(Level *level, Screen *screen){
 FLAG movement_loop(Level *level, Screen * screen){
     int k, i;
     FLAG flag = LEVEL_FINISHED;
-
+    printf("\e[?25l");
     usleep(100*1000);
 
     print_map(level->map->boxes_merge, screen);
     print_resources(screen, level);
     print_people(level, screen);
+    printf("\e[?25l");
     fflush(stdout);
     
     for (i = 0; i < level->num_people; i++){
         k = people_update(level->people[i], level, screen);
+        printf("\e[?25l");
         fflush(stdout);
         if (k < 0){
             printf("ERROR EN PEOPLE_UPDATE()\n");

@@ -26,6 +26,7 @@ Position map_position(Position position, Screen *screen){
 
     if (position.x < screen->map.x || position.y < screen->map.y || position.x > screen->map.x + screen->map_width - 1 || position.y > screen->map.y + screen->map_height - 1){
         map_pos.x = -1;
+        map_pos.y = -1;
         return map_pos;
     }
     map_pos.y = position.x - screen->map.x;
@@ -39,6 +40,7 @@ Position screen_position(Position position, Screen *screen){
 
     if (position.x < 0 || position.y < 0 || position.x > screen->map_height - 1 || position.y > screen->map_width - 1){
         screen_pos.x = -1;
+        screen_pos.y = -1;
         return screen_pos;
     }
 

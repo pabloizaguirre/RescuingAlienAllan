@@ -11,7 +11,7 @@ void free_all(Screen *screen, Level * first_level);
 int main(int argc, char** argv){
     Screen *screen;
     Level *first_level, *actual_level;
-    char interface_file[] = "./designs/size_test.txt";
+    char interface_file[] = "./designs/screen_info.txt";
     FLAG rec;
     Position pos, map_pos;
     int i = 0;
@@ -38,7 +38,16 @@ int main(int argc, char** argv){
     print_file("./designs/star.txt", pos, screen);
     fflush(stdout);
 
+    pos.x = 45;
+    pos.y = 38;
+
+    map_pos = map_position(pos, screen);
+
     change_cursor(pos, screen);
+    change_color("yellow", "black");
+    printf("%d, %d, is position occupable: %d", map_pos.x, map_pos.y, is_position_occupable(pos, actual_level, screen));
+
+
 
 
     restore_screen(screen);
