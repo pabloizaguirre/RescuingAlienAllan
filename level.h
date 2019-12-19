@@ -14,6 +14,7 @@ struct _Level {
     char message[256];
     int num_people;
     People **people;
+    int n_stars;
     
     // Currently unused resources
     int num_ladder_floor_act;
@@ -60,7 +61,7 @@ int level_print_mesaje(Level *level);
 
 /* 
     Returns the state of the game (LOST, STARS_1, STARS_2, STARS_3, SUPREME) and RES_ERROR if there
-    was an error
+    was an error also changes the number of stars of the level
  */
 Level_result game_status(Level *level);
 

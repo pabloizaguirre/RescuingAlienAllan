@@ -8,7 +8,7 @@
 
 //Celdas
 /* This enumeration defines the type Box, which represents an element in the map */
-typedef enum {AIR, WALL, START, END, LAVA, PORTALA, PORTALB, LADDER, ZONAPORTAL} Box;
+typedef enum {AIR, WALL, START, END, LAVA, PORTALA, PORTALB, LADDER, ZONAPORTAL, WALL_MERGE} Box;
 
 /* The structure Map includes an array of arrays of elements of type Box 
 Las posiciones son de tipo mapa, no de tipo */

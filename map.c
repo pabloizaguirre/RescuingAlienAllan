@@ -50,7 +50,7 @@ Position screen_position(Position position, Screen *screen){
     return screen_pos;
 }
 
-
+//celdas
 //Problematico this function returns true if there is a ladder, but if the person comes from above, the position is
 //not occupable 
 Bool is_position_occupable(Position position, Level *level, Screen *screen) {
@@ -65,7 +65,7 @@ Bool is_position_occupable(Position position, Level *level, Screen *screen) {
 
     b = level->map->boxes_merge[map_pos.x][map_pos.y];
 
-    if(b == WALL){
+    if(b == WALL || b == WALL_MERGE){
         return FALSE;
     }
 

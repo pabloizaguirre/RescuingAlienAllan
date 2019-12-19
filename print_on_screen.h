@@ -45,6 +45,11 @@ Result print_margins(Screen *screen);
 int change_color(char *background_color, char *foreground_color);
 
 /*
+    Changes the color you are printing with to the color given by the rgb values
+*/
+
+void change_color_rgb(int r, int g, int b, int bf);
+/*
     Changes the custor to the given position
 */
 int change_cursor(Position position, Screen *screen);

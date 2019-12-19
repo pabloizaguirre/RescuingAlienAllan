@@ -3,10 +3,11 @@
 #include "level.h"
 #include <stdlib.h>
 
+//celdas
 // Returns the state of the person when it reaches the b Box
-// Done for AIR, WALL, START, END, LAVA, PORTALA, PORTALB, LADDER
+// Done for AIR, WALL, START, END, LAVA, PORTALA, PORTALB, LADDER, WALL_MERGE, PORTAL_ZONE
 State change_state(Box b) {
-    if (b == LAVA || b == WALL) {
+    if (b == LAVA || b == WALL || b == WALL_MERGE) {
         return DESINTEGRATED;
     } else if (b == END) {
         return FINISHED;

@@ -5,6 +5,9 @@
 #include <string.h>
 #include <termios.h>
 
+#define FG 38
+#define BK 48
+
 struct termios initial;
 
 void _term_init();
@@ -38,6 +41,20 @@ int change_color(char *background_color, char *foreground_color){
 
     printf("%c[%s;1m", 27, background_color_code);
     return printf("%c[%s;1m", 27, foreground_color_code);
+}
+
+void change_color_rgb(int r, int g, int b, int bf){
+    if(r < 0) r = 0;
+    if(g < 0) g = 0;
+    if(b < 0) b = 0;
+
+    if(r > 255) r = 255;
+    if(g > 255) g = 255;
+    if(b > 255) b = 255;
+    
+    fprintf(stdout, "%c[%d;%d;%d;%d;%dm", 27, bf, 2, r, g, b);
+    fflush(stdout);
+    return;
 }
 
 /*
@@ -178,9 +195,9 @@ Screen *init_screen(char *file_name){
 
     //Set screen size
     _term_init(screen);
-    clear_screen();
     change_color("reset", "reset");
     printf("%c[8;%d;%dt", 27, screen->screen_height, screen->screen_width);
+    clear_screen();
     if(start_screen(screen) == ERROR) {
         free(screen);
         fclose(f);
@@ -393,6 +410,10 @@ Result print_map (Box **map, Screen *s) {
                     break;
                 case WALL:
                     change_color("white", "black");
+                    fprintf(stdout, " ");
+                    break;
+                case WALL_MERGE:
+                    change_color_rgb(124, 124, 124, BK);
                     fprintf(stdout, " ");
                     break;
                 case START:
@@ -734,7 +755,7 @@ Result print_file(char *path, Position pos, Screen *screen){
 void _term_init(Screen*screen) {
 	struct termios new;	          /*a termios structure contains a set of attributes about 
 					  how the terminal scans and outputs data*/
-	
+	setvbuf(stdin, NULL, _IONBF, 0);
 	tcgetattr(fileno(stdin), &initial);    /*first we get the current settings of out 
 						 terminal (fileno returns the file descriptor 
 						 of stdin) and save them in initial. We'd better 
@@ -756,4 +777,5 @@ void _term_init(Screen*screen) {
 	tcsetattr(fileno(stdin), TCSANOW, &new);  /*now we SET the attributes stored in new to the 
 						    terminal. TCSANOW tells the program not to wait 
 						    before making this change*/
+    setvbuf(stdin, NULL, _IONBF, 0);
 }

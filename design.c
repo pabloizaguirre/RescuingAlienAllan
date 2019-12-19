@@ -9,7 +9,7 @@ Box get_resource(char c){
     case 'l':
         return LADDER;    
     case 'f':
-        return WALL;
+        return WALL_MERGE;
     case 'p':
         return PORTALA;
     default:
@@ -24,14 +24,14 @@ int place_resource(Screen *screen, Level *level, char resource){
     Box res = get_resource(resource);
     int k = 0;
 
-    if(resource == (char)127 || res == LADDER || res == WALL || res == PORTALA){
+    if(resource == (char)127 || res == LADDER || res == WALL_MERGE || res == PORTALA){
         if(current == LADDER){
             if(level->num_ladder_floor_act < level->num_ladder_floor){
                 (level->num_ladder_floor_act)++;
             }else if(level->num_ladder_act < level->num_ladder){
                 (level->num_ladder_act)++;
             }
-        }else if(current == WALL){
+        }else if(current == WALL_MERGE){
             if(level->num_ladder_floor_act < level->num_ladder_floor){
                 (level->num_ladder_floor_act)++;
             }else if(level->num_floor_act < level->num_floor){
@@ -59,7 +59,7 @@ int place_resource(Screen *screen, Level *level, char resource){
             (level->map->boxes_design)[pos.x][pos.y] = res;
             return 1;
         }
-    }else if(res == WALL){
+    }else if(res == WALL_MERGE){
         if(level->num_floor_act > 0){
             (level->num_floor_act)--;
             (level->map->boxes_design)[pos.x][pos.y] = res;
@@ -84,6 +84,8 @@ int place_resource(Screen *screen, Level *level, char resource){
 FLAG design(Level *level, Screen *screen){
     print_resources(screen, level);
     change_cursor(screen->cursor, screen);
+    //fflush(stdin);
+    setvbuf(stdin, NULL, _IONBF, 0);
     char c = read_key();
 
     switch(c) {

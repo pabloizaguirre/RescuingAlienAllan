@@ -2,6 +2,7 @@
 #include "types.h"
 #include "level.h"
 #include "design.h"
+#include <termios.h>
 
 void free_all(Screen *screen, Level * first_level);
 
@@ -21,13 +22,15 @@ int main(int argc, char** argv){
     actual_level = first_level;
     print_message(screen, actual_level->message);
 
-    while(actual_level->next_level != NULL){
+    while(actual_level != NULL){
         /* Design loop */
         screen->cursor = screen->map;
         map_merge(screen, actual_level->map);
         print_map(actual_level->map->boxes_merge, screen);
         print_resources(screen, actual_level);
+        tcflush(fileno(stdin), TCIFLUSH); // get rid of the keys pressed in the game loop
         while(design(actual_level, screen) == DESIGN_NOT_FINISHED);
+
 
         /* People movement loop */
         printf("\e[?25l");
@@ -36,10 +39,13 @@ int main(int argc, char** argv){
         printf("\e[?25h");
         
         lr = game_status(actual_level);
+
+        
         
         if(level_end(lr, screen) == ERROR) return ERROR;
 
         /* Load next level */
+
         if(lr != LOST && lr != RES_ERROR)actual_level = actual_level->next_level;
         else reset_people(actual_level, screen);
         print_message(screen, actual_level->message);

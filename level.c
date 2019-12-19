@@ -8,8 +8,9 @@
 
 Level *levels_init(Screen *screen){
     Level *plevel_first, *plevel, *plevel_last;      
-    FILE *f_level;
+    FILE *f_level, *f_progress;
     Position spos;
+    char n_stars[10];
     char level_file[256];
     char level_number[64];
     char level_message[256];
@@ -20,10 +21,28 @@ Level *levels_init(Screen *screen){
     char num_portal_2[64], num_floor_2[64], num_ladder_2[64], num_ladder_floor_2[64], min_people_2[64];
     char num_portal_3[64], num_floor_3[64], num_ladder_3[64], num_ladder_floor_3[64], min_people_3[64];
     
+    /* f_progress = fopen("progress.txt", "r+");
+    if(!f_progress){
+        //Initialization of the game
+        f_progress = fopen("progress.txt", "w+");
+        if (!f_progress) {
+            print_message(screen, "Failed to save the game (progress.txt file couldn't be created)");
+            return ERROR;
+        }
+        fprintf(f_progress, "# number of stars in order 4 stars is supreme");
+    } */
     
 
     for(int i = 0; i < NUM_LEVELS; i++){
-
+        /* if (!feof(f_progress)){
+            if(read_line(f_progress, n_stars) != OK){
+                return NULL;
+            }
+            plevel->n_stars = atoi(n_stars);
+        } else {
+            fprintf(f_progress, "0");
+            plevel->n_stars = 0;
+        } */
         sprintf(folder_name, "./level_files/");
         sprintf(level_file, "./level_files/level%d.txt", i+1);
 
@@ -190,7 +209,9 @@ Level_result game_status(Level *level){
                     || level->num_floor_act > level->num_floor - level->num_floor_3 
                     || level->portal_act > level->portal - level->portal_3 
                     || people_finished > level->min_people_3){
-            
+            /* if (level->n_stars < 4){
+                fopen(f_progress)
+            } */
             return SUPREME;
         }
 

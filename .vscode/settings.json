@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "read_from_file.h": "c",
-        "print_on_screen.h": "c"
+        "print_on_screen.h": "c",
+        "level.h": "c"
     }
 }
