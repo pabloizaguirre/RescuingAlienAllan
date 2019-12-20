@@ -20,7 +20,7 @@ arriba a la izquierda seria map[100][0]
 
 //Celdas
 Map* map_char_to_box(char** map, Screen *screen){
-    char lista[10] = ".WSELAB#Zw";
+    char lista[11] = ".WSELAB#ZwD";
     int i, j, rows = screen->map_height, columns = screen->map_width;
     Map* map_obj = NULL;
     Box **mapB = NULL;
@@ -128,6 +128,7 @@ Map* map_char_to_box(char** map, Screen *screen){
             else if (map[i][j] == lista[7]) mapB[i][j] = LADDER;
             else if (map[i][j] == lista[8]) mapB[i][j] = ZONAPORTAL;
             else if (map[i][j] == lista[9]) mapB[i][j] = WALL_MERGE;
+            else if (map[i][j] == lista[10]) mapB[i][j] = DISAPPEAR_WALL;
         }
         free(map[i]);
     }

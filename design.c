@@ -84,8 +84,6 @@ int place_resource(Screen *screen, Level *level, char resource){
 FLAG design(Level *level, Screen *screen){
     print_resources(screen, level);
     change_cursor(screen->cursor, screen);
-    //fflush(stdin);
-    setvbuf(stdin, NULL, _IONBF, 0);
     char c = read_key();
 
     switch(c) {

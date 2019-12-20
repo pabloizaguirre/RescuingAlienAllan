@@ -50,8 +50,7 @@ int main(int argc, char** argv){
         else reset_people(actual_level, screen);
         print_message(screen, actual_level->message);
     } 
-    
-    
+      
     
     print_message(screen, "Goodbye");
     free_all(screen, first_level);

@@ -237,11 +237,22 @@ Result restore_screen(Screen *screen){
 
 Result print_title(Screen *screen, char *title){
     Position pos;
-    pos.y = 4;
-    pos.x = (screen->screen_width  - strlen(title))/ 2;
-    change_color("reset", "reset");
+    int l = strlen(title);
+    pos.y = 3;
+    pos.x = (screen->screen_width  - strlen(title))/ 2 - 2;
+    change_color("red", "white");
     change_cursor(pos, screen);
-    printf(title);
+    for(int i = 0; i < l + 3; i++)printf(" ");
+
+    pos.y++;
+    change_cursor(pos, screen);
+    printf("  ");
+    for(int i = 0; i < l-1; i++)printf("%c", title[i]);
+    printf("  ");
+
+    pos.y++;
+    change_cursor(pos, screen);
+    for(int i = 0; i < l + 3; i++)printf(" ");
     return OK;
 }
 
@@ -444,6 +455,10 @@ Result print_map (Box **map, Screen *s) {
                     change_color("reset", "magenta");
                     fprintf(stdout, "·");
                     break;
+                case DISAPPEAR_WALL:
+                    change_color_rgb(60,60,60, BK);
+                    fprintf(stdout, " ");
+                    break;
                 default:
                     change_color("black", "red");
                     fprintf(stdout, "X");
@@ -491,129 +506,126 @@ Result print_message(Screen *screen, char *text){
     }
 }
 
+Result print_resources_line(char *line, Position *p, Screen *screen){
+    int w = screen->screen_width - screen->map_width - 3;
+    int l = strlen(line);
+    // take the minimum between the width of the box and the length of the line
+    int m = w < l ? w : l; 
+    
+    change_cursor(*p, screen);
+    for(int i = 0; i < m; i++)printf("%c", line[i]);
+    for(int i = m; i < w; i++)printf(" ");
+
+    (p->y)++;
+    return OK;
+}
+
 Result print_resources(Screen *screen, Level *level){
-    int end_flag = 0;
-    int w = screen->screen_width - screen->map_width - 4;
-    int h = screen->map_height;
+    char array[256]; //Sirve para pasar los valores de los resources a print_resource
     Position res_pos, pos;
-    res_pos.x = 3;
+    int h = screen->map_height;
+    res_pos.x = 2;
     res_pos.y = (screen->map).y;
 
-    pos = res_pos;
-	
-	change_color("reset", "reset");
-    //Clear the messagebox
-    change_cursor(pos, screen);
+    //Clear the resources box
+    change_color_rgb(110, 31, 18, BK);
     for(int i=0; i < h; i++){
-        for(int j=0; j < w; j++){
-            printf(" ");
-        }
-        pos.y += 1;
-        change_cursor(pos, screen);
+        print_resources_line(" ", &res_pos, screen);
     }
+    res_pos.x = 2;
+    res_pos.y = (screen->map).y;
+	
     //Print the resources and instrucctions
     pos = res_pos;
-    change_cursor(pos, screen);
 
-    pos.y++;
-    change_cursor(pos, screen);
-    printf("RESOURCES:");
-    pos.y++;
-
-    
+    change_color_rgb(171, 147, 106, BK);
+    print_resources_line(" ", &pos, screen);
+    print_resources_line("RESOURCES:", &pos, screen);
+    print_resources_line(" ", &pos, screen);
     
     if(level->num_ladder_floor > 0){
-        pos.y++;
-        change_cursor(pos, screen);
-        printf("LADDERS/FLOORS (l/f): x%d", level->num_ladder_floor_act);
+        sprintf(array,"LADDERS/FLOORS (l/f): x%d", level->num_ladder_floor_act);
+        print_resources_line(array, &pos, screen);
     }
 
     if(level->num_ladder > 0){
-        pos.y++;
-        change_cursor(pos, screen);
-        printf("LADDERS (l): x%d", level->num_ladder_act);
+        sprintf(array,"LADDERS (l): x%d", level->num_ladder_act);
+        print_resources_line(array, &pos, screen);
     }
 
     if(level->num_floor > 0){
-        pos.y++;
-        change_cursor(pos, screen);
-        printf("FLOORS (f): x%d", level->num_floor_act);
+        sprintf(array," FLOORS (f): x%d", level->num_floor_act);
+        print_resources_line(array, &pos, screen);
     }
 
     if(level->portal > 0){
-        pos.y++;
-        change_cursor(pos, screen);
-        printf("PORTAL (p): x%d", level->portal_act);
+        sprintf(array,"PORTAL (p): x%d", level->portal_act);
+        print_resources_line(array, &pos, screen);
     }
+    print_resources_line(" ", &pos, screen);
+    print_resources_line(" ", &pos, screen);
 
+    
     // 2 starts
-    pos.y+=2;
-    change_cursor(pos, screen);
-    printf("2 stars:");
-    pos.y++;
+    change_color_rgb(184, 141, 68, BK);
+    print_resources_line("2 stars:", &pos, screen);
     
     if(level->num_ladder_floor_2 > 0){
-        pos.y++;
-        change_cursor(pos, screen);
-        printf("LADDERS/FLOORS: x%d", level->num_ladder_floor_2);
+        sprintf(array,"LADDERS/FLOORS: x%d", level->num_ladder_floor_2);
+        print_resources_line(array, &pos, screen);
     }
 
     if(level->num_ladder_2 > 0){
-        pos.y++;
-        change_cursor(pos, screen);
-        printf("LADDERS: x%d", level->num_ladder_2);
+        printf(array,"LADDERS: x%d", level->num_ladder_2);
+        print_resources_line(array, &pos, screen);
     }
 
     if(level->num_floor_2 > 0){
-        pos.y++;
-        change_cursor(pos, screen);
-        printf("FLOORS: x%d", level->num_floor_2);
+        sprintf(array,"FLOORS: x%d", level->num_floor_2);
+        print_resources_line(array, &pos, screen);
     }
 
     if(level->portal_2 > 0){
-        pos.y++;
-        change_cursor(pos, screen);
-        printf("PORTALS: x%d", level->portal_2);
+        sprintf(array,"PORTALS: x%d", level->portal_2);
+        print_resources_line(array, &pos, screen);
     }
 
     // 3 starts
-    pos.y+=2;
     change_cursor(pos, screen);
-    printf("3 stars use:");
-    pos.y++;
+    change_color_rgb(143, 100, 29, BK);
+    print_resources_line("3 stars use:", &pos, screen);
     
     if(level->num_ladder_floor_3 > 0){
-        pos.y++;
-        change_cursor(pos, screen);
-        printf("LADDERS/FLOORS: x%d", level->num_ladder_floor_3);
+        sprintf(array,"LADDERS/FLOORS: x%d", level->num_ladder_floor_3);
+        print_resources_line(array, &pos, screen);
     }
 
     if(level->num_ladder_3 > 0){
-        pos.y++;
-        change_cursor(pos, screen);
-        printf("LADDERS: x%d", level->num_ladder_3);
+        sprintf(array,"LADDERS: x%d", level->num_ladder_3);
+        print_resources_line(array, &pos, screen);
     }
 
     if(level->num_floor_3 > 0){
-        pos.y++;
-        change_cursor(pos, screen);
-        printf("FLOORS: x%d", level->num_floor_3);
+        sprintf(array,"FLOORS: x%d", level->num_floor_3);
+        print_resources_line(array, &pos, screen);
     }
 
     if(level->portal_3 > 0){
-        pos.y++;
-        change_cursor(pos, screen);
-        printf("PORTALS: x%d", level->portal_3);
+        sprintf(array,"PORTALS: x%d", level->portal_3);
+        print_resources_line(array, &pos, screen);
     }
     
+    //Instructions
+    change_color_rgb(110, 31, 18, BK);
 
-    pos.y += 3;
-    change_cursor(pos, screen);
-    printf("Press ENTER to play");
+    print_resources_line(" ", &pos, screen);
+    print_resources_line(" ", &pos, screen);
+    print_resources_line(" ", &pos, screen);
+    print_resources_line("Press ENTER to play", &pos, screen);
 
-    pos.y += 2;
-    change_cursor(pos, screen);
-    printf("Press DEL to delete");
+    print_resources_line(" ", &pos, screen);
+    print_resources_line(" ", &pos, screen);
+    print_resources_line("Press DEL to delete", &pos, screen);
 
     return OK;
 }
