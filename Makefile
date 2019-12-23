@@ -1,6 +1,6 @@
 CC = gcc -pedantic
 CFLAGS = -Wall
-EXE = main test_people
+EXE = main test_people reading_from_file_example
 #LIBRARIES = enemies.o level.o map.o people.o print_on_screen.o
 #LIBRARIES =print_on_screen.o read_from_file.o
 LIBRARIES =print_on_screen.o read_from_file.o level.o read_keys.o map.o people.o design.o
@@ -11,6 +11,9 @@ all : $(EXE)
 .PHONY : clean
 clean :
 	rm -f *.o core $(EXE)
+
+restart:
+	rm -f progress.txt core $(EXE)
 
 $(EXE) : % : %.o $(LIBRARIES)
 	$(CC) $(CFLAGS) -o $@ $@.o $(LIBRARIES)

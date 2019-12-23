@@ -15,10 +15,17 @@ int main(int argc, char** argv){
     Level_result lr;
 
     screen = init_screen(interface_file);
-    if(!screen) free_all(screen, first_level);
+    if(!screen) {
+        free_all(screen, first_level);
+        return ERROR;
+    }
     
     first_level = levels_init(screen);
-    if(!first_level) free_all(screen, first_level);
+    if(!first_level) {
+        free_all(screen, first_level);
+        return ERROR;
+    }
+    
     actual_level = first_level;
     print_message(screen, actual_level->message);
 

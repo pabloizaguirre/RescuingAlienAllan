@@ -10,9 +10,10 @@ Level *levels_init(Screen *screen){
     Level *plevel_first, *plevel, *plevel_last;      
     FILE *f_level, *f_progress;
     Position spos;
-    char n_stars[10];
+    int k = 1;
+    char n_stars[64];
     char level_file[256];
-    char level_number[64];
+    char level_number[10];
     char level_message[256];
     char num_people[64];
     char map_file[256];
@@ -21,28 +22,19 @@ Level *levels_init(Screen *screen){
     char num_portal_2[64], num_floor_2[64], num_ladder_2[64], num_ladder_floor_2[64], min_people_2[64];
     char num_portal_3[64], num_floor_3[64], num_ladder_3[64], num_ladder_floor_3[64], min_people_3[64];
     
-    /* f_progress = fopen("progress.txt", "r+");
+    f_progress = fopen("progress.txt", "r+");
     if(!f_progress){
         //Initialization of the game
-        f_progress = fopen("progress.txt", "w+");
+        f_progress = fopen("progress.txt", "w");
         if (!f_progress) {
             print_message(screen, "Failed to save the game (progress.txt file couldn't be created)");
             return ERROR;
         }
-        fprintf(f_progress, "# number of stars in order 4 stars is supreme");
-    } */
+        k = 0;
+    }
     
 
     for(int i = 0; i < NUM_LEVELS; i++){
-        /* if (!feof(f_progress)){
-            if(read_line(f_progress, n_stars) != OK){
-                return NULL;
-            }
-            plevel->n_stars = atoi(n_stars);
-        } else {
-            fprintf(f_progress, "0");
-            plevel->n_stars = 0;
-        } */
         sprintf(folder_name, "./level_files/");
         sprintf(level_file, "./level_files/level%d.txt", i+1);
 
@@ -54,6 +46,19 @@ Level *levels_init(Screen *screen){
 
         plevel = (Level*)malloc(sizeof(Level));
         if(plevel == NULL) return NULL;
+
+        if(k == 0){
+            fprintf(f_progress, "0\n");
+            fflush(f_progress);
+            plevel->n_stars = 0;
+        } else {
+            fflush(stdout);
+            if(read_line(f_progress, n_stars) != OK){
+                return NULL;
+            }
+            plevel->n_stars = atoi(n_stars);
+            if (feof(f_progress)) k = 0;
+        }
 
         plevel->next_level = NULL;
         if(i == 0){
@@ -183,6 +188,7 @@ Level *levels_init(Screen *screen){
 
         fclose(f_level);
     }
+    fclose(f_progress);
     return plevel_first;
 } 
 

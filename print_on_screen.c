@@ -698,7 +698,7 @@ Result level_end(Level_result res, Screen *screen){
             }
         }
 
-        usleep(5*1000*1000);
+        usleep(2*1000*1000); 
         printf("\e[?25h");
         return OK;
 }

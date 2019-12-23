@@ -5,10 +5,10 @@ int main(int argc, char** argv){
     FILE *f;
     char line[MAX_SIZE];
     Result r;
-    f = fopen("test.txt", "r");
+    f = fopen("test.txt", "r+");
     if(!f) return -1;
 
-    do{
+    while(!feof(f)){
         r = read_line(f, &line);
         printf(line);
 
@@ -16,8 +16,9 @@ int main(int argc, char** argv){
             printf("error reading file");
             return -1;
         }
-    }while(!feof(f));
 
+        printf("Todavia no ha acabado el archivo: %d\n", atoi(line));
+    }
 
 
     return OK;
