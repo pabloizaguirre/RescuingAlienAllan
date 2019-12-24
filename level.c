@@ -22,14 +22,15 @@ Level *levels_init(Screen *screen){
     char num_portal_2[64], num_floor_2[64], num_ladder_2[64], num_ladder_floor_2[64], min_people_2[64];
     char num_portal_3[64], num_floor_3[64], num_ladder_3[64], num_ladder_floor_3[64], min_people_3[64];
     
-    f_progress = fopen("progress.txt", "r+");
+    f_progress = fopen("progress.dat", "r+");
     if(!f_progress){
         //Initialization of the game
-        f_progress = fopen("progress.txt", "w");
+        f_progress = fopen("progress.dat", "w");
         if (!f_progress) {
-            print_message(screen, "Failed to save the game (progress.txt file couldn't be created)");
+            print_message(screen, "Failed to save the game (progress.dat file couldn't be created)");
             return ERROR;
         }
+        fprintf(f_progress, "#Stars achieved in each level in order. 4 stars is SUPREME\n");
         k = 0;
     }
     
@@ -68,6 +69,8 @@ Level *levels_init(Screen *screen){
             plevel_last->next_level = plevel;
             plevel_last = plevel;
         }
+
+        plevel->first_level = plevel_first;
 
         if(read_line(f_level, level_number) != OK){
             return NULL;
@@ -197,6 +200,8 @@ Level *levels_init(Screen *screen){
  */
 Level_result game_status(Level *level){
     int i, people_finished = 0;
+    Level *l;
+    FILE *f_progress;
     if (!level) return RES_ERROR;
 
     for (i = 0; i < level->num_people; i++){
@@ -215,10 +220,42 @@ Level_result game_status(Level *level){
                     || level->num_floor_act > level->num_floor - level->num_floor_3 
                     || level->portal_act > level->portal - level->portal_3 
                     || people_finished > level->min_people_3){
-            /* if (level->n_stars < 4){
-                fopen(f_progress)
-            } */
+            if (level->n_stars < 4){
+                level->n_stars = 4;
+                f_progress = fopen("progress.dat", "w");
+                if (!f_progress){
+                    printf("Error al abrir el archivo de progreso en game_status\n");
+                    fflush(stdout);
+                    return RES_ERROR;
+                }
+                l = level->first_level;
+                fprintf(f_progress, "#Stars achieved in each level in order. 4 stars is SUPREME\n");
+                while(l != NULL){
+                    fprintf(f_progress, "%d\n", l->n_stars);
+                    fflush(f_progress);
+                    l = l->next_level;
+                }
+                fclose(f_progress);
+            }
             return SUPREME;
+        }
+
+        if (level->n_stars < 3){
+            level->n_stars = 3;
+            f_progress = fopen("progress.dat", "w");
+            if (!f_progress){
+                printf("Error al abrir el archivo de progreso en game_status\n");
+                fflush(stdout);
+                return RES_ERROR;
+            }
+            l = level->first_level;
+            fprintf(f_progress, "#Stars achieved in each level in order. 4 stars is SUPREME\n");
+            while(l != NULL){
+                fprintf(f_progress, "%d\n", l->n_stars);
+                fflush(f_progress);
+                l = l->next_level;
+            }
+            fclose(f_progress);
         }
 
         return STARS_3;
@@ -229,6 +266,25 @@ Level_result game_status(Level *level){
                     && level->num_floor_act >= level->num_floor - level->num_floor_2 
                     && level->portal_act >= level->portal - level->portal_2
                     && people_finished >= level->min_people_2){
+        
+        if (level->n_stars < 2){
+            level->n_stars = 2;
+            f_progress = fopen("progress.dat", "w");
+            if (!f_progress){
+                printf("Error al abrir el archivo de progreso en game_status\n");
+                fflush(stdout);
+                return RES_ERROR;
+            }
+            l = level->first_level;
+            fprintf(f_progress, "#Stars achieved in each level in order. 4 stars is SUPREME\n");
+            while(l != NULL){
+                fprintf(f_progress, "%d\n", l->n_stars);
+                fflush(f_progress);
+                l = l->next_level;
+            }
+            fclose(f_progress);
+        }
+
         return STARS_2;
 
 
@@ -237,6 +293,25 @@ Level_result game_status(Level *level){
                     && level->num_floor_act >= 0
                     && level->portal_act >= 0
                     && people_finished >= level->min_people){
+        
+        if (level->n_stars < 1){
+            level->n_stars = 1;
+            f_progress = fopen("progress.dat", "w");
+            if (!f_progress){
+                printf("Error al abrir el archivo de progreso en game_status\n");
+                fflush(stdout);
+                return RES_ERROR;
+            }
+            l = level->first_level;
+            fprintf(f_progress, "#Stars achieved in each level in order. 4 stars is SUPREME\n");
+            while(l != NULL){
+                fprintf(f_progress, "%d\n", l->n_stars);
+                fflush(f_progress);
+                l = l->next_level;
+            }
+            fclose(f_progress);
+        }
+
         return STARS_1;
 
 

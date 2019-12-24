@@ -13,7 +13,7 @@ clean :
 	rm -f *.o core $(EXE)
 
 restart:
-	rm -f progress.txt core $(EXE)
+	rm -f progress.dat core $(EXE)
 
 $(EXE) : % : %.o $(LIBRARIES)
 	$(CC) $(CFLAGS) -o $@ $@.o $(LIBRARIES)

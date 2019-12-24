@@ -22,6 +22,8 @@ En **people la primera persona es *people[0], y el alien (la última persona es 
 
 el numero de niveles que hay está en level.h
 
+la velocidad de movimiento está definida en la variable SPEED en types.h en milisegundos.
+
 
 
 

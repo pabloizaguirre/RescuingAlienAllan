@@ -1,6 +1,9 @@
 #ifndef types_h
 #define types_h
 
+//normal speed is: 100 (in ms)
+#define SPEED 10 
+
 typedef struct _Level Level;
 
 typedef struct {

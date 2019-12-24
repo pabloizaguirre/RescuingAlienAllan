@@ -9,6 +9,7 @@
 
 struct _Level {
     Map *map;
+    Level *first_level;
     Level *next_level;
     int level_number;
     char message[256];
@@ -43,13 +44,15 @@ struct _Level {
     int num_floor_3;
     int portal_3; 
     int min_people_3;
+
+    
 };
 
 /*
     Initialices a double linked list of levels from a name of a file containing
     the names of all the files of all the levels
     
-    Levels_init() searches for a progress.txt file, and if it exists, it initializes
+    Levels_init() searches for a progress.dat file, and if it exists, it initializes
     the game from the last level you have played.
 */
 Level *levels_init(Screen *screen);

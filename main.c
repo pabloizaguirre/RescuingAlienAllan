@@ -46,7 +46,7 @@ int main(int argc, char** argv){
         printf("\e[?25h");
         
         lr = game_status(actual_level);
-
+        if(lr == RES_ERROR) return ERROR;
         
         
         if(level_end(lr, screen) == ERROR) return ERROR;

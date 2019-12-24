@@ -172,7 +172,7 @@ FLAG movement_loop(Level *level, Screen * screen){
     int k, i;
     FLAG flag = LEVEL_FINISHED;
     printf("\e[?25l");
-    usleep(100*1000);
+    usleep(SPEED*1000);
 
     print_map(level->map->boxes_merge, screen);
     print_resources(screen, level);
