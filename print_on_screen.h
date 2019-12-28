@@ -79,7 +79,7 @@ Result level_end(Level_result res, Screen *screen);
     prints the content of a file without printing the spaces you have to change
     the color of the cursor before calling this function for it to work
  */
-Result print_file(char *path, Position pos, Screen *screen);
+Result print_file(char *path, Position pos, Screen *screen, Bool transparency);
 
 Result start_screen(Screen *screen);
 

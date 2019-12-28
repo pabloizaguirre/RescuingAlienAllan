@@ -35,7 +35,7 @@ int main(int argc, char** argv){
     map_pos.x = screen->map_height/2 + 5;   
     map_pos.y = screen->map_width/2 - 8;
     pos = screen_position(map_pos, screen);
-    print_file("./designs/star.txt", pos, screen);
+    print_file("./designs/star.txt", pos, screen, TRUE);
     fflush(stdout);
 
     pos.x = 45;

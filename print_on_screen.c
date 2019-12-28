@@ -5,6 +5,7 @@
 #include <string.h>
 #include <termios.h>
 
+
 #define FG 38
 #define BK 48
 
@@ -217,7 +218,7 @@ Result start_screen(Screen *screen){
     Position pos;
     pos.x = 0;
     pos.y = 2;
-    if(print_file("./designs/start_screen.txt", pos, screen) == ERROR) return ERROR;
+    if(print_file("./designs/start_screen.txt", pos, screen, TRUE) == ERROR) return ERROR;
     read_key();
     clear_screen();
     return OK;
@@ -630,6 +631,85 @@ Result print_resources(Screen *screen, Level *level){
     return OK;
 }
 
+void supreme_animation(Screen *screen){
+    int n, spacing, r, w = screen->map_width, h = screen->map_height;
+    Position map_pos, pos;
+
+    for(int i = 15; i > 0; i--){
+        n = w / 17;
+        spacing = (w % 17)/(n - 1);
+
+        /* Print the background */
+        map_pos.x = screen->map_height/2 + 7;   
+        map_pos.y = screen->map_width/2 - 36;
+        pos = screen_position(map_pos, screen);
+        print_file("./designs/star_background_reduced.txt", pos, screen, FALSE);
+        /* Print the stars on screen */
+        map_pos.x = screen->map_height/2 + 4;   
+        map_pos.y = screen->map_width/2 - 28;
+        pos = screen_position(map_pos, screen);
+        r = rand()%2;
+        if(r){
+            print_file("./designs/empty_star.txt", pos, screen, FALSE);
+        } else {
+            print_file("./designs/star.txt", pos, screen, FALSE);
+        }
+        map_pos.y = screen->map_width/2 - 8;
+        pos = screen_position(map_pos, screen);
+        r = rand()%2;
+        if(r){
+            print_file("./designs/empty_star.txt", pos, screen, FALSE);
+        } else {
+            print_file("./designs/star.txt", pos, screen, FALSE);
+        }
+        map_pos.y = screen->map_width/2 + 12;
+        pos = screen_position(map_pos, screen);
+        r = rand()%2;
+        if(r){
+            print_file("./designs/empty_star.txt", pos, screen, FALSE);
+        } else {
+            print_file("./designs/star.txt", pos, screen, FALSE);
+        }
+
+        /* print top row: */
+        map_pos.x = h - 1;
+        map_pos.y = 1;
+        pos = screen_position(map_pos, screen);
+        while (n > 0){
+            r = rand()%2;
+            if(r){
+                print_file("./designs/empty_star.txt", pos, screen, FALSE);
+            } else {
+                print_file("./designs/star.txt", pos, screen, FALSE);
+            }
+            pos.x += (17 + spacing);
+            n--;
+        }
+
+        /* Print bottom row: */
+        n = w / 17;
+
+        map_pos.x = 8;
+        map_pos.y = 1;
+        pos = screen_position(map_pos, screen);
+        
+        while (n > 0){
+            r = rand()%2;
+            if(r){
+                print_file("./designs/empty_star.txt", pos, screen, FALSE);
+            } else {
+                print_file("./designs/star.txt", pos, screen, FALSE);
+            }
+            pos.x += (17 + spacing);
+            n--;
+        }
+    
+        fflush(stdout);
+        usleep(100*1000);
+    }
+
+}
+
 Result level_end(Level_result res, Screen *screen){
     Position map_pos, pos;
 
@@ -660,51 +740,64 @@ Result level_end(Level_result res, Screen *screen){
                 break;
         }
 
-        /* Print the stars on screen */
-        map_pos.x = screen->map_height/2 + 5;   
-        map_pos.y = screen->map_width/2 - 28;
-        pos = screen_position(map_pos, screen);
-        print_file("./designs/empty_star.txt", pos, screen);
-        map_pos.y = screen->map_width/2 - 8;
-        pos = screen_position(map_pos, screen);
-        print_file("./designs/empty_star.txt", pos, screen);
-        map_pos.y = screen->map_width/2 + 12;
-        pos = screen_position(map_pos, screen);
-        print_file("./designs/empty_star.txt", pos, screen);
-        fflush(stdout);
-        
-        if (res != LOST){
-            usleep(700*1000);
+
+        if (res == SUPREME){
+                supreme_animation(screen);
+        } else {
+            /* Print the background */
+            map_pos.x = screen->map_height/2 + 8;   
+            map_pos.y = screen->map_width/2 - 36;
+            pos = screen_position(map_pos, screen);
+            print_file("./designs/star_background.txt", pos, screen, FALSE);
+            /* Print the stars on screen */
             map_pos.x = screen->map_height/2 + 5;   
             map_pos.y = screen->map_width/2 - 28;
             pos = screen_position(map_pos, screen);
-            print_file("./designs/star.txt", pos, screen);
+            print_file("./designs/empty_star.txt", pos, screen, TRUE);
+            map_pos.y = screen->map_width/2 - 8;
+            pos = screen_position(map_pos, screen);
+            print_file("./designs/empty_star.txt", pos, screen, TRUE);
+            map_pos.y = screen->map_width/2 + 12;
+            pos = screen_position(map_pos, screen);
+            print_file("./designs/empty_star.txt", pos, screen, TRUE);
             fflush(stdout);
+            
 
-            if(res != STARS_1){
-                usleep(700*1000);
-                map_pos.y = screen->map_width/2 - 8;
+            if (res == SUPREME){
+                supreme_animation(screen);
+            } else if (res != LOST){
+                usleep(600*1000);
+                map_pos.x = screen->map_height/2 + 5;   
+                map_pos.y = screen->map_width/2 - 28;
                 pos = screen_position(map_pos, screen);
-                print_file("./designs/star.txt", pos, screen);
+                print_file("./designs/star.txt", pos, screen, TRUE);
                 fflush(stdout);
 
-                if(res != STARS_2){
-                    usleep(700*1000);
-                    map_pos.y = screen->map_width/2 + 12;
+                if(res != STARS_1){
+                    usleep(600*1000);
+                    map_pos.y = screen->map_width/2 - 8;
                     pos = screen_position(map_pos, screen);
-                    print_file("./designs/star.txt", pos, screen);
+                    print_file("./designs/star.txt", pos, screen, TRUE);
                     fflush(stdout);
+
+                    if(res != STARS_2){
+                        usleep(600*1000);
+                        map_pos.y = screen->map_width/2 + 12;
+                        pos = screen_position(map_pos, screen);
+                        print_file("./designs/star.txt", pos, screen, TRUE);
+                        fflush(stdout);
+                    }
                 }
             }
-        }
 
-        usleep(2*1000*1000); 
-        printf("\e[?25h");
-        return OK;
+            usleep(2*1000*1000); 
+            printf("\e[?25h");
+            return OK;
+        }
 }
 
-//This function doesn't crop the file, so make sure it fits on screen
-Result print_file(char *path, Position pos, Screen *screen){
+//This function doesn't crop the file, so make sure it fits on screen. If transparency is True spaces will be ignored.
+Result print_file(char *path, Position pos, Screen *screen, Bool transparency){
     FILE *f;
     int i;
     char line[1024];
@@ -722,7 +815,7 @@ Result print_file(char *path, Position pos, Screen *screen){
             return ERROR;
         }
         while (line[i] != 0){
-            if (line[i] != 32){
+            if (transparency == FALSE || line[i] != 32){
                 printf("%c", line[i]);
                 pos.x++;
             } else{

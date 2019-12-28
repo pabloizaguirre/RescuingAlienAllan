@@ -45,4 +45,4 @@ balabalbalabala
 11
 
 #map:   
-map2.txt
+map2_solved.txt
