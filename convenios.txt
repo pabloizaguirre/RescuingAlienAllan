@@ -24,13 +24,27 @@ el numero de niveles que hay está en level.h
 
 la velocidad de movimiento está definida en la variable SPEED en types.h en milisegundos.
 
-
+de momento al hacer make clean se borra el archivo de progreso
 
 
 
 
 
 COSAS QUE HACER:
+
+cambiar animacion supreme
+
+en print_file arreglar transparency
+
+hacer el menu de seleccion de nivel
+
+que el juego empiece en el nivel en el que empezaste
+
+hacer algo para resetear el aarchivo de progreso
+
+cambiar el color de las escaleras del jugador
+
+
 
 que si das al enter varias veces no siga funcionando el juego
 

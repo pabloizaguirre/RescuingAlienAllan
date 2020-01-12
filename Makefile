@@ -11,6 +11,7 @@ all : $(EXE)
 .PHONY : clean
 clean :
 	rm -f *.o core $(EXE)
+	rm -f progress.dat
 
 restart:
 	rm -f progress.dat core $(EXE)

@@ -51,12 +51,10 @@ int main(int argc, char** argv){
         
         if(level_end(lr, screen) == ERROR) return ERROR;
 
-        level_menu(actual_level, screen);
+        reset_people(actual_level, screen);
 
-        /* Load next level */
+        actual_level = level_menu(actual_level, screen);
 
-        if(lr != LOST && lr != RES_ERROR)actual_level = actual_level->next_level;
-        else reset_people(actual_level, screen);
         print_message(screen, actual_level->message);
     } 
       

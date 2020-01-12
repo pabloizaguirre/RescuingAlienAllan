@@ -330,21 +330,58 @@ People **level_get_peoples(Level *level){
     return level->people;
 }
 
-void print_boxes_menu(Screen *screen){
+void print_boxes_menu(Screen *screen, int a){
     Position map_pos, pos;
+    int color = 124;
 
+    if (a == 0){
+        color = 255;
+    }
     map_pos.x = screen->map_height/2 + 2; 
     map_pos.y = screen->map_width/2 - 30;
     pos = screen_position(map_pos, screen);
-    print_box(pos, 124, 124, 124, 17, 5, screen);
+    print_box(pos, color, color, color, 17, 5, screen);
 
+    change_color_rgb(0, 0, 0, 38);
+    change_color_rgb(color, color, color, 48);
+    pos.x += 2;
+    pos.y += 2;
+    change_cursor(pos, screen);
+    printf("Repeat  level");
+
+
+    if (a == 1){
+        color = 255;
+    } else {
+        color = 124;
+    }
     map_pos.y += 22;
     pos = screen_position(map_pos, screen);
-    print_box(pos, 124, 124, 124, 17, 5, screen);
+    print_box(pos, color, color, color, 17, 5, screen);
 
+    change_color_rgb(0, 0, 0, 38);
+    change_color_rgb(color, color, color, 48);
+    pos.x += 2;
+    pos.y += 2;
+    change_cursor(pos, screen);
+    printf("Choose  level");
+
+
+    if (a == 2){
+        color = 255;
+    } else {
+        color = 124;
+    }
     map_pos.y += 22;
     pos = screen_position(map_pos, screen);
-    print_box(pos, 124, 124, 124, 17, 5, screen);
+    print_box(pos, color, color, color, 17, 5, screen);
+
+    change_color_rgb(0, 0, 0, 38);
+    change_color_rgb(color, color, color, 48);
+    pos.x += 3;
+    pos.y += 2;
+    change_cursor(pos, screen);
+    printf("Next  level");
 }
 
 Level *level_menu(Level *level, Screen *screen){
@@ -357,23 +394,19 @@ Level *level_menu(Level *level, Screen *screen){
     map_pos.x = screen->map_height/2 + 8;   
     map_pos.y = screen->map_width/2 - 37;
     pos = screen_position(map_pos, screen);
-    print_file("./designs/star_background.txt", pos, screen, FALSE);
+    print_file("./designs/star_background.txt", pos, screen, FALSE);    
 
-    //print menu:
-    print_boxes_menu(screen);
-    
     if(level->n_stars < 3){
         a = 0;
+        if (level->n_stars == 0){
+            n = 2;
+        }
     } else {
         a = 2;
     }
 
     do{
-        map_pos.x = screen->map_height/2 + 2;
-        map_pos.y = screen->map_width/2 - 30 + a*22;
-        pos = screen_position(map_pos, screen);
-        print_boxes_menu(screen);
-        print_box(pos, 255, 255, 255, 17, 5, screen);
+        print_boxes_menu(screen, a);
         
         key = read_key();
 
@@ -385,7 +418,13 @@ Level *level_menu(Level *level, Screen *screen){
         }
     } while (key != '\n');
 
-    return level->next_level;
+    if (a == 0){
+        return level;
+    } else if (a == 2){
+        return level->next_level;
+    }
+
+    return level;
 }
 
 void free_level(Level* first_level, Screen * screen){
