@@ -90,4 +90,8 @@ Result start_screen(Screen *screen);
 */
 //Result print_map (Box **map, Screen *s);
 
+Result erase_mapbox(Screen *screen);
+
+Result print_box(Position pos, int r, int g, int b, int width, int height, Screen *screen);
+
 #endif

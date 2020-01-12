@@ -330,6 +330,64 @@ People **level_get_peoples(Level *level){
     return level->people;
 }
 
+void print_boxes_menu(Screen *screen){
+    Position map_pos, pos;
+
+    map_pos.x = screen->map_height/2 + 2; 
+    map_pos.y = screen->map_width/2 - 30;
+    pos = screen_position(map_pos, screen);
+    print_box(pos, 124, 124, 124, 17, 5, screen);
+
+    map_pos.y += 22;
+    pos = screen_position(map_pos, screen);
+    print_box(pos, 124, 124, 124, 17, 5, screen);
+
+    map_pos.y += 22;
+    pos = screen_position(map_pos, screen);
+    print_box(pos, 124, 124, 124, 17, 5, screen);
+}
+
+Level *level_menu(Level *level, Screen *screen){
+    Position map_pos, pos;
+    char key;
+    int a, n = 3;
+
+    printf("\e[?25l");
+
+    map_pos.x = screen->map_height/2 + 8;   
+    map_pos.y = screen->map_width/2 - 37;
+    pos = screen_position(map_pos, screen);
+    print_file("./designs/star_background.txt", pos, screen, FALSE);
+
+    //print menu:
+    print_boxes_menu(screen);
+    
+    if(level->n_stars < 3){
+        a = 0;
+    } else {
+        a = 2;
+    }
+
+    do{
+        map_pos.x = screen->map_height/2 + 2;
+        map_pos.y = screen->map_width/2 - 30 + a*22;
+        pos = screen_position(map_pos, screen);
+        print_boxes_menu(screen);
+        print_box(pos, 255, 255, 255, 17, 5, screen);
+        
+        key = read_key();
+
+        if (key == 'd'){
+            a = (a + 1) % n;
+        } else if (key == 'a'){
+            if (a == 0) a = n - 1;
+            else a = (a - 1) % n;
+        }
+    } while (key != '\n');
+
+    return level->next_level;
+}
+
 void free_level(Level* first_level, Screen * screen){
     Level *next_level;
     if(!screen) return;

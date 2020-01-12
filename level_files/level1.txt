@@ -45,4 +45,4 @@ Can you make it to the end?
 9
 
 #map:   
-map4_solved.txt
+map4.txt

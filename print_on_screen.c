@@ -741,59 +741,58 @@ Result level_end(Level_result res, Screen *screen){
         }
 
 
-        if (res == SUPREME){
-                supreme_animation(screen);
-        } else {
-            /* Print the background */
-            map_pos.x = screen->map_height/2 + 8;   
-            map_pos.y = screen->map_width/2 - 36;
-            pos = screen_position(map_pos, screen);
-            print_file("./designs/star_background.txt", pos, screen, FALSE);
-            /* Print the stars on screen */
-            map_pos.x = screen->map_height/2 + 5;   
-            map_pos.y = screen->map_width/2 - 28;
-            pos = screen_position(map_pos, screen);
-            print_file("./designs/empty_star.txt", pos, screen, TRUE);
-            map_pos.y = screen->map_width/2 - 8;
-            pos = screen_position(map_pos, screen);
-            print_file("./designs/empty_star.txt", pos, screen, TRUE);
-            map_pos.y = screen->map_width/2 + 12;
-            pos = screen_position(map_pos, screen);
-            print_file("./designs/empty_star.txt", pos, screen, TRUE);
-            fflush(stdout);
-            
+    if (res == SUPREME){
+            supreme_animation(screen);
+    } else {
+        /* Print the background */
+        map_pos.x = screen->map_height/2 + 8;   
+        map_pos.y = screen->map_width/2 - 37;
+        pos = screen_position(map_pos, screen);
+        print_file("./designs/star_background.txt", pos, screen, FALSE);
+        /* Print the stars on screen */
+        map_pos.x = screen->map_height/2 + 4;   
+        map_pos.y = screen->map_width/2 - 29;
+        pos = screen_position(map_pos, screen);
+        print_file("./designs/empty_star.txt", pos, screen, TRUE);
+        map_pos.y = screen->map_width/2 - 9;
+        pos = screen_position(map_pos, screen);
+        print_file("./designs/empty_star.txt", pos, screen, TRUE);
+        map_pos.y = screen->map_width/2 + 11;
+        pos = screen_position(map_pos, screen);
+        print_file("./designs/empty_star.txt", pos, screen, TRUE);
+        fflush(stdout);
+        
 
-            if (res == SUPREME){
-                supreme_animation(screen);
-            } else if (res != LOST){
+        if (res != LOST){
+            usleep(600*1000);
+            map_pos.x = screen->map_height/2 + 4;   
+            map_pos.y = screen->map_width/2 - 29;
+            pos = screen_position(map_pos, screen);
+            print_file("./designs/star.txt", pos, screen, TRUE);
+            fflush(stdout);
+
+            if(res != STARS_1){
                 usleep(600*1000);
-                map_pos.x = screen->map_height/2 + 5;   
-                map_pos.y = screen->map_width/2 - 28;
+                map_pos.y = screen->map_width/2 - 9;
                 pos = screen_position(map_pos, screen);
                 print_file("./designs/star.txt", pos, screen, TRUE);
                 fflush(stdout);
 
-                if(res != STARS_1){
+                if(res != STARS_2){
                     usleep(600*1000);
-                    map_pos.y = screen->map_width/2 - 8;
+                    map_pos.y = screen->map_width/2 + 11;
                     pos = screen_position(map_pos, screen);
                     print_file("./designs/star.txt", pos, screen, TRUE);
                     fflush(stdout);
-
-                    if(res != STARS_2){
-                        usleep(600*1000);
-                        map_pos.y = screen->map_width/2 + 12;
-                        pos = screen_position(map_pos, screen);
-                        print_file("./designs/star.txt", pos, screen, TRUE);
-                        fflush(stdout);
-                    }
                 }
             }
-
-            usleep(2*1000*1000); 
-            printf("\e[?25h");
-            return OK;
         }
+
+        usleep(2*1000*1000); 
+        printf("\e[?25h");
+    }
+    return OK;
+
 }
 
 //This function doesn't crop the file, so make sure it fits on screen. If transparency is True spaces will be ignored.
@@ -829,6 +828,49 @@ Result print_file(char *path, Position pos, Screen *screen, Bool transparency){
         change_cursor(pos, screen);
     }while(!feof(f));
 
+    return OK;
+}
+
+Result erase_mapbox(Screen *screen){
+    int i, j;
+    char c;
+    Position p;
+
+    if (!screen) {
+        return ERROR;
+        printf("Error en los argumentos de erase_mapbox()\n");
+    }
+    
+    p = screen->map;
+    
+    if (change_cursor(p, screen) < 0) return ERROR;
+    change_color("reset", "reset");
+    printf("\e[?25l");
+    for (i = screen->map_height - 1; i >= 0; i--) {
+        for (j = 0; j < screen->map_width; j++) {
+            printf(" ");
+        }
+        (p.y)++;
+        if (change_cursor(p, screen) < 0) return ERROR;
+    }
+    
+    printf("\e[?25h");
+    return OK;
+}
+
+Result print_box(Position pos, int r, int g, int b, int width, int height, Screen *screen){
+    change_cursor(pos, screen);
+    change_color_rgb(r, g, b, BK);
+
+    for(int i = 0; i < height; i++){
+        for(int j = 0; j < width; j++){
+            printf(" ");
+        }
+        pos.y++;
+        change_cursor(pos, screen);
+    }
+    change_color("reset", "reset");
+    fflush(stdout);
     return OK;
 }
 
