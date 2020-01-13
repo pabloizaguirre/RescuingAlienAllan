@@ -82,6 +82,7 @@ int place_resource(Screen *screen, Level *level, char resource){
 }
 
 FLAG design(Level *level, Screen *screen){
+    printf("\e[?25h");
     print_resources(screen, level);
     change_cursor(screen->cursor, screen);
     char c = read_key();
@@ -117,6 +118,7 @@ FLAG design(Level *level, Screen *screen){
             }
             map_merge(screen, level->map);
             print_map(level->map->boxes_merge, screen);
+            printf("\e[?25h");
             print_resources(screen, level);
         } else {
             printf("\e[?25l");
@@ -126,6 +128,7 @@ FLAG design(Level *level, Screen *screen){
             usleep(100*1000);
             printf("\e[?25h");
             print_map(level->map->boxes_merge, screen);
+            printf("\e[?25h");
             print_resources(screen, level);
         }
     }

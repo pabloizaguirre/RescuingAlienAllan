@@ -7,10 +7,10 @@
 #include <stdlib.h>
 
 Level *levels_init(Screen *screen){
-    Level *plevel_first, *plevel, *plevel_last;      
+    Level *plevel_first, *plevel, *plevel_last, *act_level;      
     FILE *f_level, *f_progress;
     Position spos;
-    int k = 1;
+    int k = 1, act_level_flag = 0;
     char n_stars[64];
     char level_file[256];
     char level_number[10];
@@ -52,12 +52,20 @@ Level *levels_init(Screen *screen){
             fprintf(f_progress, "0\n");
             fflush(f_progress);
             plevel->n_stars = 0;
+            if (act_level_flag == 0){
+                act_level = plevel;
+                act_level_flag = 1;
+            }
         } else {
             fflush(stdout);
             if(read_line(f_progress, n_stars) != OK){
                 return NULL;
             }
             plevel->n_stars = atoi(n_stars);
+            if (plevel->n_stars == 0 && act_level_flag == 0){
+                act_level = plevel;
+                act_level_flag = 1;
+            }
             if (feof(f_progress)) k = 0;
         }
 
@@ -192,7 +200,11 @@ Level *levels_init(Screen *screen){
         fclose(f_level);
     }
     fclose(f_progress);
-    return plevel_first;
+    if (act_level_flag != 0){
+        return act_level;
+    } else {
+        return plevel;
+    }
 } 
 
 /* 
@@ -407,7 +419,6 @@ Level *level_menu(Level *level, Screen *screen){
 
     do{
         print_boxes_menu(screen, a);
-        
         key = read_key();
 
         if (key == 'd'){

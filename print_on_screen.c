@@ -469,7 +469,6 @@ Result print_map (Box **map, Screen *s) {
         (p.y)++;
         if (change_cursor(p, s) < 0) return ERROR;
     }
-    printf("\e[?25h");
     return OK;
 }
 
@@ -632,6 +631,38 @@ Result print_resources(Screen *screen, Level *level){
 }
 
 void supreme_animation(Screen *screen){
+    int n, spacing, r, j, w = screen->map_width, h = screen->map_height;
+    Position map_pos, pos;
+
+    erase_mapbox(screen);
+
+    for(int i = 15; i > 0; i--){
+        for (j = 0; j < 3; j++){
+            n = w / 17;
+            spacing = (w % 17)/(n - 1);
+            map_pos.x = h - j * (10)- 1;
+            map_pos.y = 1;
+            pos = screen_position(map_pos, screen);
+            if (pos.x == -1){
+                break;
+            }
+            while (n > 0){
+                r = rand()%2;
+                if(r){
+                    print_file("./designs/empty_star.txt", pos, screen, FALSE);
+                } else {
+                    print_file("./designs/star.txt", pos, screen, FALSE);
+                }
+                pos.x += (17 + spacing);
+                n--;
+            }
+        }
+        fflush(stdout);
+        usleep(100*1000);
+    } 
+}
+
+void supreme_animation_2(Screen *screen){
     int n, spacing, r, w = screen->map_width, h = screen->map_height;
     Position map_pos, pos;
 
@@ -789,7 +820,6 @@ Result level_end(Level_result res, Screen *screen){
         }
 
         usleep(2*1000*1000); 
-        printf("\e[?25h");
     }
     return OK;
 
@@ -799,11 +829,14 @@ Result level_end(Level_result res, Screen *screen){
 Result print_file(char *path, Position pos, Screen *screen, Bool transparency){
     FILE *f;
     int i;
-    char line[1024];
+    char line[512];
     Position pos_aux = pos;
 
     f = fopen(path, "r");
-    if(!f) return ERROR;
+    if(!f) {
+        print_message(screen, "Error al abrir el archivo r en print_file()");
+        return ERROR;
+    }
 
     change_cursor(pos, screen);
 
@@ -828,6 +861,7 @@ Result print_file(char *path, Position pos, Screen *screen, Bool transparency){
         change_cursor(pos, screen);
     }while(!feof(f));
 
+    fclose(f);
     return OK;
 }
 
@@ -853,8 +887,6 @@ Result erase_mapbox(Screen *screen){
         (p.y)++;
         if (change_cursor(p, screen) < 0) return ERROR;
     }
-    
-    printf("\e[?25h");
     return OK;
 }
 

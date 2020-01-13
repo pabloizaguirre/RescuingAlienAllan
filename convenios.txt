@@ -44,6 +44,7 @@ hacer algo para resetear el aarchivo de progreso
 
 cambiar el color de las escaleras del jugador
 
+que salga donde los recursos el minimo de personas
 
 
 que si das al enter varias veces no siga funcionando el juego
