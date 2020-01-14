@@ -562,6 +562,17 @@ Result print_resources(Screen *screen, Level *level){
         sprintf(array,"PORTAL (p): x%d", level->portal_act);
         print_resources_line(array, &pos, screen);
     }
+
+    if(level->num_people > 0){
+        sprintf(array,"PEOPLE: %d", level->num_people);
+        print_resources_line(array, &pos, screen);
+    }
+
+    if(level->min_people > 0){
+        sprintf(array,"MIN PEOPLE: %d", level->min_people);
+        print_resources_line(array, &pos, screen);
+    }
+
     print_resources_line(" ", &pos, screen);
     print_resources_line(" ", &pos, screen);
 
@@ -590,6 +601,11 @@ Result print_resources(Screen *screen, Level *level){
         print_resources_line(array, &pos, screen);
     }
 
+    if(level->min_people_2 > 0){
+        sprintf(array,"MIN PEOPLE: %d", level->min_people_2);
+        print_resources_line(array, &pos, screen);
+    }
+
     // 3 starts
     change_cursor(pos, screen);
     change_color_rgb(143, 100, 29, BK);
@@ -612,6 +628,11 @@ Result print_resources(Screen *screen, Level *level){
 
     if(level->portal_3 > 0){
         sprintf(array,"PORTALS: x%d", level->portal_3);
+        print_resources_line(array, &pos, screen);
+    }
+
+    if(level->min_people_3 > 0){
+        sprintf(array,"MIN PEOPLE: %d", level->min_people_3);
         print_resources_line(array, &pos, screen);
     }
     

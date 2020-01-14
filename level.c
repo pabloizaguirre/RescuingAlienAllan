@@ -5,6 +5,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <termios.h>
 
 Level *levels_init(Screen *screen){
     Level *plevel_first, *plevel, *plevel_last, *act_level;      
@@ -332,6 +333,40 @@ Level_result game_status(Level *level){
     }
 }
 
+int read_record(){
+    FILE *f = NULL;
+    char line[10];
+    int record;
+    
+    f = fopen("record.txt", "r+");
+    if(f == NULL){
+        f = fopen("record.txt", "w+");
+        if(f == NULL) return -1;
+        fprintf(f, "0");
+        return 0;
+    }
+
+    read_line(f, line);
+    record = atoi(line);
+
+    fclose(f);
+    return record;
+}
+
+Result save_record(int stars){
+    FILE *f = NULL;
+    int record = read_record();
+
+    if(stars < record) return OK;
+
+    f = fopen("record.txt", "w+");
+    if(f == NULL) return ERROR;
+    fprintf(f, "%d", stars);
+
+    fclose(f);
+    return OK;
+}
+
 Map *level_get_map(Level *level){
     return level->map;
 }
@@ -396,7 +431,174 @@ void print_boxes_menu(Screen *screen, int a){
     printf("Next  level");
 }
 
-Level *level_menu(Level *level, Screen *screen){
+int get_actual_level(Level *first_level, Level *level){
+    int i = 0;
+    Level *tmp = first_level;
+
+    while(tmp->next_level){
+        if(tmp == level) return i;
+        tmp = tmp->next_level;
+        i++;
+    }
+
+    return -1;
+}
+
+int get_total_stars(Level *first_level){
+    int t = 0;
+    Level *tmp = first_level;
+    for(int i = 0; i < NUM_LEVELS; i++){
+        t += tmp->n_stars;
+        tmp = tmp->next_level;
+    }
+    save_record(t);
+    return t;
+}
+
+/*
+  012345678
+0 ---------
+1 |   5   |
+2 | * * * |
+3 ---------
+*/
+
+
+void draw_choosing_menu(Level * first_level, Screen *screen, int selected){
+    int pages, cols, rows, n_per_page, sel_page, sel_col, sel_row, in_page, stars;
+    int w = 9, h = 4;
+    Position pos;
+    Level *tmp = first_level;
+    char instructions[100] = "Choose your level and press ENTER or press Q to quit the game";
+    char end_message[100];
+
+    cols = (screen->screen_width - 4) / h;
+    rows = (screen->screen_height - 7) / w;
+    n_per_page = cols * rows;
+    pages = NUM_LEVELS % n_per_page == 0 ? NUM_LEVELS / n_per_page : NUM_LEVELS / n_per_page + 1;
+
+    sel_page = selected / n_per_page;
+    sel_row = (selected - sel_page * n_per_page) / rows;
+    sel_col = selected - sel_page * n_per_page - sel_row * rows;
+
+    in_page = (sel_page == pages - 1) ? NUM_LEVELS - n_per_page * (pages - 1) : n_per_page;
+
+    pos.x = (screen->screen_width - strlen(instructions)) / 2;
+    pos.y = 2;
+    change_cursor(pos, screen);
+    printf(instructions);
+
+    for(int i = 0; i < sel_page * n_per_page; i++) tmp = tmp->next_level;
+
+    for(int i = 0; i < in_page; i++){
+        if(sel_page * n_per_page + i == selected) change_color("white", "black");
+
+        pos.x = (i % cols) * w + 2;
+        pos.y = (i / cols) * h + 4;
+        change_cursor(pos, screen);
+        for(int j = 0; j < w; j++) printf("-");
+
+        pos.y++;
+        change_cursor(pos, screen);
+        printf("|");
+        for(int j = 0; j < (w - 5) / 2; j++) printf(" ");
+        printf("%03d", sel_page * n_per_page + i + 1);
+        for(int j = 0; j < (w - 5) / 2; j++) printf(" ");
+        printf("|");
+
+        pos.y++;
+        change_cursor(pos, screen);
+        printf("|");
+        for(int j = 0; j < (w - 7) / 2; j++) printf(" ");
+        switch (tmp->n_stars)
+        {
+        case 0:
+            printf("     ");
+            break;
+        case 1:
+            printf(" * * ");
+            break;
+        case 2:
+            printf("* * *");
+            break;
+        case 3:
+            printf("  *  ");
+            break;
+        case 4:
+            printf(" S S ");
+            break;
+        }
+        for(int j = 0; j < (w - 7) / 2; j++) printf(" ");
+        printf("|");
+
+        pos.y++;
+        change_cursor(pos, screen);
+        for(int j = 0; j < w; j++) printf("-");
+
+        if(sel_page * n_per_page + i == selected) change_color("reset", "reset");
+        
+        tmp = tmp->next_level;
+    }
+
+    stars = get_total_stars(first_level);
+    sprintf(end_message, "Total stars %d, record %d", stars, read_record());
+    pos.x = (screen->screen_width - strlen(end_message)) / 2;
+    pos.y = screen->screen_height - 1;
+    change_cursor(pos, screen);
+    printf(end_message);
+}
+
+Level *get_selected_level(Level *first_level, int selected){
+    Level *tmp = first_level;
+    for(int i = 0; i < selected; i++) tmp = tmp->next_level;
+    return tmp;
+}
+
+int get_completed_levels(Level *first_level){
+    Level *tmp = first_level;
+    for(int i = 0; i < NUM_LEVELS; i++){
+        if(tmp->n_stars == 0) return i;
+        tmp = tmp->next_level;
+    }
+    return NUM_LEVELS - 1;
+}
+
+Level *choose_level_menu(Level *first_level, Level *level, Screen *screen){
+    int actual_lvl, selected, completed;
+    char c;
+
+    change_color("reset", "reset");
+    clear_screen();
+
+    actual_lvl = get_actual_level(first_level, level);
+    selected = actual_lvl;
+    completed = get_completed_levels(first_level);
+
+    draw_choosing_menu(first_level, screen, selected);
+    while(TRUE){
+        tcflush(fileno(stdin), TCIFLUSH);
+        c = read_key();
+        switch(c) {
+        case('a'):
+            if(selected > 0) selected--;
+            break;
+        case('d'):
+            if(selected < completed) selected++;
+            break;
+        case('q'):
+            clear_screen();
+            print_margins(screen);
+            return NULL;
+        case('\n'):
+            clear_screen();
+            print_margins(screen);
+            return get_selected_level(first_level, selected);
+        }
+        draw_choosing_menu(first_level, screen, selected);
+    }
+}
+
+Level *level_menu(Level *level, Screen *screen, Level *first_level){
     Position map_pos, pos;
     char key;
     int a, n = 3;
@@ -408,7 +610,7 @@ Level *level_menu(Level *level, Screen *screen){
     pos = screen_position(map_pos, screen);
     print_file("./designs/star_background.txt", pos, screen, FALSE);    
 
-    if(level->n_stars < 3){
+    if(level->n_stars < 3 || level->level_number == NUM_LEVELS){
         a = 0;
         if (level->n_stars == 0){
             n = 2;
@@ -419,6 +621,7 @@ Level *level_menu(Level *level, Screen *screen){
 
     do{
         print_boxes_menu(screen, a);
+        tcflush(fileno(stdin), TCIFLUSH);
         key = read_key();
 
         if (key == 'd'){
@@ -431,7 +634,9 @@ Level *level_menu(Level *level, Screen *screen){
 
     if (a == 0){
         return level;
-    } else if (a == 2){
+    } else if(a == 1){
+        return choose_level_menu(first_level, level, screen);
+    }else if (a == 2){
         return level->next_level;
     }
 

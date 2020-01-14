@@ -20,16 +20,17 @@ int main(int argc, char** argv){
         return ERROR;
     }
     
-    first_level = levels_init(screen);
-    if(!first_level) {
-        free_all(screen, first_level);
+    actual_level = levels_init(screen);
+    if(!actual_level) {
+        free_all(screen, actual_level->first_level);
         return ERROR;
     }
     
-    actual_level = first_level;
-    print_message(screen, actual_level->message);
+    first_level = actual_level->first_level;
 
     while(actual_level != NULL){
+        print_message(screen, actual_level->message);
+
         /* Design loop */
         screen->cursor = screen->map;
         map_merge(screen, actual_level->map);
@@ -53,9 +54,7 @@ int main(int argc, char** argv){
 
         reset_people(actual_level, screen);
 
-        actual_level = level_menu(actual_level, screen);
-
-        print_message(screen, actual_level->message);
+        actual_level = level_menu(actual_level, screen, first_level);
     } 
       
     

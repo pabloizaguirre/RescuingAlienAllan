@@ -87,7 +87,7 @@ Level *level_set_last_level(Level *level, Level *last_level);
 Level *level_set_peoples(Level *level, People **peoples);
 Level *level_set_alien(Level *level, People *alien);
 
-Level *level_menu(Level *level, Screen *screen);
+Level *level_menu(Level *level, Screen *screen, Level *first_level);
 
 void free_level(Level* first_level, Screen * screen);
 
