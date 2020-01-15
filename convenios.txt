@@ -32,24 +32,9 @@ de momento al hacer make clean se borra el archivo de progreso
 
 COSAS QUE HACER:
 
-cambiar animacion supreme
-
-en print_file arreglar transparency
-
-hacer el menu de seleccion de nivel
-
-que el juego empiece en el nivel en el que empezaste
-
 hacer algo para resetear el aarchivo de progreso
 
 cambiar el color de las escaleras del jugador
 
-que salga donde los recursos el minimo de personas
-
-
-que si das al enter varias veces no siga funcionando el juego
-
-Guardado del juego
-Level_init a partir de un archivo
-Conseguir que funcione que se muevan los personajes
-Imprimir margenes automaticamente
+donde los recursos cambiar a que salga los recursos que tienen que sobrar para tener cada estrella
+en vez de los que tienes que gastar

@@ -457,8 +457,8 @@ Result print_map (Box **map, Screen *s) {
                     fprintf(stdout, "·");
                     break;
                 case DISAPPEAR_WALL:
-                    change_color_rgb(60,60,60, BK);
-                    fprintf(stdout, " ");
+                    change_color("reset", "reset");
+                    fprintf(stdout, "^");
                     break;
                 default:
                     change_color("black", "red");
