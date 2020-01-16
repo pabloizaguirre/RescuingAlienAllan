@@ -5,8 +5,6 @@
 #include "map.h"
 #include "print_on_screen.h"
 
-#define MAX_SIZE 1024
-
 /*
     Reads a line from a given file ignoring 
     lines starting with # and blank lines

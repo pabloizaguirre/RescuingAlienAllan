@@ -15,6 +15,7 @@ typedef struct {
     Position messagebox;
     int messagebox_width;
     int messagebox_height;
+    char title[MAX_SIZE];
 } Screen;
 
 /*
@@ -93,5 +94,7 @@ Result start_screen(Screen *screen);
 Result erase_mapbox(Screen *screen);
 
 Result print_box(Position pos, int r, int g, int b, int width, int height, Screen *screen);
+
+int continue_or_newgame_screen(Screen *screen);
 
 #endif

@@ -19,6 +19,8 @@ int main(int argc, char** argv){
         free_all(screen, first_level);
         return ERROR;
     }
+
+    continue_or_newgame_screen(screen);
     
     actual_level = levels_init(screen);
     if(!actual_level) {
@@ -30,6 +32,8 @@ int main(int argc, char** argv){
 
     while(actual_level != NULL){
         print_message(screen, actual_level->message);
+        print_title(screen, screen->title);
+        print_margins(screen);
 
         /* Design loop */
         screen->cursor = screen->map;
@@ -49,7 +53,7 @@ int main(int argc, char** argv){
         lr = game_status(actual_level);
         if(lr == RES_ERROR) return ERROR;
         
-        
+        usleep(1000*1000);
         if(level_end(lr, screen) == ERROR) return ERROR;
 
         reset_people(actual_level, screen);
@@ -60,6 +64,8 @@ int main(int argc, char** argv){
     
     print_message(screen, "Goodbye");
     free_all(screen, first_level);
+
+    printf("\e[?25h");
 
     return OK;
 }

@@ -24,17 +24,19 @@ el numero de niveles que hay está en level.h
 
 la velocidad de movimiento está definida en la variable SPEED en types.h en milisegundos.
 
-de momento al hacer make clean se borra el archivo de progreso
-
 
 
 
 
 COSAS QUE HACER:
 
-hacer algo para resetear el aarchivo de progreso
-
 cambiar el color de las escaleras del jugador
 
 donde los recursos cambiar a que salga los recursos que tienen que sobrar para tener cada estrella
 en vez de los que tienes que gastar
+
+tutorial al principio
+
+Pantalla final
+
+Añadir mapas

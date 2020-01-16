@@ -112,6 +112,8 @@ Screen *init_screen(char *file_name){
         return NULL;
     }
 
+    strcpy(screen->title, title);
+
     r = read_line(f, &line);
     if(r == ERROR){
         free(screen);
@@ -513,8 +515,9 @@ Result print_resources_line(char *line, Position *p, Screen *screen){
     int m = w < l ? w : l; 
     
     change_cursor(*p, screen);
+    printf(" ");
     for(int i = 0; i < m; i++)printf("%c", line[i]);
-    for(int i = m; i < w; i++)printf(" ");
+    for(int i = m; i < w - 1; i++)printf(" ");
 
     (p->y)++;
     return OK;
@@ -925,6 +928,85 @@ Result print_box(Position pos, int r, int g, int b, int width, int height, Scree
     change_color("reset", "reset");
     fflush(stdout);
     return OK;
+}
+
+void print_boxes_start_screen(Screen *screen, int a){
+    Position pos;
+    int color = 124;
+
+    if (a == 0){
+        color = 255;
+    }
+    pos.x = screen->screen_width / 2 - 25;
+    pos.y = screen->screen_height / 2 - 5;
+    print_box(pos, color, color, color, 50, 5, screen);
+
+    change_color_rgb(0, 0, 0, 38);
+    change_color_rgb(color, color, color, 48);
+    pos.x += 21;
+    pos.y += 2;
+    change_cursor(pos, screen);
+    printf("Continue");
+
+
+    if (a == 1){
+        color = 255;
+    } else {
+        color = 124;
+    }
+    pos.x = screen->screen_width / 2 - 25;
+    pos.y = screen->screen_height / 2 + 1;
+    print_box(pos, color, color, color, 50, 5, screen);
+
+    change_color_rgb(0, 0, 0, 38);
+    change_color_rgb(color, color, color, 48);
+    pos.x += 21;
+    pos.y += 2;
+    change_cursor(pos, screen);
+    printf("New game");
+}
+
+/* Prints the start screen where you choose if you want to continue or start a new game
+   if there isn't a progress file or you choose to start a new game, it returns 0, if you decide
+   to continue the game it returns 1, and if there was a problem it returns -1 */
+int continue_or_newgame_screen(Screen *screen){
+    int a = 0, n = 2;
+    char key;
+    FILE *f;
+
+    f = fopen("progress.dat", "r");
+    if (!f){
+        return 0;
+    }
+    fclose(f);
+    
+    change_color("reset", "reset");
+    clear_screen();
+    
+    printf("\e[?25l");
+    
+    do{
+        print_boxes_start_screen(screen, a);
+        tcflush(fileno(stdin), TCIFLUSH);
+        key = read_key();
+
+        if (key == 's'){
+            a = (a + 1) % n;
+        } else if (key == 'w'){
+            if (a == 0) a = n - 1;
+            else a = (a - 1) % n;
+        }
+    } while (key != '\n');
+
+    if (a == 0){
+        return 1;
+    } else if (a == 1){
+        fopen("progress.dat", "w");
+        fclose(f);
+        return 0;
+    } else {
+        return -1;
+    }
 }
 
 /*

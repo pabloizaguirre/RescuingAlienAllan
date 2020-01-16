@@ -221,6 +221,10 @@ Level_result game_status(Level *level){
         if(level->people[i]->state == FINISHED) people_finished++;
     }
 
+    if (level->people[i - 1]->state != FINISHED){
+        return LOST;
+    }
+
 
     if (level->num_ladder_floor_act >= level->num_ladder_floor - level->num_ladder_floor_3
                     && level->num_ladder_act >= level->num_ladder - level->num_ladder_3
@@ -516,13 +520,13 @@ void draw_choosing_menu(Level * first_level, Screen *screen, int selected){
             printf("     ");
             break;
         case 1:
-            printf(" * * ");
+            printf("  *  ");
             break;
         case 2:
-            printf("* * *");
+            printf(" * * ");
             break;
         case 3:
-            printf("  *  ");
+            printf("* * *");
             break;
         case 4:
             printf(" S S ");
