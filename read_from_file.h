@@ -41,6 +41,7 @@ Result read_line(FILE *f, char *line);
         Z   ZONAPORTAL
         w   WALL_MERGE
         D   DISAPPEAR_WALL
+        l   LADDER_MERGE
 */
 Map* map_char_to_box(char** map, Screen *screen);
 

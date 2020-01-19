@@ -46,9 +46,10 @@ Result read_line(FILE *f, char *line){
         Z   ZONAPORTAL
         w   WALL_MERGE
         D   DISAPPEAR_WALL
+        l   LADDER_MERGE
 */
 Map* map_char_to_box(char** map, Screen *screen){
-    char lista[11] = ".WSELAB#ZwD";
+    char lista[12] = ".WSELAB#ZwDl";
     int i, j, rows = screen->map_height, columns = screen->map_width;
     Map* map_obj = NULL;
     Box **mapB = NULL;
@@ -144,6 +145,7 @@ Map* map_char_to_box(char** map, Screen *screen){
             else if (map[i][j] == lista[8]) mapB[i][j] = ZONAPORTAL;
             else if (map[i][j] == lista[9]) mapB[i][j] = WALL_MERGE;
             else if (map[i][j] == lista[10]) mapB[i][j] = DISAPPEAR_WALL;
+            else if (map[i][j] == lista[11]) mapB[i][j] = LADDER_MERGE;
         }
         free(map[i]);
     }

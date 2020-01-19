@@ -103,6 +103,17 @@ int people_update(People *p, Level *level, Screen *screen){
             }
             return 0;
             break;
+        case LADDER_MERGE:
+            pos_aux.y--;
+            if (is_position_occupable(pos_aux, level, screen)){
+                // Moves up
+                p->position.y--;
+                map_pos = map_position(p->position, screen);
+                p->state = change_state(level->map->boxes_merge[map_pos.x][map_pos.y]);
+                return 1;
+            }
+            return 0;
+            break;
         case PORTALA:
             if(level->map->PORTALB_pos != NULL){
                 map_pos = *(level->map->PORTALB_pos);
@@ -129,7 +140,7 @@ int people_update(People *p, Level *level, Screen *screen){
     } else b = AIR;//This is just so it works when the cell below is the end of the map
     
     //The person cannot move down if there is a ladder underneath
-    if (is_position_occupable(pos_aux, level, screen) && b != LADDER){
+    if (is_position_occupable(pos_aux, level, screen) && b != LADDER && b != LADDER_MERGE){
         // Moves down
         p->position = pos_aux;
         map_pos = map_position(p->position, screen);

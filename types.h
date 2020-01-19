@@ -2,7 +2,7 @@
 #define types_h
 
 //normal speed is: 100 (in ms)
-#define SPEED 10 
+#define SPEED 100
 
 #define MAX_SIZE 1024
 

@@ -480,6 +480,11 @@ Result print_map (Box **map, Screen *s) {
                     change_color_rgb(124, 124, 124, BK);
                     fprintf(stdout, " ");
                     break;
+                case LADDER_MERGE:
+                    change_color("reset", "reset");
+                    change_color_rgb(124, 124, 124, FG);
+                    fprintf(stdout, "#");
+                    break;
                 case START:
                     change_color("green", "black");
                     fprintf(stdout, " ");
@@ -658,22 +663,22 @@ Result print_resources(Screen *screen, Level *level){
     print_resources_line("2 stars:", &pos, screen);
     
     if(level->num_ladder_floor_2 > 0){
-        sprintf(array,"LADDERS/FLOORS: x%d", level->num_ladder_floor_2);
+        sprintf(array,"LADDERS/FLOORS: x%d", level->num_ladder_floor - level->num_ladder_floor_2);
         print_resources_line(array, &pos, screen);
     }
 
     if(level->num_ladder_2 > 0){
-        printf(array,"LADDERS: x%d", level->num_ladder_2);
+        printf(array,"LADDERS: x%d", level->num_ladder - level->num_ladder_2);
         print_resources_line(array, &pos, screen);
     }
 
     if(level->num_floor_2 > 0){
-        sprintf(array,"FLOORS: x%d", level->num_floor_2);
+        sprintf(array,"FLOORS: x%d", level->num_floor - level->num_floor_2);
         print_resources_line(array, &pos, screen);
     }
 
     if(level->portal_2 > 0){
-        sprintf(array,"PORTALS: x%d", level->portal_2);
+        sprintf(array,"PORTALS: x%d", level->portal - level->portal_2);
         print_resources_line(array, &pos, screen);
     }
 
@@ -688,22 +693,22 @@ Result print_resources(Screen *screen, Level *level){
     print_resources_line("3 stars use:", &pos, screen);
     
     if(level->num_ladder_floor_3 > 0){
-        sprintf(array,"LADDERS/FLOORS: x%d", level->num_ladder_floor_3);
+        sprintf(array,"LADDERS/FLOORS: x%d", level->num_ladder_floor - level->num_ladder_floor_3);
         print_resources_line(array, &pos, screen);
     }
 
     if(level->num_ladder_3 > 0){
-        sprintf(array,"LADDERS: x%d", level->num_ladder_3);
+        sprintf(array,"LADDERS: x%d", level->num_ladder - level->num_ladder_3);
         print_resources_line(array, &pos, screen);
     }
 
     if(level->num_floor_3 > 0){
-        sprintf(array,"FLOORS: x%d", level->num_floor_3);
+        sprintf(array,"FLOORS: x%d", level->num_floor - level->num_floor_3);
         print_resources_line(array, &pos, screen);
     }
 
     if(level->portal_3 > 0){
-        sprintf(array,"PORTALS: x%d", level->portal_3);
+        sprintf(array,"PORTALS: x%d", level->portal - level->portal_3);
         print_resources_line(array, &pos, screen);
     }
 

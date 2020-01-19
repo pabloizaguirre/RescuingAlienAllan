@@ -1,18 +1,48 @@
 #Numero nivel:
 4
 #Mensaje:
-bloblboblbolboblo
+balabalbalabala
 #Number of people:
-8
+12
+
+
 #Resources:
 #Number of ladders/floors:
-4
+12
 #Number of ladders:
-12
+0
 #Number of floors:
-12
+0
 #Number of portals:
-2
+1
+#Min number of people:
+11
+
+
+#2stars:
+#Number of ladders/floors:
+10
+#Number of ladders:
+0
+#Number of floors:
+0
+#Number of portals:
+1
+#Min number of people:
+11
+
+
+#3stars:
+#Number of ladders/floors:
+8
+#Number of ladders:
+0
+#Number of floors:
+0
+#Number of portals:
+1
+#Min number of people:
+12
 
 #map:   
-map4.txt
+map5.txt

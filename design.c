@@ -11,7 +11,7 @@
         Box object
     Description:
         Given a character returns the corresponding resouce
-        l -> LADDER
+        l -> LADDER_MERGE
         f -> WALL_MERGE
         p -> PORTALA
         default -> AIR
@@ -20,7 +20,7 @@ Box get_resource(char c){
     switch (c)
     {
     case 'l':
-        return LADDER;    
+        return LADDER_MERGE;    
     case 'f':
         return WALL_MERGE;
     case 'p':
@@ -51,8 +51,8 @@ int place_resource(Screen *screen, Level *level, char resource){
     int k = 0;
 
     // Delete resource
-    if(resource == (char)127 || res == LADDER || res == WALL_MERGE || res == PORTALA){
-        if(current == LADDER){
+    if(resource == (char)127 || res == LADDER_MERGE || res == WALL_MERGE || res == PORTALA){
+        if(current == LADDER_MERGE){
             if(level->num_ladder_floor_act < level->num_ladder_floor){
                 (level->num_ladder_floor_act)++;
             }else if(level->num_ladder_act < level->num_ladder){
@@ -77,7 +77,7 @@ int place_resource(Screen *screen, Level *level, char resource){
     }
 
     // Add resource
-    if(res == LADDER){
+    if(res == LADDER_MERGE){
         if(level->num_ladder_act > 0){
             (level->num_ladder_act)--;
             (level->map->boxes_design)[pos.x][pos.y] = res;

@@ -6,7 +6,7 @@
 #include "print_on_screen.h"
 
 /* This enumeration defines the type Box, which represents an element in the map */
-typedef enum {AIR, WALL, START, END, LAVA, PORTALA, PORTALB, LADDER, ZONAPORTAL, WALL_MERGE, DISAPPEAR_WALL} Box;
+typedef enum {AIR, WALL, START, END, LAVA, PORTALA, PORTALB, LADDER, ZONAPORTAL, WALL_MERGE, DISAPPEAR_WALL, LADDER_MERGE} Box;
 
 typedef struct {
     Box **boxes;

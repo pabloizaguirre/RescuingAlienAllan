@@ -131,7 +131,7 @@ Bool is_position_occupable(Position position, Level *level, Screen *screen) {
         return FALSE;
     }
 
-    // chdeck the other people postion and state
+    // check the other people postion and state
     for(i = 0; i < level->num_people; i++){
         if ((level->people[i]->state != DESINTEGRATED) && (level->people[i]->state != FINISHED) && (level->people[i]->position.x == position.x) && (level->people[i]->position.y == position.y)){
             return FALSE;
