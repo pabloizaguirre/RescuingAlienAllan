@@ -1,4 +1,3 @@
-
 #ifndef level_h
 #define level_h
 
@@ -49,46 +48,65 @@ struct _Level {
 };
 
 /*
-    Initialices a double linked list of levels from a name of a file containing
-    the names of all the files of all the levels
-    
-    Levels_init() searches for a progress.dat file, and if it exists, it initializes
-    the game from the last level you have played.
+    Input:
+        - *screen: pointer to main screen
+    Outputs:
+        Level *: pointer to the current level
+        levels act as a foward linked list
+        each level has a pointer to the first level just in case 
+        the current level is not the first one
+    Description:
+        Goes through all the files named level**.txt inside the level_files folder
+        for each level initializes a level structure setting all it's values appropiately
+        and links each level to the next one creating a linked list structure
+        NOTES:
+            - The map inside each level is created from a file wich name shold be especified in
+            the corresponding level**.txt file
+            - The n_starts property is set from the progress.dat file wich is created and initialized
+            to 0 if it didn't exist
+            - The level number property acts as an index but it starts at 1 so that it can be printed
+            in a user friendly way
+            - A double pointer to the persons for the level is also created and initialized inside
+            this function
 */
 Level *levels_init(Screen *screen);
 
 /*
-    Prints the level mesage in the screen
+    Input:
+        - *level: pointer to the current level
+    Outputs:
+        Flag indicating if the player has lost or the number of starts won
+    Description:
+        Checks how many resources the player has spent and how many people
+        have reached the end. Based on that determines if the player has
+        lost and the number of stars won if he didn't lose
+        Also saves the won stars in the progress.dat file
 */
-int level_print_mesaje(Level *level);
-
-/* 
-    Returns the state of the game (LOST, STARS_1, STARS_2, STARS_3, SUPREME) and RES_ERROR if there
-    was an error also changes the number of stars of the level
- */
 Level_result game_status(Level *level);
 
-
 /*
-    Get functions for the level structure
+    Inputs:
+        - *level: pointer to the current level
+        - *screen: pointer to the main screen
+        - *first_level: pointer to the first_level
+    Outputs:
+        Level *: pointer to the level chosen by the player
+        NULL it the player exits
+    Description:
+        Let's the player repeat the level, open the choose level menu
+        or go to the next level if he has won at least 1 star
+        returns a pointer to the level chosen by the player of NULL
+        it the player exits the game
 */
-Map *level_get_map(Level *level);
-Level *level_get_next_level(Level *level);
-Level *level_get_last_level(Level *level);
-People **level_get_peoples(Level *level);
-People *level_get_alien(Level *level);
-
-/*
-    Set functions for the level structure
-*/
-Level *level_set_map(Level *level, Map *map);
-Level *level_set_next_level(Level *level, Level *next_level);
-Level *level_set_last_level(Level *level, Level *last_level);
-Level *level_set_peoples(Level *level, People **peoples);
-Level *level_set_alien(Level *level, People *alien);
-
 Level *level_menu(Level *level, Screen *screen, Level *first_level);
 
+/*
+    Inputs:
+        - *first_level: pointer to the first_level
+        - *screen: pointer to the main screen
+    Description:
+        Frees the level structure
+*/
 void free_level(Level* first_level, Screen * screen);
 
 #endif

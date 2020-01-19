@@ -3,6 +3,18 @@
 #include "level.h"
 
 
+/* PRIVATE FUNCTION
+    Input:
+        - c: character to be converted
+    Outputs:
+        Box object
+    Description:
+        Given a character returns the corresponding resouce
+        l -> LADDER
+        f -> WALL_MERGE
+        p -> PORTALA
+        default -> AIR
+*/
 Box get_resource(char c){
     switch (c)
     {
@@ -17,13 +29,27 @@ Box get_resource(char c){
     }
 }
 
-/* returns 2 if it deletes a resource, 1 if it places a resource, and 0 if it hasn't done anything*/
+/* PRIVATE FUNCTION
+    Input:
+        - *screen: pointer to main screen
+        - *level: pointer to current level
+        - resource: resource to be placed
+    Outputs:
+        integer
+    Description:
+        Places or deletes resource depending on the current position of the cursor
+        updates the remaining resources inside the level and the boxes_design map
+        returns 0 if a invalid action is requested
+                1 if a resource is placed
+                2 if a resource is deleted
+*/
 int place_resource(Screen *screen, Level *level, char resource){
     Position pos = map_position(screen->cursor, screen);
     Box current = (level->map->boxes_design)[pos.x][pos.y];
     Box res = get_resource(resource);
     int k = 0;
 
+    // Delete resource
     if(resource == (char)127 || res == LADDER || res == WALL_MERGE || res == PORTALA){
         if(current == LADDER){
             if(level->num_ladder_floor_act < level->num_ladder_floor){
@@ -49,6 +75,7 @@ int place_resource(Screen *screen, Level *level, char resource){
         }
     }
 
+    // Add resource
     if(res == LADDER){
         if(level->num_ladder_act > 0){
             (level->num_ladder_act)--;
@@ -81,13 +108,26 @@ int place_resource(Screen *screen, Level *level, char resource){
 
 }
 
+/*
+    Input:
+        - *level: pointer to current level
+        - *screen: pointer to main screen
+    Outputs:
+        FLAG: DESIGN_FINISHED or DESIGN_NOT_FINISHED
+    Description:
+        Called for each iteration of the design loop
+        Waits for a key input and places / deletes the corresponding resource
+        Returns a flag indicating wheter the design loop should finish or not
+*/
 FLAG design(Level *level, Screen *screen){
     printf("\e[?25h");
     print_resources(screen, level);
     change_cursor(screen->cursor, screen);
-    char c = read_key();
 
+    // Read key and change cursor of place resource
+    char c = read_key();
     switch(c) {
+    // Change cursor
     case('w'):
         if(screen->cursor.y > screen->map.y)
             screen->cursor.y--;
@@ -104,11 +144,13 @@ FLAG design(Level *level, Screen *screen){
         if(screen->cursor.x > screen->map.x)
             screen->cursor.x--;
         break;
+    // Exit loop
     case('\n'):
         return DESIGN_FINISHED;
+    // Place / delete corresponding resource
     default:
         if(is_position_valid_resources(screen->cursor, level, screen)){
-            if(place_resource(screen, level, c) == 0){
+            if(place_resource(screen, level, c) == 0){ // if action is invalid
                 printf("\e[?25l");
                 change_color("red", "red");
                 printf(" ");
@@ -116,11 +158,14 @@ FLAG design(Level *level, Screen *screen){
                 usleep(100*1000);
                 printf("\e[?25h");
             }
+            
+            // merge design map and print the resulting map
             map_merge(screen, level->map);
             print_map(level->map->boxes_merge, screen);
             printf("\e[?25h");
             print_resources(screen, level);
-        } else {
+
+        } else { // if position is invalid
             printf("\e[?25l");
             change_color("red", "red");
             printf(" ");
