@@ -2,6 +2,7 @@
 #include "read_from_file.h"
 #include "map.h"
 #include "level.h"
+#include "read_keys.h"
 #include <string.h>
 #include <termios.h>
 
@@ -332,7 +333,7 @@ Result print_title(Screen *screen, char *title){
         Pritns all the margins in the game
 */
 Result print_margins(Screen *screen){
-    int i=0, k;
+    int i=0;
     Position pos;
     pos.x = 0;
     pos.y = 2;
@@ -568,6 +569,7 @@ Result print_message(Screen *screen, char *text){
         pos.y += 1;
         change_cursor(pos,screen);
     }
+    return OK;
 }
 
 /* PRIVATE FUNCTION
@@ -892,6 +894,8 @@ Result level_end(Level_result res, Screen *screen){
             case SUPREME:
                 print_message(screen, "You found a better way to solve the level than what the developers of the game thought!!!");
                 fflush(stdout);
+                break;        
+            default:
                 break;
         }
 
@@ -1010,7 +1014,6 @@ Result print_file(char *path, Position pos, Screen *screen, Bool transparency){
 */
 Result erase_mapbox(Screen *screen){
     int i, j;
-    char c;
     Position p;
 
     if (!screen) {

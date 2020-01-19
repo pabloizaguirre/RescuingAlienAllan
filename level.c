@@ -1,6 +1,8 @@
 #include "level.h"
 #include "print_on_screen.h"
 #include "map.h"
+#include "read_keys.h"
+#include "read_from_file.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -599,7 +601,7 @@ void draw_choosing_menu(Level * first_level, Screen *screen, int selected){
     pos.x = (screen->screen_width - strlen(instructions)) / 2;
     pos.y = 2;
     change_cursor(pos, screen);
-    printf(instructions);
+    printf("%s", instructions);
 
     // get tmp to point to the first level to be displayed
     for(int i = 0; i < sel_page * n_per_page; i++) tmp = tmp->next_level;
@@ -660,7 +662,7 @@ void draw_choosing_menu(Level * first_level, Screen *screen, int selected){
     pos.x = (screen->screen_width - strlen(end_message)) / 2;
     pos.y = screen->screen_height - 1;
     change_cursor(pos, screen);
-    printf(end_message);
+    printf("%s", end_message);
 }
 
 /* PRIVATE FUNCTION

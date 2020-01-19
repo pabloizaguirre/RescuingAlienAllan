@@ -173,7 +173,7 @@ Map* map_char_to_box(char** map, Screen *screen){
 */
 char** map_from_file(char *file, Screen *screen){
     FILE *fp;
-    int i,j,rows = screen->map_height,columns = screen->map_width;
+    int i,rows = screen->map_height,columns = screen->map_width;
     char **map;
 
     map = (char**)malloc(sizeof(char*)*rows);
