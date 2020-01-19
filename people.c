@@ -147,7 +147,7 @@ int people_update(People *p, Level *level, Screen *screen){
         p->state = change_state(level->map->boxes_merge[map_pos.x][map_pos.y]);
         return 1;
     } else { // If the person cannot move down then it will move right if it is possible
-        if(level->map->boxes_merge[map_pos.x][map_pos.y] == DISAPPEAR_WALL){
+        if(b == DISAPPEAR_WALL){
             level->map->boxes_merge[map_pos.x][map_pos.y] = AIR;
         }
         pos_aux = p->position;
