@@ -1,5 +1,14 @@
 #include "read_from_file.h"
 
+/*
+    Inputs:
+        - *f: pointer to file to be read
+        - *line: pointer to character where the read line
+        should be stored
+    Description:
+        Reads a line ignoring empty lines and lines starting
+        with #
+*/
 Result read_line(FILE *f, char *line){
 
     do{
@@ -13,12 +22,31 @@ Result read_line(FILE *f, char *line){
 }
 
 /*
-This function transforms the characters to boxes.
-map[0][0] es el de abajo a la izquierda.
-arriba a la izquierda seria map[100][0]
- */
+    Inputs:
+        - **map: pointer double array of character to be converted
+        - *screen: pointer to the main screen
+    Outputs:
+        Map *: pointer to the initialized map
+        NULL in case of error
+    Description:
+        initializes a map from the given array of characters
+        initializes de boxes, boxes_design and boxes_merge arrays
+        boxes and boxes_merge are initialized to the contents in the file
+        and boxes_design is initialized to AIR
 
-//Celdas
+        The char to box conversion goes as follows:
+        .   AIR
+        W   WALL
+        S   START
+        E   END
+        L   LAVA
+        A   PORTALA
+        B   PORTALB
+        #   LADDER
+        Z   ZONAPORTAL
+        w   WALL_MERGE
+        D   DISAPPEAR_WALL
+*/
 Map* map_char_to_box(char** map, Screen *screen){
     char lista[11] = ".WSELAB#ZwD";
     int i, j, rows = screen->map_height, columns = screen->map_width;
@@ -27,10 +55,9 @@ Map* map_char_to_box(char** map, Screen *screen){
     Box **boxes_design = NULL;
     Box **boxes_merge = NULL;
 
-    //falta control de errores.
     map_obj = (Map *)malloc(sizeof(Map));
     if(map == NULL) return NULL;
-    //falta control de errores.
+    
     boxes_design = (Box **)malloc(sizeof(Box*)*rows);
     if(boxes_design == NULL){
         free(map);
@@ -58,14 +85,10 @@ Map* map_char_to_box(char** map, Screen *screen){
         return NULL;
     }
     
-    //falta hacer free bien
     for(i=0;i<rows;i++){
         mapB[i]=(Box*)malloc(sizeof(Box)*(columns));
         if(mapB[i] == NULL) {
-            //falta cambiar free(map_obj) por free_map(map_obj)
-            free(map);
-            free(map_obj); 
-            free(mapB);
+            free_map(map_obj, screen);
             return NULL;
         }
     }
@@ -73,11 +96,7 @@ Map* map_char_to_box(char** map, Screen *screen){
     for(i=0;i<rows;i++){
         boxes_design[i]=(Box*)malloc(sizeof(Box)*(columns));
         if(boxes_design[i] == NULL) {
-            //falta cambiar free(map_obj) por free_map(map_obj)
-            free(map);
-            free(map_obj); 
-            free(mapB);
-            free(boxes_design);
+            free_map(map_obj, screen);
             return NULL;
         }
         for(j=0; j<columns; j++){
@@ -88,11 +107,7 @@ Map* map_char_to_box(char** map, Screen *screen){
     for(i=0;i<rows;i++){
         boxes_merge[i]=(Box*)malloc(sizeof(Box)*(columns));
         if(boxes_merge[i] == NULL) {
-            //falta cambiar free(map_obj) por free_map(map_obj)
-            free(map);
-            free(map_obj); 
-            free(mapB);
-            free(boxes_design);
+            free_map(map_obj, screen);
             return NULL;
         }
     }
@@ -144,19 +159,24 @@ Map* map_char_to_box(char** map, Screen *screen){
 }
 
 /*
-Receives a file with a map and writes it in a char table.
- */
-
+    Inputs:
+        - *file: name of the file to open
+        - *screen: pointer to the main screen
+    Outputs:
+        Char **: contents read from the file
+        NULL in case of error
+    Description:
+        Reads a file initializing a double array of characters
+        with the contents of the file
+*/
 char** map_from_file(char *file, Screen *screen){
     FILE *fp;
-    //problematico
     int i,j,rows = screen->map_height,columns = screen->map_width;
     char **map;
 
     map = (char**)malloc(sizeof(char*)*rows);
     if(map == NULL) return NULL;
 
-    //falta hacer free de todo map cuando hay un error
     for(i=0;i<rows;i++){
         map[i]=(char*)malloc(sizeof(char)*columns);
         if(map[i] == NULL) return NULL;

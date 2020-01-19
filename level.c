@@ -771,7 +771,7 @@ Level *level_menu(Level *level, Screen *screen, Level *first_level){
     char key;
     int a, n = 3;
 
-    printf("\e[?25l");
+    disable_terminal_cursor();
 
     // print background
     map_pos.x = screen->map_height/2 + 8;   

@@ -3,9 +3,18 @@
 #include "level.h"
 #include <stdlib.h>
 
-//celdas
-// Returns the state of the person when it reaches the b Box
-// Done for AIR, WALL, START, END, LAVA, PORTALA, PORTALB, LADDER, WALL_MERGE, PORTAL_ZONE
+/* PRIVATE FUNCTION
+    Inputs:
+        - b: box to be processed
+    Outputs:
+        - State: resulting state
+    Description:
+        Returns the state a person should have after being occupying
+        the box b
+        If b is LAVA / WALL / WALL_MERGE the person gets DESINTEGRATED
+        If b is END the person gets FINISHED
+        Otherwise gets ALIVE
+*/
 State change_state(Box b) {
     if (b == LAVA || b == WALL || b == WALL_MERGE) {
         return DESINTEGRATED;
@@ -16,6 +25,18 @@ State change_state(Box b) {
     }
 }
 
+/*
+    Inputs:
+        - character: character to display
+        - position: original position for the person
+        - state: original state
+        - wait: delay before it starts moving
+    Outputs:
+        - People *: pointer to the initialized person
+    Description:
+        Creates a People pointer, allocates memory and sets its properties to 
+        the given values
+*/
 People* create_people(char character, Position position, State state, int wait){
     People *p;
     p = (People*)malloc(sizeof(People));
@@ -30,29 +51,18 @@ People* create_people(char character, Position position, State state, int wait){
     return p;
 }
 
-Position People_get_position(People *p){
-    return p->position;
-}
-
-State People_get_state(People *p){
-    return p->state;
-}
-
-int People_set_character(People *p, char c){
-    p->character = c;
-    return 1;
-}
-int People_set_position(People *p, Position position){
-    p->position = position;
-    return 1;
-}
-int People_set_state(People *p, State state){
-    p->state = state;
-    return 1;
-}
-
-
-// Returns -1 if something went wrong, 0 if it doesn't move and 1 if it succeeded
+/*
+    Inputs:
+        - *p: person to be updated
+        - *level: pointer to current level
+        - *screen: pointer to main screen
+    Outputs:
+        Returns -1 if something went wrong, 0 if it didn't move and 1 if it did
+    Description:
+        Checks the state of the person and the contents of the map arround him
+        based on that moves him and updates its state
+        Finally returns the appropiate number
+*/
 int people_update(People *p, Level *level, Screen *screen){
     Position pos_aux = p->position;
     Position map_pos = map_position(pos_aux, screen);
@@ -62,6 +72,7 @@ int people_update(People *p, Level *level, Screen *screen){
         return -1;
     }
 
+    // If the person is dead or it still has to wait
     if (p->state != ALIVE && p->wait < 0) {
         return 0;
     }
@@ -73,7 +84,7 @@ int people_update(People *p, Level *level, Screen *screen){
 
     if (p->wait == 0){
         p->wait--;
-        People_set_state(p, ALIVE);
+        p->state = ALIVE;
         return 0;
     }
 
@@ -143,7 +154,16 @@ int people_update(People *p, Level *level, Screen *screen){
     return 0;
 }
 
-//state
+/*
+    Inputs:
+        - *level: pointer to current level
+        - *screen: pointer to main screen
+    Outputs:
+        Reslut: indiacting if an error ocurred
+    Description:
+        Prints all the people using their character
+        The last person is printed in green to represent the alien
+*/
 Result print_people(Level *level, Screen *screen){
     int i;
     if (!level || !screen){
@@ -152,6 +172,7 @@ Result print_people(Level *level, Screen *screen){
         return ERROR;
     }
 
+    // print all the people except the last one
     for(i = 0; i < level->num_people - 1; i++){
         if(level->people[i]->state != DESINTEGRATED && level->people[i]->state != FINISHED){
             change_cursor(level->people[i]->position, screen);
@@ -159,30 +180,48 @@ Result print_people(Level *level, Screen *screen){
             printf("%c", level->people[i]->character);
         }
     }
+
+    // print the alien
     if(level->people[i]->state != DESINTEGRATED && level->people[i]->state != FINISHED){
         change_cursor(level->people[i]->position, screen);
         change_color("reset", "green");
         printf("%c", level->people[i]->character);
     }
+    
     return OK;
 }
 
-
+/*
+    Inputs:
+        - *level: pointer to current level
+        - *screen: pointer to main screen
+    Outputs:
+        FLAG: indicating whether the level has finished
+    Description:
+        Performs each iteration of the people movement loop
+        For each person it calls people update to move them and 
+        determine their state
+        This function gets a delay based on the SPEED macro defined
+        in types.h
+        If no person moved then the game finishes
+*/
 FLAG movement_loop(Level *level, Screen * screen){
     int k, i;
     FLAG flag = LEVEL_FINISHED;
-    printf("\e[?25l");
-    usleep(SPEED*1000);
+    disable_terminal_cursor();
+    usleep(SPEED*1000); // delay
 
+    // print screen
     print_map(level->map->boxes_merge, screen);
     print_resources(screen, level);
     print_people(level, screen);
-    printf("\e[?25l");
+    disable_terminal_cursor();
     fflush(stdout);
     
+    // iterate through all persons
     for (i = 0; i < level->num_people; i++){
         k = people_update(level->people[i], level, screen);
-        printf("\e[?25l");
+        disable_terminal_cursor();
         fflush(stdout);
         if (k < 0){
             printf("ERROR EN PEOPLE_UPDATE()\n");
@@ -193,12 +232,20 @@ FLAG movement_loop(Level *level, Screen * screen){
             flag = LEVEL_NOT_FINISHED;
         }
     }
-    if (flag == LEVEL_FINISHED){
-        return LEVEL_FINISHED;
-    }
-    return LEVEL_NOT_FINISHED;
+    
+    return flag;
 }
 
+/*
+    Inputs:
+        - *level: pointer to current level
+        - *screen: pointer to main screen
+    Outputs:
+        Result: indicating whether an error ocurred
+    Description:
+        Resets each person to its default values so 
+        that the level can be restarted
+*/
 Result reset_people(Level *level, Screen * screen){
     Position spos = screen_position(*(level->map->Start_pos), screen);
         
@@ -209,7 +256,15 @@ Result reset_people(Level *level, Screen * screen){
     }
 }
 
-
+/*
+    Inputs:
+        - *level: pointer to current level
+    Outputs:
+        int: indicating whether an error ocurred
+    Description:
+        Frees all memory allocated for the people
+        Checks if pointers are set to NULL before calling free()
+*/
 int free_people(Level *level){
     int i;
     if(level->people){

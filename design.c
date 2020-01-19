@@ -1,6 +1,7 @@
 #include "design.h"
 #include "read_keys.h"
 #include "level.h"
+#include "print_on_screen.h"
 
 
 /* PRIVATE FUNCTION
@@ -120,7 +121,7 @@ int place_resource(Screen *screen, Level *level, char resource){
         Returns a flag indicating wheter the design loop should finish or not
 */
 FLAG design(Level *level, Screen *screen){
-    printf("\e[?25h");
+    enable_terminal_cursor();
     print_resources(screen, level);
     change_cursor(screen->cursor, screen);
 
@@ -151,29 +152,29 @@ FLAG design(Level *level, Screen *screen){
     default:
         if(is_position_valid_resources(screen->cursor, level, screen)){
             if(place_resource(screen, level, c) == 0){ // if action is invalid
-                printf("\e[?25l");
+                disable_terminal_cursor();
                 change_color("red", "red");
                 printf(" ");
                 fflush(stdout);
                 usleep(100*1000);
-                printf("\e[?25h");
+                enable_terminal_cursor();
             }
             
             // merge design map and print the resulting map
             map_merge(screen, level->map);
             print_map(level->map->boxes_merge, screen);
-            printf("\e[?25h");
+            enable_terminal_cursor();
             print_resources(screen, level);
 
         } else { // if position is invalid
-            printf("\e[?25l");
+            disable_terminal_cursor();
             change_color("red", "red");
             printf(" ");
             fflush(stdout);
             usleep(100*1000);
-            printf("\e[?25h");
+            enable_terminal_cursor();
             print_map(level->map->boxes_merge, screen);
-            printf("\e[?25h");
+            enable_terminal_cursor();
             print_resources(screen, level);
         }
     }

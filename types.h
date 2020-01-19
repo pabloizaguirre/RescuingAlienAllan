@@ -6,6 +6,10 @@
 
 #define MAX_SIZE 1024
 
+/*
+    General purpose enumerations and structures
+*/
+
 typedef struct _Level Level;
 
 typedef struct {

@@ -1,6 +1,10 @@
 #include "read_from_file.h"
 #include "types.h"
 
+/*
+    Example on how to read a file
+    using the read_from_file library
+*/
 int main(int argc, char** argv){
     FILE *f;
     char line[MAX_SIZE];

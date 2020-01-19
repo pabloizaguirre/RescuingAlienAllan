@@ -5,16 +5,29 @@
 #include <string.h>
 #include <termios.h>
 
-
-#define FG 38
-#define BK 48
-
+// global variable to store all the terminal default settings
 struct termios initial;
 
 void _term_init();
 
 /*
-    Changes the color you are printing with to the color given by the string argument
+    Inputs:
+        - *background_color: name of the background color
+        - *foreground_color: name of the foreground color
+    Description:
+        Changes the terminal background and foreground colors
+        available options are:
+            -black
+            -red
+            -green
+            -yellow
+            -blue
+            -magenta
+            -cyan
+            -white
+            -reset (default terminal color)
+    NOTE:
+        Setting one of the colors to reset resets both colors
 */
 int change_color(char *background_color, char *foreground_color){
     char *foreground_color_code = "40";
@@ -40,10 +53,22 @@ int change_color(char *background_color, char *foreground_color){
     else if(!strcmp(foreground_color, "white")) foreground_color_code = "37";
     else if(!strcmp(foreground_color, "reset")) foreground_color_code = "0";
 
+    // print corresponding ASCII code
     printf("%c[%s;1m", 27, background_color_code);
     return printf("%c[%s;1m", 27, foreground_color_code);
 }
 
+/*
+    Inputs:
+        - r, g, b: RGB values for the color
+        - bf: integer indicating whether you want to change
+        the background or the foreground color
+    Description:
+        Changes the terminal color to the given RGB values
+        to indicate if you want to change the background or
+        the foreground color use the macros defined earlier
+        in this file
+*/
 void change_color_rgb(int r, int g, int b, int bf){
     if(r < 0) r = 0;
     if(g < 0) g = 0;
@@ -59,7 +84,12 @@ void change_color_rgb(int r, int g, int b, int bf){
 }
 
 /*
-    Changes the custor to the given position
+    Inputs:
+        - position: where to change the cursor
+        - *screen: pointer to the main screen
+    Description:
+        Changes the cursor to the given position
+        Checks if the position is valid
 */
 int change_cursor(Position position, Screen *screen){
     int x, y;
@@ -69,7 +99,6 @@ int change_cursor(Position position, Screen *screen){
     } else {  
         x = position.x;
         y = position.y;
-        //screen->cursor = position;
         return printf ("%c[%d;%dH", 27, y, x);
     }
     printf("Error en change_cursor()\n");
@@ -78,7 +107,8 @@ int change_cursor(Position position, Screen *screen){
 }
 
 /*
-    Clears screen
+    Description:
+        Clears the screen
 */
 Result clear_screen(){
     printf("%c[2J", 27);
@@ -86,7 +116,19 @@ Result clear_screen(){
 }
 
 /*
-    Initialize screen
+    Inputs:
+        - *file_name: name of the file where the information
+        about the screen is stored
+    Outputs:
+        - Screen *: pointer to the initialized screen
+    Description:
+        Opens the given file
+        Creates a screen structure
+        Set all its values based on the contents of the file
+        Sets the terminal size
+        Displays a welcome start screen and waits for any key
+        Clears the screen
+        Prints the margins and the game title
 */
 Screen *init_screen(char *file_name){
     //Open file
@@ -196,16 +238,20 @@ Screen *init_screen(char *file_name){
     screen->cursor.x = 10;
     screen->cursor.y = 10;
 
-    //Set screen size
+    // Set screen size
     _term_init(screen);
     change_color("reset", "reset");
     printf("%c[8;%d;%dt", 27, screen->screen_height, screen->screen_width);
     clear_screen();
+
+    // display welcome screen and wait for any key
     if(start_screen(screen) == ERROR) {
         free(screen);
         fclose(f);
         return NULL;
     }
+
+    //print margins and title
     if(print_margins(screen) == ERROR){
         free(screen);
         fclose(f);
@@ -216,6 +262,13 @@ Screen *init_screen(char *file_name){
     return screen;
 }
 
+/*
+    Inputs:
+        - *screen: pointer to the main screen
+    Description:
+        Pritns the contents of the designs/start_screen.txt file
+        and waits for any key to be pressed
+*/
 Result start_screen(Screen *screen){
     Position pos;
     pos.x = 0;
@@ -226,6 +279,12 @@ Result start_screen(Screen *screen){
     return OK;
 }
 
+/*
+    Inputs:
+        - *screen: pointer to the main screen
+    Description:
+        Restores all the terminal settings and frees the screen
+*/
 Result restore_screen(Screen *screen){
     Position final_pos;
     if(!screen) return ERROR;
@@ -238,6 +297,13 @@ Result restore_screen(Screen *screen){
     return OK;
 }
 
+/*
+    Inputs:
+        - *screen: pointer to the main screen
+        - *title: title of the game
+    Description:
+        Pritns the title at the top of the screen
+*/
 Result print_title(Screen *screen, char *title){
     Position pos;
     int l = strlen(title);
@@ -260,29 +326,10 @@ Result print_title(Screen *screen, char *title){
 }
 
 /*
-    Prints the magins between the map and the message boxes
-*/
-Result print_margins2(FILE *f, Screen *screen){
-    char line[MAX_SIZE];
-    Result r;
-
-    Position pos;
-    pos.x = 0;
-    pos.y = 2;
-    change_cursor(pos,screen);
-    do{
-        r = read_line(f, &line);
-        printf(line);
-
-        if(r == ERROR){
-            printf("error reading file");
-            return ERROR;
-        }
-    }while(!feof(f));    
-}
-
-/* 
-    Prints the margins between the map and the message boxes without a file
+    Inputs:
+        - *screen: pointer to the main screen
+    Description:
+        Pritns all the margins in the game
 */
 Result print_margins(Screen *screen){
     int i=0, k;
@@ -306,7 +353,6 @@ Result print_margins(Screen *screen){
         |
         |
         +
-        funciona
     */
     pos.x = 0;
     pos.y = 2;
@@ -326,7 +372,6 @@ Result print_margins(Screen *screen){
         |
         |
         +------+
-        Funciona
     */
     for (i = 1; i < screen->screen_width - 1; i++){
        printf("-");
@@ -337,7 +382,6 @@ Result print_margins(Screen *screen){
         |      | 
         |      |
         +------+
-        Funciona
     */
     pos.x = screen->screen_width;
     pos.y = 2;
@@ -352,7 +396,6 @@ Result print_margins(Screen *screen){
         +------+ 
         |      |
         +------+
-        Funciona
     */
     pos.y = screen->map.y - 1;
     pos.x = 0;
@@ -369,7 +412,6 @@ Result print_margins(Screen *screen){
         |      |
         +------+
         +------+
-        Funciona
     */
     pos.y = screen->messagebox.y - 1;
     pos.x = 0;
@@ -401,8 +443,16 @@ Result print_margins(Screen *screen){
 
     return OK;
 }
-//celdas
-//falta comprobar errores
+
+/*
+    Inputs:
+        - **map: map to be printed
+        - *screen: pointer to the main screen
+    Description:
+        Pritns the given map in the screen
+        Makes the appropiate conversions from box to
+        character and colors
+*/
 Result print_map (Box **map, Screen *s) {
     int i, j;
     Position p;
@@ -414,7 +464,7 @@ Result print_map (Box **map, Screen *s) {
     p = s->map;
     
     if (change_cursor(p, s) < 0) return ERROR;
-    printf("\e[?25l");
+    disable_terminal_cursor();
     for (i = s->map_height - 1; i >= 0; i--) {
         for (j = 0; j < s->map_width; j++) {
             switch (map[i][j]){
@@ -474,7 +524,14 @@ Result print_map (Box **map, Screen *s) {
     return OK;
 }
 
-
+/*
+    Inputs:
+        - *screen: pointer to the main screen
+        - *text: message to be displayed
+    Description:
+        Pritns the given message in the message box
+        crops it to the right dimensions and splits it into lines
+*/
 Result print_message(Screen *screen, char *text){
     int end_flag = 0;
     int w = screen->messagebox_width - 1;
@@ -508,6 +565,14 @@ Result print_message(Screen *screen, char *text){
     }
 }
 
+/* PRIVATE FUNCTION
+    Inputs:
+        - *line: line to be printed
+        - *p: position where it sholud be printed
+        - *screen: pointer to the main screen
+    Description:
+        Pritns the given line and fills the remaining space with spaces
+*/
 Result print_resources_line(char *line, Position *p, Screen *screen){
     int w = screen->screen_width - screen->map_width - 3;
     int l = strlen(line);
@@ -523,6 +588,14 @@ Result print_resources_line(char *line, Position *p, Screen *screen){
     return OK;
 }
 
+/*
+    Inputs:
+        - *screen: pointer to the main screen
+        - *level: pointer to the current level
+    Description:
+        Clears the resources box
+        Pritns all the information about the level resources in the screen
+*/
 Result print_resources(Screen *screen, Level *level){
     char array[256]; //Sirve para pasar los valores de los resources a print_resource
     Position res_pos, pos;
@@ -654,6 +727,13 @@ Result print_resources(Screen *screen, Level *level){
     return OK;
 }
 
+/* PRIVATE FUNCTION
+    Inputs:
+        - *screen: pointer to the main screen
+    Description:
+        Prints a cool animation when the player make more than 3 stars
+        Takes some time to run the full animation
+*/
 void supreme_animation(Screen *screen){
     int n, spacing, r, j, w = screen->map_width, h = screen->map_height;
     Position map_pos, pos;
@@ -686,6 +766,14 @@ void supreme_animation(Screen *screen){
     } 
 }
 
+/* PRIVATE FUNCTION
+    Inputs:
+        - *screen: pointer to the main screen
+    Description:
+        Prints a cool animation when the player make more than 3 stars
+        Takes some time to run the full animation
+        Its the second version
+*/
 void supreme_animation_2(Screen *screen){
     int n, spacing, r, w = screen->map_width, h = screen->map_height;
     Position map_pos, pos;
@@ -765,13 +853,20 @@ void supreme_animation_2(Screen *screen){
 
 }
 
+/*
+    Inputs:
+        - res: result of the level indicating the number of stars won
+        - *screen: pointer to the main screen
+    Description:
+        Prints an animation depending on the number of stars the player won
+*/
 Result level_end(Level_result res, Screen *screen){
     Position map_pos, pos;
 
     if(!screen){
         return ERROR;
     }
-    printf("\e[?25l");
+    disable_terminal_cursor();
     switch(res){
             case LOST:
                 print_message(screen, "Level not completed");
@@ -849,7 +944,18 @@ Result level_end(Level_result res, Screen *screen){
 
 }
 
-//This function doesn't crop the file, so make sure it fits on screen. If transparency is True spaces will be ignored.
+/*
+    Inputs:
+        - *path: name of the file to be printed
+        - pos: position where the file should be printed
+        - *screen: pointer to the main screen
+        - transparency: whether or not to ignore the spaces
+    Description:
+        Prints the contents of the given file in the screen
+        NOTE:
+            This function doesn't crop the file, so make sure it fits on screen.
+            If transparency is True spaces will be ignored.
+*/
 Result print_file(char *path, Position pos, Screen *screen, Bool transparency){
     FILE *f;
     int i;
@@ -889,6 +995,14 @@ Result print_file(char *path, Position pos, Screen *screen, Bool transparency){
     return OK;
 }
 
+/*
+    Inputs:
+        - *screen: pointer to the main screen
+    Description:
+        Prints the contents of the given file in the screen
+        NOTE:
+            Ereses the contents inside the mapbox
+*/
 Result erase_mapbox(Screen *screen){
     int i, j;
     char c;
@@ -903,7 +1017,7 @@ Result erase_mapbox(Screen *screen){
     
     if (change_cursor(p, screen) < 0) return ERROR;
     change_color("reset", "reset");
-    printf("\e[?25l");
+    disable_terminal_cursor();
     for (i = screen->map_height - 1; i >= 0; i--) {
         for (j = 0; j < screen->map_width; j++) {
             printf(" ");
@@ -914,6 +1028,16 @@ Result erase_mapbox(Screen *screen){
     return OK;
 }
 
+/*
+    Inputs:
+        - pos: position to print the box
+        - r, g, b: RGB values of the box
+        - width, height: size of the box
+        - *screen: pointer to the main screen
+    Description:
+        Prints a rectangular box of the given size at the given position
+        with the give colors
+*/
 Result print_box(Position pos, int r, int g, int b, int width, int height, Screen *screen){
     change_cursor(pos, screen);
     change_color_rgb(r, g, b, BK);
@@ -930,6 +1054,13 @@ Result print_box(Position pos, int r, int g, int b, int width, int height, Scree
     return OK;
 }
 
+/* PRIVATE FUNCTION
+    Inputs:
+        - a: integer representing the selected option
+        - *screen: pointer to the main screen
+    Description:
+        Prints the continue / new game menu
+*/
 void print_boxes_start_screen(Screen *screen, int a){
     Position pos;
     int color = 124;
@@ -966,9 +1097,14 @@ void print_boxes_start_screen(Screen *screen, int a){
     printf("New game");
 }
 
-/* Prints the start screen where you choose if you want to continue or start a new game
-   if there isn't a progress file or you choose to start a new game, it returns 0, if you decide
-   to continue the game it returns 1, and if there was a problem it returns -1 */
+/*
+    Inputs:
+        - *screen: pointer to the main screen
+    Description:
+        Prints the start screen where you choose if you want to continue or start a new game
+        if there isn't a progress file or you choose to start a new game, it returns 0, if you decide
+        to continue the game it returns 1, and if there was a problem it returns -1
+*/
 int continue_or_newgame_screen(Screen *screen){
     int a = 0, n = 2;
     char key;
@@ -983,7 +1119,7 @@ int continue_or_newgame_screen(Screen *screen){
     change_color("reset", "reset");
     clear_screen();
     
-    printf("\e[?25l");
+    disable_terminal_cursor();
     
     do{
         print_boxes_start_screen(screen, a);
@@ -1007,6 +1143,22 @@ int continue_or_newgame_screen(Screen *screen){
     } else {
         return -1;
     }
+}
+
+/*
+    Description:
+        Disables the terminal cursor
+*/
+void disable_terminal_cursor(){
+    printf("\e[?25l");
+}
+
+/*
+    Description:
+        Enables the terminal cursor
+*/
+void enable_terminal_cursor(){
+    printf("\e[?25h");
 }
 
 /*

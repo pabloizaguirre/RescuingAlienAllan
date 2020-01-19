@@ -1,12 +1,10 @@
 CC = gcc -pedantic
 CFLAGS = -Wall
-EXE = main test_people reading_from_file_example
-#LIBRARIES = enemies.o level.o map.o people.o print_on_screen.o
-#LIBRARIES =print_on_screen.o read_from_file.o
-LIBRARIES =print_on_screen.o read_from_file.o level.o read_keys.o map.o people.o design.o
+EXE = main
+LIBRARIES = print_on_screen.o read_from_file.o level.o read_keys.o map.o people.o design.o
 
 
-all : $(EXE)
+all : $(EXE) run
 
 .PHONY : clean
 clean :
@@ -43,5 +41,5 @@ read_from_file.o: read_from_file.c read_from_file.h
 	$(CC) $(CFLAGS) -c $<
 
 run:
-	./test
+	./main
 
