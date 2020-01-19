@@ -29,7 +29,7 @@ int main(int argc, char** argv){
         return ERROR;
     }
 
-    // open a menu to choose wheter you want to continue
+    // open a menu to choose if you want to continue
     // with the last game
     continue_or_newgame_screen(screen);
     

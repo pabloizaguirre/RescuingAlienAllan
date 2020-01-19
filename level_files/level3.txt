@@ -1,7 +1,7 @@
 #Numero nivel:
 3
 #Mensaje:
-balabalbalabala
+Level 3. Try to get out of this room!
 #Number of people:
 12
 

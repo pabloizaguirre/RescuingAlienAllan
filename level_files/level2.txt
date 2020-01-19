@@ -1,7 +1,7 @@
 #Numero nivel:
 2
 #Mensaje:
-balabalbalabala
+Level 2. Find your way to the end!
 #Number of people:
 15
 
@@ -45,4 +45,4 @@ balabalbalabala
 11
 
 #map:   
-map2_solved.txt
+map2.txt

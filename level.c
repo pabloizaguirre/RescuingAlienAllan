@@ -266,7 +266,7 @@ Level_result game_status(Level *level){
         return LOST;
     }
 
-    // determine the number of won starst and save the progress file
+    // determine the number of won stars and save the progress file
     if (level->num_ladder_floor_act >= level->num_ladder_floor - level->num_ladder_floor_3
                     && level->num_ladder_act >= level->num_ladder - level->num_ladder_3
                     && level->num_floor_act >= level->num_floor - level->num_floor_3 

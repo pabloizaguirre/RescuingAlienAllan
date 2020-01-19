@@ -6,11 +6,18 @@
 
 #define MAX_SIZE 1024
 
+#include <time.h>
+#include <unistd.h>
+#include <stdlib.h>
+
 /*
     General purpose enumerations and structures
 */
 
 typedef struct _Level Level;
+
+/* This enumeration defines the type Box, which represents an element in the map */
+typedef enum {AIR, WALL, START, END, LAVA, PORTALA, PORTALB, LADDER, ZONAPORTAL, WALL_MERGE, DISAPPEAR_WALL, LADDER_MERGE} Box;
 
 typedef struct {
     int x;

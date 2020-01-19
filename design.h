@@ -1,5 +1,5 @@
 #ifndef DESIGN_H
-#define DISIGN_H
+#define DESIGN_H
 
 #include "types.h"
 #include "print_on_screen.h"

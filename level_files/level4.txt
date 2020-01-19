@@ -1,7 +1,7 @@
 #Numero nivel:
 4
 #Mensaje:
-balabalbalabala
+Level 4. Can you reach the end?
 #Number of people:
 12
 

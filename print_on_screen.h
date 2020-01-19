@@ -180,7 +180,7 @@ Result start_screen(Screen *screen);
         Makes the appropiate conversions from box to
         character and colors
 */
-//Result print_map (Box **map, Screen *s);
+Result print_map (Box **map, Screen *s);
 
 /*
     Inputs:

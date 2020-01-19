@@ -4,7 +4,7 @@
 #include "map.h"
 #include "people.h"
 
-#define NUM_LEVELS 4
+#define NUM_LEVELS 6
 
 struct _Level {
     Map *map;

@@ -114,7 +114,7 @@ Position screen_position(Position position, Screen *screen){
             Finished and desintegrated people are not taken into account  
 */
 Bool is_position_occupable(Position position, Level *level, Screen *screen) {
-    int i, x, y;
+    int i;
     Box b;
     Position map_pos;
 

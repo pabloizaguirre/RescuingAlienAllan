@@ -265,6 +265,8 @@ Result reset_people(Level *level, Screen * screen){
         level->people[k]->state = DESINTEGRATED;
         level->people[k]->wait = 3*k;                
     }
+
+    return OK;
 }
 
 /*
