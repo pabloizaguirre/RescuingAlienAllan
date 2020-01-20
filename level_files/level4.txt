@@ -1,7 +1,7 @@
 #Numero nivel:
 4
 #Mensaje:
-Tutorial 4. Use the portal.
+Tutorial 4. Use the portal. It can be placed on the purple dots.
 #Number of people:
 10
 

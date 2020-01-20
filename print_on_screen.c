@@ -637,7 +637,7 @@ Result print_resources(Screen *screen, Level *level){
     }
 
     if(level->num_floor > 0){
-        sprintf(array," FLOORS (f): x%d", level->num_floor_act);
+        sprintf(array,"FLOORS (f): x%d", level->num_floor_act);
         print_resources_line(array, &pos, screen);
     }
 
@@ -692,7 +692,7 @@ Result print_resources(Screen *screen, Level *level){
     // 3 starts
     change_cursor(pos, screen);
     change_color_rgb(143, 100, 29, BK);
-    print_resources_line("3 stars use:", &pos, screen);
+    print_resources_line("3 stars:", &pos, screen);
     
     if(level->num_ladder_floor_3 > 0){
         sprintf(array,"LADDERS/FLOORS: x%d", level->num_ladder_floor - level->num_ladder_floor_3);
