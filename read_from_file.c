@@ -113,7 +113,6 @@ Map* map_char_to_box(char** map, Screen *screen){
         }
     }
 
-    //falta arreglar la start_pos, end_pos y portal_pos
     for(i=0;i<rows;i++){
         for(j=0;j<columns;j++){
             if (map[i][j] == lista[0]) mapB[i][j] = AIR;
