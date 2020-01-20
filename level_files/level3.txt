@@ -1,48 +1,49 @@
 #Numero nivel:
 3
 #Mensaje:
-Level 3. Try to get out of this room!
+Tutorial 3. Use people to get to the next level.
 #Number of people:
-12
+13
 
 
 #Resources:
 #Number of ladders/floors:
-14
+0
 #Number of ladders:
 0
 #Number of floors:
 0
 #Number of portals:
-1
+0
 #Min number of people:
-11
+10
 
 
 #2stars:
 #Number of ladders/floors:
-13
+0
 #Number of ladders:
 0
 #Number of floors:
 0
 #Number of portals:
-1
+0
 #Min number of people:
-11
+10
 
 
 #3stars:
 #Number of ladders/floors:
-12
+0
 #Number of ladders:
 0
 #Number of floors:
 0
 #Number of portals:
-1
+0
+
 #Min number of people:
-12
+10
 
 #map:   
-map3.txt
+tutorial_3.txt

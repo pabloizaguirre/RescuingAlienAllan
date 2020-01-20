@@ -64,7 +64,6 @@ Level *levels_init(Screen *screen){
         // Open it's file
         sprintf(folder_name, "./level_files/");
         sprintf(level_file, "./level_files/level%d.txt", i+1);
-
         f_level = fopen(level_file, "r");
         if(f_level == NULL){
             if(plevel) free(plevel);
@@ -215,6 +214,7 @@ Level *levels_init(Screen *screen){
             return NULL;
         }
         strcat(folder_name, map_file);
+
         plevel->map = create_map(folder_name, screen); // initialize the map
         if(plevel->map == NULL) return NULL;
 
