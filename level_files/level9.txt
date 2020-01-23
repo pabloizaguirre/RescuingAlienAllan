@@ -3,7 +3,7 @@
 #Mensaje:
 Level 9. Some walls disapear when you step on them.
 #Number of people:
-10
+20
 
 
 #Resources:

@@ -586,8 +586,8 @@ void draw_choosing_menu(Level * first_level, Screen *screen, int selected){
     char end_message[100];
 
     //set all variables
-    cols = (screen->screen_width - 4) / h;
-    rows = (screen->screen_height - 7) / w;
+    cols = (screen->screen_width - 4) / w;
+    rows = (screen->screen_height - 7) / h;
     n_per_page = cols * rows;
     pages = NUM_LEVELS % n_per_page == 0 ? NUM_LEVELS / n_per_page : NUM_LEVELS / n_per_page + 1;
 
